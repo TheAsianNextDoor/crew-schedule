@@ -21,14 +21,14 @@
         })
         .addTo(map);
 
-      const populatedSites = siteList.map((site) => ({
-        ...site,
-        currentPhase: phases.find((phase) => phase.phaseId === site.currentPhaseId) || null,
-      }));
+      // const populatedSites = siteList.map((site) => ({
+      //   ...site,
+      //   currentPhase: phases.find((phase) => phase.phaseId === site.currentPhaseId) || null,
+      // }));
 
-      populatedSites.forEach((site) => {
-        createMarker(site, setSiteStore, map);
-      });
+      // populatedSites.forEach((site) => {
+      //   createMarker(site, setSiteStore, map);
+      // });
     }
   });
 
