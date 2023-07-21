@@ -192,7 +192,7 @@ export const phases: Phase[] = [
     crewMemberCount: null,
     startDateTime: null,
     scheduledDateTime: null,
-    status: 'In Progress',
+    status: 'pending',
     subContractorInfo: {
       phoneNumber: 1232121212,
       email: 'subcontractor@gmail.com',

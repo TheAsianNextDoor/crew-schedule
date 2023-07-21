@@ -1,7 +1,3 @@
-import { db } from '$lib/db';
-import { company, profile } from '$lib/db/schema';
-import { eq } from 'drizzle-orm';
-
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async (event) => {
