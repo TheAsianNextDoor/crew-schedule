@@ -1,6 +1,6 @@
-<script>
-  import { signIn, signOut } from '@auth/sveltekit/client';
+<script lang="ts">
   import { page } from '$app/stores';
+  import { signIn, signOut } from '@auth/sveltekit/client';
 
   console.log('hello', $page.data.session);
 </script>

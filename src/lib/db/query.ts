@@ -27,6 +27,9 @@ export const queryDatabase = async (
       const res = await client.query(query, params);
 
       console.log(`elapsed: ${Date.now() - start}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('row: ', res.rows);
+      }
 
       return res;
     } catch (e: unknown) {
@@ -43,11 +46,26 @@ export const getQuery = async (
 ) => {
   const result = await queryDatabase(query, params, retryConfig);
 
-  if (!result?.rowCount) {
+  if (!result?.rows) {
     return [];
   }
 
   return result.rows;
+};
+
+export const getFirstQuery = async (
+  query: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  params?: any[],
+  retryConfig?: Options
+) => {
+  const result = await queryDatabase(query, params, retryConfig);
+
+  if (!result?.rows) {
+    return [];
+  }
+
+  return result.rows[0];
 };
 
 export const mutateQuery = async (
