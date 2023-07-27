@@ -60,7 +60,7 @@ export const seed = async function (knex) {
       ('${employee2}', '${company1}', 'Employee 2', 'Lastname', '2345678901', 'employee2@example.com'),
       ('${employee3}', '${company1}', 'Employee 3', 'Lastname', '3456789012', 'employee3@example.com'),
       ('${employee4}', '${company1}', 'Employee 4', 'Lastname', '4567890123', 'employee4@example.com'),
-      ('${employee5}', '${company1}', 'Employee 5', 'Lastname', '5678901234', 'employee5@example.com');
+      ('${employee5}', '${company1}', 'Employee 5', 'Lastname', '5678901234', 'aaron.o.scherling@gmail.com');
   `);
 
   await knex.raw(`
@@ -141,22 +141,35 @@ export const seed = async function (knex) {
   const phase10 = 'd8b75782-277e-11ee-be56-0242ac120002';
   const phase11 = 'deb35e88-277e-11ee-be56-0242ac120002';
   const phase12 = 'e1d8b356-277e-11ee-be56-0242ac120002';
+  const phase13 = 'e1d8b356-277e-11ee-be36-0242ac120002';
+  const phase14 = 'e1d8b356-277e-11ee-be57-0242ac120002';
 
   await knex.raw(`
     INSERT INTO "phase" ("id", "site_id", "sub_contractor_id", "discipline_id", "order", "status", "estimated_hours", "personnel_count")
     VALUES
-      ('${phase1}', '${site1}', NULL, '${disciplineAsphaltId}', 1, 'pending', NULL, NULL),
-      ('${phase2}', '${site2}', NULL, '${disciplineConcreteId}', 1, 'pending', NULL, NULL),
-      ('${phase3}', '${site3}', NULL, '${disciplineStripingId}', 1, 'pending', NULL, NULL),
-      ('${phase4}', '${site4}', NULL, '${disciplineAsphaltId}', 1, 'scheduled', 32, 12),
-      ('${phase5}', '${site5}', NULL, '${disciplineConcreteId}', 1, 'scheduled', 19, 91),
-      ('${phase6}', '${site6}', NULL, '${disciplineStripingId}', 1, 'scheduled', 22, 123),
+      ('${phase1}', '${site4}', NULL, '${disciplineAsphaltId}', 1, 'pending', NULL, NULL),
+      
+      ('${phase2}', '${site5}', NULL, '${disciplineConcreteId}', 1, 'pending', NULL, NULL),
+      ('${phase4}', '${site5}', NULL, '${disciplineAsphaltId}', 2, 'scheduled', 32, 12),
+
+      ('${phase5}', '${site6}', NULL, '${disciplineConcreteId}', 1, 'scheduled', 19, 91),
+
       ('${phase7}', '${site7}', NULL, '${disciplineAsphaltId}', 1, 'in_progress', 22.9, 128),
+
       ('${phase8}', '${site8}', NULL, '${disciplineConcreteId}', 1, 'in_progress', 222.9, 125),
-      ('${phase9}', '${site9}', NULL, '${disciplineStripingId}', 1, 'in_progress', 22.0, 13),
+      ('${phase3}', '${site8}', NULL, '${disciplineStripingId}', 2, 'pending', NULL, NULL),
+
+      ('${phase12}', '${site9}', NULL, '${disciplineStripingId}', 1, 'completed', 29, 1203),
+      ('${phase9}', '${site9}', NULL, '${disciplineStripingId}', 2, 'in_progress', 22.0, 13),
+      ('${phase6}', '${site9}', NULL, '${disciplineStripingId}', 3, 'scheduled', 22, 123),
+
       ('${phase10}', '${site10}', NULL, '${disciplineAsphaltId}', 1, 'completed', 22, 23),
-      ('${phase11}', '${site11}', NULL, '${disciplineConcreteId}', 1, 'completed', 23, 322),
-      ('${phase12}', '${site12}', NULL, '${disciplineStripingId}', 1, 'completed', 29, 1203);
+      ('${phase11}', '${site10}', NULL, '${disciplineConcreteId}', 2, 'completed', 23, 322),
+
+      ('${phase13}', '${site11}', NULL, '${disciplineConcreteId}', 1, 'completed', 23, 322),
+
+      ('${phase14}', '${site12}', NULL, '${disciplineConcreteId}', 1, 'completed', 23, 322);
+
   `);
 
   const phaseAssignment1 = '1a8b93db-3292-4c1d-85fe-ee012dd1e5d1';
@@ -168,6 +181,8 @@ export const seed = async function (knex) {
   const phaseAssignment7 = '1a8b73db-3292-4c1d-85fe-ee012dd1e5d1';
   const phaseAssignment8 = '1a8b33db-3292-4c1d-85fe-ee012dd1e5d1';
   const phaseAssignment9 = '1a8b94db-3292-4c1d-85fe-ee012dd1e5d1';
+  const phaseAssignment10 = '1a8b94db-3292-4c1d-85fe-ee012dd1e5d3';
+  const phaseAssignment11 = '1a8b94db-3292-4c1d-85fe-ee012dd1e5d5';
 
   await knex.raw(`
     INSERT INTO "phase_assignment" ("id", "phase_id", "crew_id", "status", "estimated_hours", "mobilization_from_location", "estimated_mobilization_duration", "actual_mobilization_duration", "scheduled_date_time", "start_date_time", "finished_date_time")
@@ -180,6 +195,44 @@ export const seed = async function (knex) {
       ('${phaseAssignment6}', '${phase9}', '${crew2}', 'in_progress', 89.0, '{1.23, 4.56}', 23.5, 23.0, '2023-07-20 08:00:00', '2023-08-20 08:00:00', NULL),
       ('${phaseAssignment7}', '${phase10}', '${crew3}', 'completed', 80.0, '{1.23, 4.56}', 2.5, 10.4, '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-21 08:00:00'),
       ('${phaseAssignment8}', '${phase11}', '${crew3}', 'completed', 813.0, '{1.23, 4.56}', 3.5, 11.9, '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-22 08:00:00'),
-      ('${phaseAssignment9}', '${phase12}', '${crew3}', 'completed', 49.0, '{1.23, 4.56}', 30.5, 10.99, '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00');
+      ('${phaseAssignment9}', '${phase12}', '${crew3}', 'completed', 49.0, '{1.23, 4.56}', 30.5, 10.99, '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00'),
+      ('${phaseAssignment10}', '${phase13}', '${crew3}', 'completed', 49.0, '{1.23, 4.56}', 30.5, 10.99, '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00'),
+      ('${phaseAssignment11}', '${phase14}', '${crew3}', 'completed', 49.0, '{1.23, 4.56}', 30.5, 10.99, '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00');
+  `);
+
+  await knex.raw(`
+    UPDATE site
+    SET current_phase_id = '${phase1}'
+    WHERE id = '${site4}';
+  `);
+
+  await knex.raw(`
+    UPDATE site
+    SET current_phase_id = '${phase2}'
+    WHERE id = '${site5}';
+  `);
+
+  await knex.raw(`
+    UPDATE site
+    SET current_phase_id = '${phase5}'
+    WHERE id = '${site6}';
+  `);
+
+  await knex.raw(`
+    UPDATE site
+    SET current_phase_id = '${phase7}'
+    WHERE id = '${site7}';
+  `);
+
+  await knex.raw(`
+    UPDATE site
+    SET current_phase_id = '${phase8}'
+    WHERE id = '${site8}';
+  `);
+
+  await knex.raw(`
+    UPDATE site
+    SET current_phase_id = '${phase9}'
+    WHERE id = '${site9}';
   `);
 };

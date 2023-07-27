@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Map from '$lib/components/map.svelte';
+  import Map from './map.svelte';
 
   export let data;
 

@@ -3,8 +3,6 @@
   import type { Map } from 'leaflet';
   import { onDestroy, onMount } from 'svelte';
 
-  export let sites;
-
   let mapElement: HTMLDivElement;
   let map: Map;
 

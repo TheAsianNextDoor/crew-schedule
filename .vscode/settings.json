@@ -4,5 +4,5 @@
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
   },
-  "typescript.tsserver.log": "verbose"
+  "typescript.tsserver.log": "off"
 }

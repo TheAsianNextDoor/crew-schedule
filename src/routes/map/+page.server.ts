@@ -1,10 +1,13 @@
-// import * as db from '$lib/server/database';
-import { db } from '$lib/db';
-import { PageInsights } from '$lib/db/schema.js';
+import { retrieveSites } from './retrieve-sites.db.js';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export async function load({ parent }) {
+  const {
+    employee: { company_id: companyId },
+  } = await parent();
+  const sites = await retrieveSites(companyId);
+
   return {
-    post: await db.select().from(PageInsights),
+    sites,
   };
 }

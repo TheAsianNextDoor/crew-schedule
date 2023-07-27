@@ -13,7 +13,7 @@ export const DEFAULT_MUTATE_RETRY_CONFIG: Options = {
   retries: 0,
 };
 
-export const queryDatabase = async (
+export const queryDatabase = async <QueryResultType>(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
@@ -24,7 +24,7 @@ export const queryDatabase = async (
       const start = Date.now();
 
       // @ts-ignore
-      const res = await client.query(query, params);
+      const res = await client.query<QueryResultType>(query, params);
 
       console.log(`elapsed: ${Date.now() - start}`);
       if (process.env.NODE_ENV === 'development') {
@@ -38,13 +38,13 @@ export const queryDatabase = async (
   }, retryConfig);
 };
 
-export const getQuery = async (
+export const getQuery = async <QueryReturnType>(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
   retryConfig?: Options
 ) => {
-  const result = await queryDatabase(query, params, retryConfig);
+  const result = await queryDatabase<QueryReturnType>(query, params, retryConfig);
 
   if (!result?.rows) {
     return [];
@@ -53,16 +53,16 @@ export const getQuery = async (
   return result.rows;
 };
 
-export const getFirstQuery = async (
+export const getFirstQuery = async <QueryReturnType>(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
   retryConfig?: Options
 ) => {
-  const result = await queryDatabase(query, params, retryConfig);
+  const result = await queryDatabase<QueryReturnType>(query, params, retryConfig);
 
   if (!result?.rows) {
-    return [];
+    return null;
   }
 
   return result.rows[0];
