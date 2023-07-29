@@ -9,7 +9,7 @@ export const siteTableSchema = z.object({
   job_number: z.number(),
   name: z.string(),
   status: statusSchema,
-  location: z.number().array(),
+  location: z.tuple([z.number(), z.number()]),
   cluster_id: z.string().optional(),
   estimated_hours: z.number().optional(),
   attachments: z.string().array().optional(),

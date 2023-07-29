@@ -1,4 +1,4 @@
-import { retrieveMapSites } from './retrieve-sites.db.js';
+import { retrieveMapSites } from './queries/retrieve-sites.db.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ parent }) {

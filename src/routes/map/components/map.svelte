@@ -3,7 +3,7 @@
   import type { Map } from 'leaflet';
   import { onDestroy, onMount } from 'svelte';
 
-  import { createMarker } from './marker-utils';
+  import { createMarker } from '../helpers/marker-utils';
 
   export let sites: any[];
 
