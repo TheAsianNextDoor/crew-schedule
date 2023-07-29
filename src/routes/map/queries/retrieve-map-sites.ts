@@ -2,7 +2,7 @@ import { getQuery } from '$lib/db/query';
 import type { PhaseTableType } from '$lib/db/schemas/phase';
 import type { SiteTableType } from '$lib/db/schemas/site';
 
-type MapSites = Pick<
+export type MapSites = Pick<
   SiteTableType,
   | 'site_id'
   | 'current_phase_id'

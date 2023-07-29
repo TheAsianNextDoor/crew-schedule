@@ -1,5 +1,7 @@
 import type Leaflet from 'leaflet';
 
+import type { MapSites } from '../queries/retrieve-map-sites';
+
 // const getMarkerIcon = (site: any) => {
 //   const LeafIcon = L.Icon.extend({
 //     options: {
@@ -38,7 +40,7 @@ import type Leaflet from 'leaflet';
 // };
 
 export const createMarker = (
-  site: any,
+  site: MapSites,
   // setSiteStore: SetStoreFunction<MapItems>,
   marker: typeof Leaflet.marker,
   map: Leaflet.Map
@@ -50,7 +52,14 @@ export const createMarker = (
   //   setIsDrawerOpen(true);
   //   setSelectedMarker(site);
   // });
-  myMarker.addTo(map);
+
+  myMarker.addTo(map).bindTooltip(
+    `
+    Name: ${site.name} <br>
+    Job Number: ${site.job_number} <br>
+    Status: ${site.status} <br>
+  `
+  );
 
   // setSiteStore(
   //   produce((list) => {
