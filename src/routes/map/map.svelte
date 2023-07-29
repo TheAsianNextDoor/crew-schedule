@@ -3,6 +3,10 @@
   import type { Map } from 'leaflet';
   import { onDestroy, onMount } from 'svelte';
 
+  import { createMarker } from './marker-utils';
+
+  export let sites: any[];
+
   let mapElement: HTMLDivElement;
   let map: Map;
 
@@ -10,7 +14,7 @@
     if (browser) {
       const leaflet = await import('leaflet');
 
-      map = leaflet.map(mapElement).setView([51.505, -0.09], 13);
+      map = leaflet.map(mapElement).setView([51.505, -0.09], 12);
 
       leaflet
         .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -24,9 +28,9 @@
       //   currentPhase: phases.find((phase) => phase.phaseId === site.currentPhaseId) || null,
       // }));
 
-      // populatedSites.forEach((site) => {
-      //   createMarker(site, setSiteStore, map);
-      // });
+      sites.forEach((site) => {
+        createMarker(site, leaflet.marker, map);
+      });
     }
   });
 

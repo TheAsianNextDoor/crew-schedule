@@ -2,12 +2,10 @@
   import Map from './map.svelte';
 
   export let data;
-
-  console.log('hi: ', data);
 </script>
 
 <div class="map-container">
-  <Map />
+  <Map sites={data.sites} />
 </div>
 
 <style>

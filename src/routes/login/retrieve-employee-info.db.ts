@@ -2,7 +2,7 @@ import { getFirstQuery } from '$lib/db/query';
 
 export const retrieveEmployeeInfo = (email: string) => {
   const query = `
-    SELECT "id", "company_id"
+    SELECT "employee_id", "company_id"
     FROM "employee"
     WHERE email = $1
   `;
