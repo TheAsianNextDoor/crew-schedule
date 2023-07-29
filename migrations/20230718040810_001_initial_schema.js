@@ -12,7 +12,7 @@ export const up = async function (knex) {
     );
     
     CREATE TABLE "company" (
-      "id" uuid PRIMARY KEY,
+      "company_id" uuid PRIMARY KEY,
       "name" text NOT NULL,
       "phone_number" text NOT NULL,
       "email" text NOT NULL,
@@ -21,13 +21,13 @@ export const up = async function (knex) {
     );
     
     CREATE TABLE "discipline" (
-      "id" uuid PRIMARY KEY,
+      "discipline_id" uuid PRIMARY KEY,
       "company_id" uuid NOT NULL,
       "name" text NOT NULL
     );
     
     CREATE TABLE "client" (
-      "id" uuid PRIMARY KEY,
+      "client_id" uuid PRIMARY KEY,
       "name" text NOT NULL,
       "contact_first_name" text NOT NULL,
       "contact_last_name" text NOT NULL,
@@ -38,14 +38,14 @@ export const up = async function (knex) {
     );
     
     CREATE TABLE "profile" (
-      "id" uuid PRIMARY KEY,
+      "profile_id" uuid PRIMARY KEY,
       "profile_pic" text,
       "employee_id" uuid NOT NULL,
       "created_at" timestamp DEFAULT (now())
     );
     
     CREATE TABLE "employee" (
-      "id" uuid UNIQUE PRIMARY KEY,
+      "employee_id" uuid UNIQUE PRIMARY KEY,
       "company_id" uuid NOT NULL,
       "first_name" text NOT NULL,
       "last_name" text NOT NULL,
@@ -55,7 +55,7 @@ export const up = async function (knex) {
     );
     
     CREATE TABLE "crew" (
-      "id" uuid PRIMARY KEY,
+      "crew_id" uuid PRIMARY KEY,
       "company_id" uuid NOT NULL,
       "discipline_id" uuid NOT NULL,
       "name" text NOT NULL,
@@ -68,15 +68,15 @@ export const up = async function (knex) {
     );
     
     CREATE TABLE "crew_assignment" (
-      "id" uuid PRIMARY KEY,
+      "crew_assignment_id" uuid PRIMARY KEY,
       "employee_id" uuid NOT NULL,
       "crew_id" uuid NOT NULL,
-      "is_foreman" boolean,
+      "is_foreman" boolean DEFAULT false,
       "created_at" timestamp DEFAULT (now())
     );
     
     CREATE TABLE "phase" (
-      "id" uuid PRIMARY KEY,
+      "phase_id" uuid PRIMARY KEY,
       "site_id" uuid NOT NULL,
       "sub_contractor_id" uuid,
       "discipline_id" uuid NOT NULL,
@@ -88,7 +88,7 @@ export const up = async function (knex) {
     );
     
     CREATE TABLE "phase_assignment" (
-      "id" uuid PRIMARY KEY,
+      "phase_assignment_id" uuid PRIMARY KEY,
       "phase_id" uuid NOT NULL,
       "crew_id" uuid NOT NULL,
       "status" status DEFAULT 'pending',
@@ -103,7 +103,7 @@ export const up = async function (knex) {
     );
     
     CREATE TABLE "site" (
-      "id" uuid PRIMARY KEY,
+      "site_id" uuid PRIMARY KEY,
       "company_id" uuid NOT NULL,
       "client_id" uuid NOT NULL,
       "current_phase_id" uuid,
@@ -123,35 +123,35 @@ export const up = async function (knex) {
     
     CREATE INDEX ON "site" ("job_number");
     
-    ALTER TABLE "discipline" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("id");
+    ALTER TABLE "discipline" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
     
-    ALTER TABLE "profile" ADD FOREIGN KEY ("employee_id") REFERENCES "employee" ("id");
+    ALTER TABLE "profile" ADD FOREIGN KEY ("employee_id") REFERENCES "employee" ("employee_id");
     
-    ALTER TABLE "employee" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("id");
+    ALTER TABLE "employee" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
     
-    ALTER TABLE "crew" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("id");
+    ALTER TABLE "crew" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
     
-    ALTER TABLE "crew" ADD FOREIGN KEY ("discipline_id") REFERENCES "discipline" ("id");
+    ALTER TABLE "crew" ADD FOREIGN KEY ("discipline_id") REFERENCES "discipline" ("discipline_id");
     
-    ALTER TABLE "crew_assignment" ADD FOREIGN KEY ("employee_id") REFERENCES "employee" ("id");
+    ALTER TABLE "crew_assignment" ADD FOREIGN KEY ("employee_id") REFERENCES "employee" ("employee_id");
     
-    ALTER TABLE "crew_assignment" ADD FOREIGN KEY ("crew_id") REFERENCES "crew" ("id");
+    ALTER TABLE "crew_assignment" ADD FOREIGN KEY ("crew_id") REFERENCES "crew" ("crew_id");
     
-    ALTER TABLE "phase" ADD FOREIGN KEY ("site_id") REFERENCES "site" ("id");
+    ALTER TABLE "phase" ADD FOREIGN KEY ("site_id") REFERENCES "site" ("site_id");
     
-    ALTER TABLE "phase" ADD FOREIGN KEY ("sub_contractor_id") REFERENCES "company" ("id");
+    ALTER TABLE "phase" ADD FOREIGN KEY ("sub_contractor_id") REFERENCES "company" ("company_id");
     
-    ALTER TABLE "phase" ADD FOREIGN KEY ("discipline_id") REFERENCES "discipline" ("id");
+    ALTER TABLE "phase" ADD FOREIGN KEY ("discipline_id") REFERENCES "discipline" ("discipline_id");
     
-    ALTER TABLE "phase_assignment" ADD FOREIGN KEY ("phase_id") REFERENCES "phase" ("id");
+    ALTER TABLE "phase_assignment" ADD FOREIGN KEY ("phase_id") REFERENCES "phase" ("phase_id");
     
-    ALTER TABLE "phase_assignment" ADD FOREIGN KEY ("crew_id") REFERENCES "crew" ("id");
+    ALTER TABLE "phase_assignment" ADD FOREIGN KEY ("crew_id") REFERENCES "crew" ("crew_id");
     
-    ALTER TABLE "site" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("id");
+    ALTER TABLE "site" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
     
-    ALTER TABLE "site" ADD FOREIGN KEY ("client_id") REFERENCES "client" ("id");
+    ALTER TABLE "site" ADD FOREIGN KEY ("client_id") REFERENCES "client" ("client_id");
     
-    ALTER TABLE "site" ADD FOREIGN KEY ("current_phase_id") REFERENCES "phase" ("id");  
+    ALTER TABLE "site" ADD FOREIGN KEY ("current_phase_id") REFERENCES "phase" ("phase_id");  
   `);
 };
 

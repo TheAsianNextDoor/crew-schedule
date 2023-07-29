@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const employeeTableSchema = z.object({
-  id: z.string().uuid(),
+  employee_id: z.string().uuid(),
   company_id: z.string().uuid(),
   first_name: z.string(),
   last_name: z.string(),

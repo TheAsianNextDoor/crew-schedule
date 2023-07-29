@@ -10,7 +10,7 @@ export const seed = async function (knex) {
   const company5 = '5d3034c4-dc5e-4a8f-ba84-cc6ff9f7074d';
 
   await knex.raw(`
-    INSERT INTO "company" ("id", "name", "phone_number", "email", "address") 
+    INSERT INTO "company" ("company_id", "name", "phone_number", "email", "address") 
     VALUES 
       ('${company1}', 'Company 1', '1234567890', 'company1@example.com', 'Address 1'),
       ('${company2}', 'Company 2', '2345678901', 'company2@example.com', 'Address 2'),
@@ -24,7 +24,7 @@ export const seed = async function (knex) {
   const disciplineStripingId = '43bf3430-277c-11ee-be56-0242ac120002';
 
   await knex.raw(`
-    INSERT INTO "discipline" ("id", "company_id", "name")
+    INSERT INTO "discipline" ("discipline_id", "company_id", "name")
     VALUES
       ('${disciplineAsphaltId}', '${company1}', 'asphalt'),
       ('${disciplineConcreteId}', '${company1}', 'concrete'),
@@ -38,7 +38,7 @@ export const seed = async function (knex) {
   const client5 = '5b7f14c2-f29a-4f92-b5fe-4970da3d2e8e';
 
   await knex.raw(`
-    INSERT INTO "client" ("id", "name", "contact_first_name", "contact_last_name", "email", "phone_number", "headquarters_address")
+    INSERT INTO "client" ("client_id", "name", "contact_first_name", "contact_last_name", "email", "phone_number", "headquarters_address")
     VALUES
       ('${client1}', 'Client 1', 'John', 'Doe', 'client1@example.com', '1234567890', 'Headquarters 1'),
       ('${client2}', 'Client 2', 'Jane', 'Smith', 'client2@example.com', '2345678901', 'Headquarters 2'),
@@ -54,7 +54,7 @@ export const seed = async function (knex) {
   const employee5 = '69b45d89-301e-4b5f-ba0e-1ed5fd3e678b';
 
   await knex.raw(`
-    INSERT INTO "employee" ("id", "company_id", "first_name", "last_name", "phone_number", "email")
+    INSERT INTO "employee" ("employee_id", "company_id", "first_name", "last_name", "phone_number", "email")
     VALUES
       ('${employee1}', '${company1}', 'Employee 1', 'Lastname', '1234567890', 'employee1@example.com'),
       ('${employee2}', '${company1}', 'Employee 2', 'Lastname', '2345678901', 'employee2@example.com'),
@@ -64,7 +64,7 @@ export const seed = async function (knex) {
   `);
 
   await knex.raw(`
-    INSERT INTO "profile" ("id", "profile_pic", "employee_id")
+    INSERT INTO "profile" ("profile_id", "profile_pic", "employee_id")
     VALUES
       ('1232921e-5b39-42fc-8db0-d89e95c5a5a0', 'profile1.jpg', '${employee1}'),
       ('234b768d-5946-47df-8a97-22a3c34d5f8c', 'profile2.jpg', '${employee2}'),
@@ -80,7 +80,7 @@ export const seed = async function (knex) {
   const crew5 = '56e42e7e-5f1e-4c5d-8b3f-d4ef0658978b';
 
   await knex.raw(`
-    INSERT INTO "crew" ("id", "company_id", "discipline_id", "name", "size", "weekly_hours", "weekly_capacity", "personnel_hourly_cost", "equipment_hourly_cost")
+    INSERT INTO "crew" ("crew_id", "company_id", "discipline_id", "name", "size", "weekly_hours", "weekly_capacity", "personnel_hourly_cost", "equipment_hourly_cost")
     VALUES
       ('${crew1}', '${company1}', '${disciplineAsphaltId}', 'Crew 1', 10, 40.0, 400.0, 25.0, 50.0),
       ('${crew2}', '${company1}', '${disciplineConcreteId}', 'Crew 2', 8, 32.0, 320.0, 20.0, 30.0),
@@ -90,7 +90,7 @@ export const seed = async function (knex) {
   `);
 
   await knex.raw(`
-    INSERT INTO "crew_assignment" ("id", "employee_id", "crew_id", "is_foreman")
+    INSERT INTO "crew_assignment" ("crew_assignment_id", "employee_id", "crew_id", "is_foreman")
     VALUES
       ('1be3f4c2-7b4b-4e9c-bd57-7f4c131fd365', '${employee1}', '${crew1}', true),
       ('25f7828d-50dd-4d1d-97f4-3296890db1cd', '${employee2}', '${crew2}', false),
@@ -113,20 +113,20 @@ export const seed = async function (knex) {
   const site12 = 'ae06b168-277e-11ee-be56-0242ac120002';
 
   await knex.raw(`
-    INSERT INTO "site" ("id", "company_id", "client_id", "current_phase_id", "job_number", "name", "status", "location", "cluster_id", "estimated_hours", "notes", "scheduled_date_time", "start_date_time", "finished_date_time")
+    INSERT INTO "site" ("site_id", "company_id", "client_id", "current_phase_id", "job_number", "name", "status", "location", "cluster_id", "estimated_hours", "notes", "scheduled_date_time", "start_date_time", "finished_date_time")
     VALUES
-      ('${site1}', '${company1}', '${client1}', NULL, 'Job001', 'Site 1', 'pending', '{1.23, 4.56}', 'Cluster A', 200.0, 'Notes for Site 1', NULL, NULL, NULL),
-      ('${site2}', '${company1}', '${client2}', NULL, 'Job002', 'Site 2', 'pending', '{7.89, 1.23}', 'Cluster B', 300.0, 'Notes for Site 2', NULL, NULL, NULL),
-      ('${site3}', '${company1}', '${client3}', NULL, 'Job003', 'Site 3', 'pending', '{4.56, 7.89}', 'Cluster C', 400.0, 'Notes for Site 3', NULL, NULL, NULL),
-      ('${site4}', '${company1}', '${client4}', NULL, 'Job004', 'Site 4', 'scheduled', '{1.23, 7.89}', 'Cluster D', 250.0, 'Notes for Site 4', '2023-07-20 08:00:00', NULL, NULL),
-      ('${site5}', '${company1}', '${client5}', NULL, 'Job005', 'Site 5', 'scheduled', '{7.89, 4.56}', 'Cluster E', 180.0, 'Notes for Site 5', '2023-07-20 08:00:00', NULL, NULL),
-      ('${site6}', '${company1}', '${client5}', NULL, 'Job006', 'Site 6', 'scheduled', '{7.89, 4.56}', 'Cluster F', 183.0, 'Notes for Site 6', '2023-07-20 08:00:00', NULL, NULL),
-      ('${site7}', '${company1}', '${client5}', NULL, 'Job007', 'Site 7', 'in_progress', '{7.89, 4.56}', 'Cluster F', 184.0, 'Notes for Site 7', '2023-07-20 08:00:00', '2023-08-20 08:00:00', NULL),
-      ('${site8}', '${company1}', '${client5}', NULL, 'Job008', 'Site 8', 'in_progress', '{7.89, 4.56}', 'Cluster F', 186.0, 'Notes for Site 8', '2023-07-20 08:00:00', '2023-08-20 08:00:00', NULL),
-      ('${site9}', '${company1}', '${client5}', NULL, 'Job009', 'Site 9', 'in_progress', '{7.89, 4.56}', 'Cluster F', 133.0, 'Notes for Site 9', '2023-07-20 08:00:00', '2023-08-20 08:00:00', NULL),
-      ('${site10}', '${company1}', '${client5}', NULL, 'Job010', 'Site 10', 'completed', '{7.89, 4.56}', 'Cluster F', 113.0, 'Notes for Site 10', '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00'),
-      ('${site11}', '${company1}', '${client5}', NULL, 'Job011', 'Site 11', 'completed', '{7.89, 4.56}', 'Cluster F', 1233.0, 'Notes for Site 11', '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00'),
-      ('${site12}', '${company1}', '${client5}', NULL, 'Job012', 'Site 12', 'completed', '{7.89, 4.56}', 'Cluster F', 183.0, 'Notes for Site 12', '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00');
+      ('${site1}', '${company1}', '${client1}', NULL, 'Job001', 'Site 1', 'pending', '{51.490, -0.09}', 'Cluster A', 200.0, 'Notes for Site 1', NULL, NULL, NULL),
+      ('${site2}', '${company1}', '${client2}', NULL, 'Job002', 'Site 2', 'pending', '{51.530, -0.07}', 'Cluster B', 300.0, 'Notes for Site 2', NULL, NULL, NULL),
+      ('${site3}', '${company1}', '${client3}', NULL, 'Job003', 'Site 3', 'pending', '{51.501, -0.08}', 'Cluster C', 400.0, 'Notes for Site 3', NULL, NULL, NULL),
+      ('${site4}', '${company1}', '${client4}', NULL, 'Job004', 'Site 4', 'scheduled', '{51.505, -0.06}', 'Cluster D', 250.0, 'Notes for Site 4', '2023-07-20 08:00:00', NULL, NULL),
+      ('${site5}', '${company1}', '${client5}', NULL, 'Job005', 'Site 5', 'scheduled', '{51.509, -0.09}', 'Cluster E', 180.0, 'Notes for Site 5', '2023-07-20 08:00:00', NULL, NULL),
+      ('${site6}', '${company1}', '${client5}', NULL, 'Job006', 'Site 6', 'scheduled', '{51.485, -0.05}', 'Cluster F', 183.0, 'Notes for Site 6', '2023-07-20 08:00:00', NULL, NULL),
+      ('${site7}', '${company1}', '${client5}', NULL, 'Job007', 'Site 7', 'in_progress', '{51.503, -0.07}', 'Cluster F', 184.0, 'Notes for Site 7', '2023-07-20 08:00:00', '2023-08-20 08:00:00', NULL),
+      ('${site8}', '${company1}', '${client5}', NULL, 'Job008', 'Site 8', 'in_progress', '{51.502, -0.05}', 'Cluster F', 186.0, 'Notes for Site 8', '2023-07-20 08:00:00', '2023-08-20 08:00:00', NULL),
+      ('${site9}', '${company1}', '${client5}', NULL, 'Job009', 'Site 9', 'in_progress', '{51.517, -0.11}', 'Cluster F', 133.0, 'Notes for Site 9', '2023-07-20 08:00:00', '2023-08-20 08:00:00', NULL),
+      ('${site10}', '${company1}', '${client5}', NULL, 'Job010', 'Site 10', 'completed', '{51.535, -0.12}', 'Cluster F', 113.0, 'Notes for Site 10', '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00'),
+      ('${site11}', '${company1}', '${client5}', NULL, 'Job011', 'Site 11', 'completed', '{51.510, -0.13}', 'Cluster F', 1233.0, 'Notes for Site 11', '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00'),
+      ('${site12}', '${company1}', '${client5}', NULL, 'Job012', 'Site 12', 'completed', '{51.515, -0.08}', 'Cluster F', 183.0, 'Notes for Site 12', '2023-07-20 08:00:00', '2023-08-20 08:00:00', '2023-08-23 08:00:00');
   `);
 
   const phase1 = '144c3e95-1fd2-4baf-9a7d-3eef49a36d47';
@@ -145,7 +145,7 @@ export const seed = async function (knex) {
   const phase14 = 'e1d8b356-277e-11ee-be57-0242ac120002';
 
   await knex.raw(`
-    INSERT INTO "phase" ("id", "site_id", "sub_contractor_id", "discipline_id", "order", "status", "estimated_hours", "personnel_count")
+    INSERT INTO "phase" ("phase_id", "site_id", "sub_contractor_id", "discipline_id", "order", "status", "estimated_hours", "personnel_count")
     VALUES
       ('${phase1}', '${site4}', NULL, '${disciplineAsphaltId}', 1, 'pending', NULL, NULL),
       
@@ -185,7 +185,7 @@ export const seed = async function (knex) {
   const phaseAssignment11 = '1a8b94db-3292-4c1d-85fe-ee012dd1e5d5';
 
   await knex.raw(`
-    INSERT INTO "phase_assignment" ("id", "phase_id", "crew_id", "status", "estimated_hours", "mobilization_from_location", "estimated_mobilization_duration", "actual_mobilization_duration", "scheduled_date_time", "start_date_time", "finished_date_time")
+    INSERT INTO "phase_assignment" ("phase_assignment_id", "phase_id", "crew_id", "status", "estimated_hours", "mobilization_from_location", "estimated_mobilization_duration", "actual_mobilization_duration", "scheduled_date_time", "start_date_time", "finished_date_time")
     VALUES
       ('${phaseAssignment1}', '${phase4}', '${crew1}', 'scheduled', 80.0, '{1.23, 4.56}', 2.5, NULL, '2023-07-20 08:00:00', NULL, NULL),
       ('${phaseAssignment2}', '${phase5}', '${crew1}', 'scheduled', 81.0, '{1.23, 4.56}', 1.5, NULL, '2023-07-20 08:00:00', NULL, NULL),
@@ -203,36 +203,36 @@ export const seed = async function (knex) {
   await knex.raw(`
     UPDATE site
     SET current_phase_id = '${phase1}'
-    WHERE id = '${site4}';
+    WHERE site_id = '${site4}';
   `);
 
   await knex.raw(`
     UPDATE site
     SET current_phase_id = '${phase2}'
-    WHERE id = '${site5}';
+    WHERE site_id = '${site5}';
   `);
 
   await knex.raw(`
     UPDATE site
     SET current_phase_id = '${phase5}'
-    WHERE id = '${site6}';
+    WHERE site_id = '${site6}';
   `);
 
   await knex.raw(`
     UPDATE site
     SET current_phase_id = '${phase7}'
-    WHERE id = '${site7}';
+    WHERE site_id = '${site7}';
   `);
 
   await knex.raw(`
     UPDATE site
     SET current_phase_id = '${phase8}'
-    WHERE id = '${site8}';
+    WHERE site_id = '${site8}';
   `);
 
   await knex.raw(`
     UPDATE site
     SET current_phase_id = '${phase9}'
-    WHERE id = '${site9}';
+    WHERE site_id = '${site9}';
   `);
 };

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { statusSchema } from '../enum/status';
 
 export const siteTableSchema = z.object({
-  id: z.string().uuid(),
+  site_id: z.string().uuid(),
   client_id: z.string().uuid(),
   current_phase_id: z.string().uuid(),
   job_number: z.number(),

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const clientTableSchema = z.object({
-  id: z.string().uuid(),
+  client_id: z.string().uuid(),
   name: z.string(),
   contact_first_name: z.string(),
   contact_last_name: z.string(),

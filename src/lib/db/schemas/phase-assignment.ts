@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { statusSchema } from '../enum/status';
 
 export const phaseAssignmentTableSchema = z.object({
-  id: z.string().uuid(),
+  phase_assignment_id: z.string().uuid(),
   phase_id: z.string().uuid(),
   crew_id: z.string().uuid(),
   status: statusSchema,
