@@ -1,5 +1,6 @@
 import type Leaflet from 'leaflet';
 
+import { showMapDrawer } from '../components/map-drawer-store';
 import type { MapSites } from '../queries/retrieve-map-sites';
 
 // const getMarkerIcon = (site: any) => {
@@ -53,13 +54,16 @@ export const createMarker = (
   //   setSelectedMarker(site);
   // });
 
-  myMarker.addTo(map).bindTooltip(
-    `
+  myMarker
+    .addTo(map)
+    .bindTooltip(
+      `
     Name: ${site.name} <br>
     Job Number: ${site.job_number} <br>
     Status: ${site.status} <br>
   `
-  );
+    )
+    .on('click', showMapDrawer);
 
   // setSiteStore(
   //   produce((list) => {
