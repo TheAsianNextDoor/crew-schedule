@@ -1,7 +1,19 @@
 <script>
-  import '../app.postcss';
-  // import Header from './Header.svelte';
   import './styles.css';
+  // Your selected Skeleton theme:
+  import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
+
+  // This contains the bulk of Skeletons required styles:
+  import '@skeletonlabs/skeleton/styles/skeleton.css';
+
+  // Finally, your application's global stylesheet (sometimes labeled 'app.css')
+  import '../app.postcss';
+
+  // skeleton popups
+  import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
+  import { storePopup } from '@skeletonlabs/skeleton';
+
+  storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 </script>
 
 <div class="app">

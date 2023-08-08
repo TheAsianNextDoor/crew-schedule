@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 
 export const isMapDrawerHidden = writable(false);
+export const searchHistoryList = writable<string[]>([]);
 
 export const hideMapDrawer = () => {
   console.log('hide');
@@ -10,4 +11,16 @@ export const hideMapDrawer = () => {
 export const showMapDrawer = () => {
   console.log('show');
   isMapDrawerHidden.set(false);
+};
+
+export const addToHistoryList = (item: string) => {
+  searchHistoryList.update((value) => {
+    if (value.length > 5) {
+      value.pop();
+    }
+
+    value.unshift(item);
+
+    return value;
+  });
 };

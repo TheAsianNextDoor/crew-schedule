@@ -6,7 +6,7 @@
 </script>
 
 <div class="z-20">
-  <MapDrawer />
+  <MapDrawer sites={data.sites} />
 </div>
 <div class="w-full h-full absolute z-10">
   <Map sites={data.sites} />

@@ -2,7 +2,7 @@ import { getQuery } from '$lib/db/query';
 import type { PhaseTableType } from '$lib/db/schemas/phase';
 import type { SiteTableType } from '$lib/db/schemas/site';
 
-export type MapSites = Pick<
+export type MapSite = Pick<
   SiteTableType,
   | 'site_id'
   | 'current_phase_id'
@@ -34,5 +34,5 @@ export const retrieveMapSites = (companyId: string) => {
   `;
   const params = [companyId];
 
-  return getQuery<MapSites>(query, params);
+  return getQuery<MapSite>(query, params);
 };

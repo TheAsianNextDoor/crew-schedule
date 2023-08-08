@@ -1,7 +1,7 @@
 import type Leaflet from 'leaflet';
 
 import { showMapDrawer } from '../components/map-drawer-store';
-import type { MapSites } from '../queries/retrieve-map-sites';
+import type { MapSite } from '../queries/retrieve-map-sites';
 
 // const getMarkerIcon = (site: any) => {
 //   const LeafIcon = L.Icon.extend({
@@ -41,7 +41,7 @@ import type { MapSites } from '../queries/retrieve-map-sites';
 // };
 
 export const createMarker = (
-  site: MapSites,
+  site: MapSite,
   // setSiteStore: SetStoreFunction<MapItems>,
   marker: typeof Leaflet.marker,
   map: Leaflet.Map
