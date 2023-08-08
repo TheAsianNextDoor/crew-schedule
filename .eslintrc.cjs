@@ -38,7 +38,12 @@ module.exports = {
     'import/prefer-default-export': 'off',
 
     '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        fixStyle: 'inline-type-imports',
+      },
+    ],
 
     // disable rules for '_'
     '@typescript-eslint/no-unused-vars': [
