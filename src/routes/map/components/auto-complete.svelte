@@ -1,0 +1,57 @@
+<script lang="ts">
+  import {
+    Autocomplete,
+    type AutocompleteOption,
+    type PopupSettings,
+    popup,
+  } from '@skeletonlabs/skeleton';
+  import Menu from 'svelte-material-icons/Menu.svelte';
+
+  import type { MapSite } from '../queries/retrieve-map-sites';
+
+  export let sites: MapSite[];
+
+  let searchValue = '';
+  let popupSettings: PopupSettings = {
+    event: 'focus-click',
+    target: 'popupAutocomplete',
+    placement: 'bottom',
+  };
+
+  function onPopupDemoSelect(event: CustomEvent<AutocompleteOption>): void {
+    searchValue = event.detail.label;
+  }
+
+  const siteOptions: AutocompleteOption[] = sites.map((site) => ({
+    label: site.name,
+    value: site.site_id,
+    keywords: [site.job_number, site.status],
+  }));
+</script>
+
+<div class="text-token w-full p-4">
+  <div class="card flex items-center">
+    <Menu class="ml-4 hover:cursor-pointer" size="25px" />
+    <input
+      class="no-outline border-none bg-surface-100"
+      type="search"
+      name="autocomplete-search"
+      bind:value={searchValue}
+      placeholder="Search..."
+      use:popup={popupSettings}
+    />
+  </div>
+  <div data-popup="popupAutocomplete" class="card w-full max-h-52 overflow-hidden static">
+    <Autocomplete bind:input={searchValue} options={siteOptions} on:selection={onPopupDemoSelect} />
+  </div>
+</div>
+
+<style>
+  .no-outline:focus {
+    outline: none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+</style>
