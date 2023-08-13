@@ -1,0 +1,267 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  city_id String    @id @db.Uuid
+  city    String    @unique
+  Address Address[]
+
+  @@map("city")
+}
+
+model State {
+  state_id String    @id @db.Uuid
+  state    String    @unique
+  Address  Address[]
+
+  @@map("state")
+}
+
+model Country {
+  country_id String    @id @db.Uuid
+  country    String    @unique
+  Address    Address[]
+
+  @@map("country")
+}
+
+model ZipCode {
+  zip_code_id String    @id @db.Uuid
+  zip_code    String    @unique
+  Address     Address[]
+
+  @@map("zip_code")
+}
+
+model Address {
+  address_id  String     @id @db.Uuid
+  city        City       @relation(references: [city_id], fields: [city_id])
+  city_id     String     @db.Uuid
+  state       State      @relation(references: [state_id], fields: [state_id])
+  state_id    String     @db.Uuid
+  country     Country    @relation(references: [country_id], fields: [country_id])
+  country_id  String     @db.Uuid
+  zip_code    ZipCode    @relation(references: [zip_code_id], fields: [zip_code_id])
+  zip_code_id String     @db.Uuid
+  street      String
+  Customer    Customer[]
+  Client      Client[]
+
+  @@map("address")
+}
+
+model Customer {
+  customer_id     String           @id @db.Uuid
+  address         Address          @relation(references: [address_id], fields: [address_id])
+  address_id      String           @db.Uuid
+  customer_name   String
+  phone_number    String
+  email           String           @unique
+  created_at      DateTime         @default(now())
+  discipline      Discipline[]
+  role            Role[]
+  person          Person[]
+  crew            Crew[]
+  status          Status[]
+  phase           Phase[]
+  site            Site[]
+  Client          Client[]
+  Crew_assignment CrewAssignment[]
+
+  @@map("customer")
+}
+
+model Status {
+  status_id        String            @id @db.Uuid
+  customer         Customer          @relation(references: [customer_id], fields: [customer_id])
+  customer_id      String            @db.Uuid
+  status_name      String            @unique
+  created_at       DateTime          @default(now())
+  phase            Phase[]
+  phase_assignment PhaseAssignment[]
+  site             Site[]
+
+  @@map("status")
+}
+
+model Discipline {
+  discipline_id   String   @id @db.Uuid
+  customer        Customer @relation(fields: [customer_id], references: [customer_id])
+  customer_id     String   @db.Uuid
+  discipline_name String   @unique
+  created_at      DateTime @default(now())
+  crew            Crew[]
+  phase           Phase[]
+
+  @@map("discipline")
+}
+
+model Client {
+  client_id          String   @id @db.Uuid
+  address            Address  @relation(references: [address_id], fields: [address_id])
+  address_id         String   @db.Uuid
+  customer           Customer @relation(references: [customer_id], fields: [customer_id])
+  customer_id        String   @db.Uuid
+  client_name        String
+  contact_first_name String
+  contact_last_name  String
+  email              String   @unique
+  phone_number       String
+  created_at         DateTime @default(now())
+  site               Site[]
+
+  @@map("client")
+}
+
+model Role {
+  role_id     String   @id @db.Uuid
+  customer    Customer @relation(fields: [customer_id], references: [customer_id])
+  customer_id String   @db.Uuid
+  role_name   String   @unique
+  created_at  DateTime @default(now())
+  person      Person[]
+
+  @@map("role")
+}
+
+model Person {
+  person_id         String           @id @db.Uuid
+  customer          Customer         @relation(references: [customer_id], fields: [customer_id])
+  customer_id       String           @db.Uuid
+  role              Role             @relation(references: [role_id], fields: [role_id])
+  role_id           String           @db.Uuid
+  person_first_name String
+  person_last_name  String
+  phone_number      String?
+  email             String           @unique
+  is_foreman        Boolean          @default(false)
+  created_at        DateTime         @default(now())
+  profile           Profile[]
+  crew_assignment   CrewAssignment[]
+
+  @@map("person")
+}
+
+model Profile {
+  profile_id  String   @id @db.Uuid
+  profile_pic String?
+  person      Person   @relation(references: [person_id], fields: [person_id])
+  person_id   String   @db.Uuid
+  created_at  DateTime @default(now())
+
+  @@map("profile")
+}
+
+model Crew {
+  crew_id               String            @id @db.Uuid
+  customer              Customer          @relation(references: [customer_id], fields: [customer_id])
+  customer_id           String            @db.Uuid
+  discipline            Discipline        @relation(references: [discipline_id], fields: [discipline_id])
+  discipline_id         String            @db.Uuid
+  crew_name             String
+  size                  Int
+  weekly_hours          Float?
+  weekly_capacity       Float?
+  personnel_hourly_cost Float?
+  equipment_hourly_cost Float?
+  created_at            DateTime          @default(now())
+  crew_assignment       CrewAssignment[]
+  phase_assignment      PhaseAssignment[]
+
+  @@map("crew")
+}
+
+model CrewAssignment {
+  crew_assignment_id String   @id @db.Uuid
+  customer           Customer @relation(references: [customer_id], fields: [customer_id])
+  customer_id        String   @db.Uuid
+  person             Person   @relation(references: [person_id], fields: [person_id])
+  person_id          String   @db.Uuid
+  crew               Crew     @relation(references: [crew_id], fields: [crew_id])
+  crew_id            String   @db.Uuid
+  created_at         DateTime @default(now())
+
+  @@map("crew_assignment")
+}
+
+model Site {
+  site_id             String       @id @db.Uuid
+  customer            Customer     @relation(references: [customer_id], fields: [customer_id])
+  customer_id         String       @db.Uuid
+  client              Client       @relation(references: [client_id], fields: [client_id])
+  client_id           String       @db.Uuid
+  status              Status       @relation(references: [status_id], fields: [status_id])
+  status_id           String       @db.Uuid
+  job_number          String       @unique
+  site_name           String
+  location            Float[]
+  cluster_id          String?
+  estimated_hours     Float?
+  notes               String?
+  scheduled_date_time DateTime?
+  start_date_time     DateTime?
+  finished_date_time  DateTime?
+  created_at          DateTime     @default(now())
+  attachment          Attachment[]
+  phase               Phase[]
+
+  @@map("site")
+}
+
+model Attachment {
+  attachment_id   String   @id @db.Uuid
+  site            Site     @relation(references: [site_id], fields: [site_id])
+  site_id         String   @db.Uuid
+  attachment_path String
+  created_at      DateTime @default(now())
+
+  @@map("attachment")
+}
+
+model Phase {
+  phase_id          String            @id @db.Uuid
+  site              Site              @relation(references: [site_id], fields: [site_id])
+  site_id           String            @db.Uuid
+  sub_contractor    Customer?         @relation(references: [customer_id], fields: [sub_contractor_id])
+  sub_contractor_id String?           @db.Uuid
+  discipline        Discipline        @relation(references: [discipline_id], fields: [discipline_id])
+  discipline_id     String            @db.Uuid
+  status            Status            @relation(references: [status_id], fields: [status_id])
+  status_id         String            @db.Uuid
+  order             Int
+  estimated_hours   Float?
+  personnel_count   Int?
+  created_at        DateTime          @default(now())
+  phase_assignment  PhaseAssignment[]
+
+  @@map("phase")
+}
+
+model PhaseAssignment {
+  phase_assignment_id             String    @id @db.Uuid
+  phase                           Phase     @relation(references: [phase_id], fields: [phase_id])
+  phase_id                        String    @db.Uuid
+  crew                            Crew      @relation(references: [crew_id], fields: [crew_id])
+  crew_id                         String    @db.Uuid
+  status                          Status    @relation(references: [status_id], fields: [status_id])
+  status_id                       String    @db.Uuid
+  estimated_hours                 Float?
+  mobilization_from_location      Float[]
+  estimated_mobilization_duration Float?
+  actual_mobilization_duration    Float?
+  scheduled_date_time             DateTime?
+  start_date_time                 DateTime?
+  finished_date_time              DateTime?
+  created_at                      DateTime  @default(now())
+
+  @@map("phase_assignment")
+}

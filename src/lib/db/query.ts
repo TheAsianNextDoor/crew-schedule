@@ -19,6 +19,7 @@ export const queryDatabase = async <QueryResultType>(
   params?: any[],
   retryConfig = DEFAULT_RETRY_CONFIG
 ) => {
+  console.log('\n[QUERY]: ', query);
   return retry(async (_bail) => {
     try {
       const start = Date.now();
@@ -28,7 +29,7 @@ export const queryDatabase = async <QueryResultType>(
 
       console.log(`elapsed: ${Date.now() - start}`);
       if (process.env.NODE_ENV === 'development') {
-        console.log('row: ', res.rows);
+        // console.log('row: ', res.rows);
       }
 
       return res;

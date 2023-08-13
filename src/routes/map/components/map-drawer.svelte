@@ -7,11 +7,23 @@
 
   import type { MapSite } from '../queries/retrieve-map-sites';
   import AutoComplete from './auto-complete.svelte';
-  import { hideMapDrawer, isMapDrawerHidden, showMapDrawer } from './map-drawer-store';
+  import {
+    hideMapDrawer,
+    isMapDrawerHidden,
+    selectedEntity,
+    showMapDrawer,
+  } from './map-drawer-store';
 
   export let sites: MapSite[];
 
-  let hidden = false;
+  let hidden: boolean;
+  let selectedSite: MapSite;
+
+  const unsubSelectedSite = selectedEntity.subscribe((value) => {
+    selectedSite = value;
+  });
+  onDestroy(unsubSelectedSite);
+
   const unsub = isMapDrawerHidden.subscribe((value) => {
     hidden = value;
   });
@@ -29,6 +41,7 @@
         <ArrowLeft size="40px" />
       </button>
       <AutoComplete bind:sites />
+      <pre>{JSON.stringify(selectedSite, null, 2)}</pre>
     </div>
   {/if}
   <!-- Drawer -->

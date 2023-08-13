@@ -1,6 +1,11 @@
 import type Leaflet from 'leaflet';
+import { get } from 'svelte/store';
 
-import { showMapDrawer } from '../components/map-drawer-store';
+import {
+  isMapDrawerHidden,
+  setSelectedEntity,
+  showMapDrawer,
+} from '../components/map-drawer-store';
 import type { MapSite } from '../queries/retrieve-map-sites';
 
 // const getMarkerIcon = (site: any) => {
@@ -63,7 +68,12 @@ export const createMarker = (
     Status: ${site.status} <br>
   `
     )
-    .on('click', showMapDrawer);
+    .on('click', () => {
+      if (get(isMapDrawerHidden)) {
+        showMapDrawer();
+      }
+      setSelectedEntity(site);
+    });
 
   // setSiteStore(
   //   produce((list) => {

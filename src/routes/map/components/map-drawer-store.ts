@@ -1,7 +1,10 @@
 import { writable } from 'svelte/store';
 
+import type { MapSite } from '../queries/retrieve-map-sites';
+
 export const isMapDrawerHidden = writable(false);
 export const searchHistoryList = writable<string[]>([]);
+export const selectedEntity = writable<MapSite>();
 
 export const hideMapDrawer = () => {
   console.log('hide');
@@ -23,4 +26,8 @@ export const addToHistoryList = (item: string) => {
 
     return value;
   });
+};
+
+export const setSelectedEntity = (site: MapSite) => {
+  selectedEntity.set(site);
 };

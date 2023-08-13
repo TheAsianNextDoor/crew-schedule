@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const employeeTableSchema = z.object({
+export const personTableSchema = z.object({
   employee_id: z.string().uuid(),
   company_id: z.string().uuid(),
   first_name: z.string(),
@@ -10,4 +10,4 @@ export const employeeTableSchema = z.object({
   created_at: z.date(),
 });
 
-export type EmployeeTableType = z.infer<typeof employeeTableSchema>;
+export type EmployeeTableType = z.infer<typeof personTableSchema>;

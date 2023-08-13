@@ -4,15 +4,8 @@
  */
 export const up = async function (knex) {
   await knex.raw(`
-    CREATE TYPE "status" AS ENUM (
-      'pending',
-      'scheduled',
-      'in_progress',
-      'completed'
-    );
-    
-    CREATE TABLE "company" (
-      "company_id" uuid PRIMARY KEY,
+    CREATE TABLE "customer" (
+      "customer_id" uuid PRIMARY KEY,
       "name" text NOT NULL,
       "phone_number" text NOT NULL,
       "email" text NOT NULL,
@@ -22,7 +15,7 @@ export const up = async function (knex) {
     
     CREATE TABLE "discipline" (
       "discipline_id" uuid PRIMARY KEY,
-      "company_id" uuid NOT NULL,
+      "customer_id" uuid NOT NULL,
       "name" text NOT NULL
     );
     
@@ -40,23 +33,30 @@ export const up = async function (knex) {
     CREATE TABLE "profile" (
       "profile_id" uuid PRIMARY KEY,
       "profile_pic" text,
-      "employee_id" uuid NOT NULL,
+      "person_id" uuid NOT NULL,
       "created_at" timestamp DEFAULT (now())
     );
     
-    CREATE TABLE "employee" (
-      "employee_id" uuid UNIQUE PRIMARY KEY,
-      "company_id" uuid NOT NULL,
+    CREATE TABLE "role" (
+      "role_id" uuid PRIMARY KEY,
+      "role_name" text NOT NULL
+    );
+    
+    CREATE TABLE "person" (
+      "person_id" uuid UNIQUE PRIMARY KEY,
+      "customer_id" uuid NOT NULL,
+      "role_id" uuid NOT NULL,
       "first_name" text NOT NULL,
       "last_name" text NOT NULL,
       "phone_number" text,
       "email" text UNIQUE NOT NULL,
+      "is_foreman" boolean DEFAULT false,
       "created_at" timestamp DEFAULT (now())
     );
     
     CREATE TABLE "crew" (
       "crew_id" uuid PRIMARY KEY,
-      "company_id" uuid NOT NULL,
+      "customer_id" uuid NOT NULL,
       "discipline_id" uuid NOT NULL,
       "name" text NOT NULL,
       "size" integer DEFAULT 0,
@@ -69,10 +69,15 @@ export const up = async function (knex) {
     
     CREATE TABLE "crew_assignment" (
       "crew_assignment_id" uuid PRIMARY KEY,
-      "employee_id" uuid NOT NULL,
+      "person_id" uuid NOT NULL,
       "crew_id" uuid NOT NULL,
       "is_foreman" boolean DEFAULT false,
       "created_at" timestamp DEFAULT (now())
+    );
+    
+    CREATE TABLE "status" (
+      "status_id" uuid PRIMARY KEY,
+      "status_name" text NOT NULL
     );
     
     CREATE TABLE "phase" (
@@ -80,8 +85,8 @@ export const up = async function (knex) {
       "site_id" uuid NOT NULL,
       "sub_contractor_id" uuid,
       "discipline_id" uuid NOT NULL,
+      "status_id" uuid NOT NULL,
       "order" integer NOT NULL,
-      "status" status DEFAULT 'pending',
       "estimated_hours" float,
       "personnel_count" integer,
       "created_at" timestamp DEFAULT (now())
@@ -91,7 +96,7 @@ export const up = async function (knex) {
       "phase_assignment_id" uuid PRIMARY KEY,
       "phase_id" uuid NOT NULL,
       "crew_id" uuid NOT NULL,
-      "status" status DEFAULT 'pending',
+      "status_id" uuid NOT NULL,
       "estimated_hours" float,
       "mobilization_from_location" float[2],
       "estimated_mobilization_duration" float,
@@ -104,16 +109,15 @@ export const up = async function (knex) {
     
     CREATE TABLE "site" (
       "site_id" uuid PRIMARY KEY,
-      "company_id" uuid NOT NULL,
+      "customer_id" uuid NOT NULL,
       "client_id" uuid NOT NULL,
       "current_phase_id" uuid,
+      "status_id" uuid NOT NULL,
       "job_number" text NOT NULL,
       "name" text NOT NULL,
-      "status" status DEFAULT 'pending',
       "location" float[2] NOT NULL,
       "cluster_id" text,
       "estimated_hours" float,
-      "attachments" text[],
       "notes" text,
       "scheduled_date_time" timestamp,
       "start_date_time" timestamp,
@@ -121,37 +125,53 @@ export const up = async function (knex) {
       "created_at" timestamp DEFAULT (now())
     );
     
+    CREATE TABLE "attachment" (
+      "attachment_id" uuid PRIMARY KEY,
+      "site_id" uuid NOT NULL,
+      "attachment_path" text NOT NULL
+    );
+    
     CREATE INDEX ON "site" ("job_number");
     
-    ALTER TABLE "discipline" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
+    ALTER TABLE "discipline" ADD FOREIGN KEY ("customer_id") REFERENCES "customer" ("customer_id");
     
-    ALTER TABLE "profile" ADD FOREIGN KEY ("employee_id") REFERENCES "employee" ("employee_id");
+    ALTER TABLE "profile" ADD FOREIGN KEY ("person_id") REFERENCES "person" ("person_id");
     
-    ALTER TABLE "employee" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
+    ALTER TABLE "person" ADD FOREIGN KEY ("customer_id") REFERENCES "customer" ("customer_id");
     
-    ALTER TABLE "crew" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
+    ALTER TABLE "person" ADD FOREIGN KEY ("role_id") REFERENCES "role" ("role_id");
+    
+    ALTER TABLE "crew" ADD FOREIGN KEY ("customer_id") REFERENCES "customer" ("customer_id");
     
     ALTER TABLE "crew" ADD FOREIGN KEY ("discipline_id") REFERENCES "discipline" ("discipline_id");
     
-    ALTER TABLE "crew_assignment" ADD FOREIGN KEY ("employee_id") REFERENCES "employee" ("employee_id");
+    ALTER TABLE "crew_assignment" ADD FOREIGN KEY ("person_id") REFERENCES "person" ("person_id");
     
     ALTER TABLE "crew_assignment" ADD FOREIGN KEY ("crew_id") REFERENCES "crew" ("crew_id");
     
     ALTER TABLE "phase" ADD FOREIGN KEY ("site_id") REFERENCES "site" ("site_id");
     
-    ALTER TABLE "phase" ADD FOREIGN KEY ("sub_contractor_id") REFERENCES "company" ("company_id");
+    ALTER TABLE "phase" ADD FOREIGN KEY ("sub_contractor_id") REFERENCES "customer" ("customer_id");
     
     ALTER TABLE "phase" ADD FOREIGN KEY ("discipline_id") REFERENCES "discipline" ("discipline_id");
+    
+    ALTER TABLE "phase" ADD FOREIGN KEY ("status_id") REFERENCES "status" ("status_id");
     
     ALTER TABLE "phase_assignment" ADD FOREIGN KEY ("phase_id") REFERENCES "phase" ("phase_id");
     
     ALTER TABLE "phase_assignment" ADD FOREIGN KEY ("crew_id") REFERENCES "crew" ("crew_id");
     
-    ALTER TABLE "site" ADD FOREIGN KEY ("company_id") REFERENCES "company" ("company_id");
+    ALTER TABLE "phase_assignment" ADD FOREIGN KEY ("status_id") REFERENCES "status" ("status_id");
+    
+    ALTER TABLE "site" ADD FOREIGN KEY ("customer_id") REFERENCES "customer" ("customer_id");
     
     ALTER TABLE "site" ADD FOREIGN KEY ("client_id") REFERENCES "client" ("client_id");
     
-    ALTER TABLE "site" ADD FOREIGN KEY ("current_phase_id") REFERENCES "phase" ("phase_id");  
+    ALTER TABLE "site" ADD FOREIGN KEY ("current_phase_id") REFERENCES "phase" ("phase_id");
+    
+    ALTER TABLE "site" ADD FOREIGN KEY ("status_id") REFERENCES "status" ("status_id");
+    
+    ALTER TABLE "attachment" ADD FOREIGN KEY ("site_id") REFERENCES "site" ("site_id");
   `);
 };
 
@@ -160,16 +180,18 @@ export const up = async function (knex) {
  * @returns { Promise<void> }
  */
 export const down = async function (knex) {
-  await knex.raw('DROP TYPE IF EXISTS status CASCADE');
-  await knex.raw('DROP TABLE IF EXISTS company CASCADE');
+  await knex.raw('DROP TABLE IF EXISTS customer CASCADE');
   await knex.raw('DROP TABLE IF EXISTS discipline CASCADE');
   await knex.raw('DROP TABLE IF EXISTS client CASCADE');
+  await knex.raw('DROP TABLE IF EXISTS role CASCADE');
   await knex.raw('DROP TABLE IF EXISTS profile CASCADE');
-  await knex.raw('DROP TABLE IF EXISTS employee CASCADE');
+  await knex.raw('DROP TABLE IF EXISTS person CASCADE');
   await knex.raw('DROP TABLE IF EXISTS crew CASCADE');
   await knex.raw('DROP TABLE IF EXISTS crew_member CASCADE');
   await knex.raw('DROP TABLE IF EXISTS phase_assignment CASCADE');
+  await knex.raw('DROP TABLE IF EXISTS status CASCADE');
   await knex.raw('DROP TABLE IF EXISTS phase CASCADE');
   await knex.raw('DROP TABLE IF EXISTS crew_assignment CASCADE');
   await knex.raw('DROP TABLE IF EXISTS site CASCADE');
+  await knex.raw('DROP TABLE IF EXISTS attachment CASCADE');
 };
