@@ -23,9 +23,9 @@
   }
 
   const siteOptions: AutocompleteOption[] = sites.map((site) => ({
-    label: site.name,
+    label: site.site_name,
     value: site.site_id,
-    keywords: [site.job_number, site.status],
+    keywords: [site.job_number, site.status_name],
   }));
 </script>
 

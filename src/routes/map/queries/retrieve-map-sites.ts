@@ -1,4 +1,4 @@
-import { getQuery } from '$lib/db/query';
+import { queryDb } from '$lib/db/query';
 import type { Client, Site, Status } from '@prisma/client';
 
 export type MapSite = Pick<
@@ -15,7 +15,7 @@ export type MapSite = Pick<
   Pick<Client, 'client_name'>;
 
 export const retrieveMapSites = async (customerId: string) =>
-  getQuery<MapSite>(
+  queryDb.findMany<MapSite>(
     `
       SELECT 
         site.site_id, 
@@ -32,7 +32,7 @@ export const retrieveMapSites = async (customerId: string) =>
         ON site.client_id = client.client_id
       LEFT JOIN status
         on site.status_id = status.status_id
-      WHERE site.customer_id =  $1
+      WHERE site.customer_id = $1
     `,
     [customerId]
   );

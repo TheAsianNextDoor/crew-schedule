@@ -52,7 +52,7 @@ export const createMarker = (
   map: Leaflet.Map
 ) => {
   // const myMarker = marker(site.location, { icon: getMarkerIcon(site) });
-  const myMarker = marker(site.location);
+  const myMarker = marker(site.location as [number, number]);
 
   // myMarker.on('click', () => {
   //   setIsDrawerOpen(true);
@@ -63,16 +63,19 @@ export const createMarker = (
     .addTo(map)
     .bindTooltip(
       `
-    Name: ${site.name} <br>
+    Name: ${site.site_name} <br>
     Job Number: ${site.job_number} <br>
-    Status: ${site.status} <br>
+    Status: ${site.status_name} <br>
   `
     )
-    .on('click', () => {
+    .on('click', async () => {
       if (get(isMapDrawerHidden)) {
         showMapDrawer();
       }
-      setSelectedEntity(site);
+      const res = await fetch(`/api/map-drawer-info/${site.site_id}`);
+      const data = await res.json();
+
+      setSelectedEntity(data);
     });
 
   // setSiteStore(
