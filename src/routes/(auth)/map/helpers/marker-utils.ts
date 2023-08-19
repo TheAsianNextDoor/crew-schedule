@@ -1,12 +1,12 @@
 import type Leaflet from 'leaflet';
 import { get } from 'svelte/store';
 
+import type { MapSite } from '../../(auth)/map/queries/retrieve-map-sites';
 import {
   isMapDrawerHidden,
   setSelectedEntity,
   showMapDrawer,
 } from '../components/map-drawer-store';
-import type { MapSite } from '../queries/retrieve-map-sites';
 
 // const getMarkerIcon = (site: any) => {
 //   const LeafIcon = L.Icon.extend({
