@@ -102,8 +102,8 @@ export const seed = async function (knex) {
   await knex.raw(`
     INSERT INTO "role" ("role_id", "role_name", "customer_id")
     VALUES 
-      ('${standard}', 'standard', '${customer1}'),
-      ('${admin}', 'admin', '${customer1}');
+      ('${standard}', 'STANDARD', '${customer1}'),
+      ('${admin}', 'ADMIN', '${customer1}');
   `);
 
   const person1 = '2ab8189a-4b8d-431e-97d5-7e8582ab7453';

@@ -1,8 +1,10 @@
 import { queryDb } from '$lib/db/query';
 import type { Person } from '@prisma/client';
 
+type EmployeeInfo = Person & { role_name: string };
+
 export const retrieveEmployeeInfo = (email: string) =>
-  queryDb.findFirst<Person>(
+  queryDb.findFirst<EmployeeInfo>(
     `
     SELECT 
       person.*,
