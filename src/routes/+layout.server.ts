@@ -1,22 +1,12 @@
 import type { LayoutServerLoad } from './$types';
 import { retrieveEmployeeInfo } from './login/retrieve-employee-info';
 
-export const load: LayoutServerLoad = async (event) => {
-  const session = await event.locals.getSession();
+export const load: LayoutServerLoad = async ({ locals: { getSession } }) => {
+  const session = await getSession();
+  const employee = await retrieveEmployeeInfo(session.user.user_metadata.email);
 
-  console.log('sesh: ', session);
-
-  if (!session?.user?.email) {
-    return {};
-  }
-
-  const employeeInfo = await retrieveEmployeeInfo(session.user.email);
   return {
-    employee: {
-      ...employeeInfo,
-    },
-    session: {
-      ...session,
-    },
+    employee,
+    session,
   };
 };

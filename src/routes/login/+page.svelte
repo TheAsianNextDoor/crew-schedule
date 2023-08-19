@@ -1,23 +1,36 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { signIn, signOut } from '@auth/sveltekit/client';
+  export let data;
 
-  console.log('hello', $page.data.session);
+  $: ({ session, supabase } = data);
+  console.log('hello', session);
+
+  const LoginWithGithub = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+    });
+  };
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
 </script>
 
 <h1>SvelteKit Auth Example</h1>
 <p>
-  {#if $page.data.session}
-    {#if $page.data.session.user?.image}
-      <span style="background-image: url('{$page.data.session.user.image}')" class="avatar" />
+  {#if session}
+    {#if session.user?.user_metadata.avatar_url}
+      <span
+        style="background-image: url('{session.user.user_metadata.avatar_url}')"
+        class="avatar"
+      />
     {/if}
     <span class="signedInText">
       <small>Signed in as</small><br />
-      <strong>{$page.data.session.user?.name ?? 'User'}</strong>
+      <strong>{session.user?.user_metadata.full_name ?? 'User'}</strong>
     </span>
     <button on:click={() => signOut()} class="button">Sign out</button>
   {:else}
     <span class="notSignedInText">You are not signed in</span>
-    <button on:click={() => signIn('github')}>Sign In with GitHub</button>
+    <button on:click={LoginWithGithub}>Sign In with GitHub</button>
   {/if}
 </p>
