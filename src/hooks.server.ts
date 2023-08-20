@@ -1,14 +1,10 @@
-import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
-import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
+import { initSupabaseServerClient, supabaseServerClient } from '$lib/supabase';
 
 import type { GithubSession } from './app';
 
 export const handle = async ({ event, resolve }) => {
-  event.locals.supabase = createSupabaseServerClient({
-    supabaseUrl: PUBLIC_SUPABASE_URL,
-    supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
-    event,
-  });
+  initSupabaseServerClient(event);
+  event.locals.supabase = supabaseServerClient;
 
   event.locals.getSession = async () => {
     const {

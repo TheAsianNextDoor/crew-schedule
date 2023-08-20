@@ -4,5 +4,6 @@
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
   },
-  "typescript.tsserver.log": "off"
+  "typescript.tsserver.log": "off",
+  "cSpell.words": ["supabase"]
 }

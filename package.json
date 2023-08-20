@@ -5,6 +5,7 @@
   "scripts": {
     "build": "vite build",
     "db:reset": "cross-env NODE_ENV=development knex migrate:down && npx cross-env NODE_ENV=development knex migrate:up && npx cross-env NODE_ENV=development knex seed:run",
+    "db:prisma": "cross-env NODE_ENV=development npx prisma migrate reset && cross-env NODE_ENV=development npx prisma migrate dev && cross-env NODE_ENV=development npx knex seed:run",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "dev": "cross-env NODE_ENV=development vite dev",

@@ -16,6 +16,7 @@ export default {
       database: process.env.POSTGRES_DATABASE,
       user: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
+      port: process.env.POSTGRES_PORT,
     },
     migrations: {
       directory: join(__dirname, 'migrations'),
