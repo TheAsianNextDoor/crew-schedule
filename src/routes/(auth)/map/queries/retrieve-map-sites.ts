@@ -6,6 +6,7 @@ export type MapSite = Pick<
   | 'site_id'
   | 'job_number'
   | 'site_name'
+  | 'estimated_hours'
   | 'status_id'
   | 'location'
   | 'start_date_time'
@@ -21,6 +22,7 @@ export const retrieveMapSites = async (customerId: string) =>
         site.site_id, 
         site.job_number, 
         site.site_name,
+        site.estimated_hours,
         site.location,
         site.scheduled_date_time,
         site.start_date_time,
