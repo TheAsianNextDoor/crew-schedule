@@ -49,17 +49,12 @@
 
 <style>
   .app {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    height: 100%;
   }
 
   main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     width: 100%;
-    margin: 0 auto;
+    height: 100%;
   }
 
   /* footer {
