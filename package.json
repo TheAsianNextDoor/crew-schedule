@@ -4,8 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "db:reset": "cross-env NODE_ENV=development knex migrate:down && npx cross-env NODE_ENV=development knex migrate:up && npx cross-env NODE_ENV=development knex seed:run",
-    "db:prisma": "npx prisma migrate reset && npx prisma generate",
+    "db:reset": "del-cli ./prisma/migrations && prisma migrate reset --force && prisma db push && tsx ./prisma/seed.ts",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "dev": "vite dev",
@@ -48,6 +47,7 @@
     "@vitest/ui": "^0.34.2",
     "autoprefixer": "^10.4.15",
     "cross-env": "^7.0.3",
+    "del-cli": "^5.0.1",
     "eslint": "^8.47.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -71,8 +71,5 @@
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
     "vitest": "^0.34.2"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   }
 }
