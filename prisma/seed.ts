@@ -104,7 +104,7 @@ const main = async () => {
       {
         status_id: in_progress,
         customer_id: customer1,
-        status_name: 'IN PROGRESS',
+        status_name: 'IN_PROGRESS',
       },
       {
         status_id: completed,
