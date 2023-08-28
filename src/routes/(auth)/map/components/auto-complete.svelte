@@ -5,7 +5,6 @@
     type PopupSettings,
     popup,
   } from '@skeletonlabs/skeleton';
-  import Filter from 'svelte-material-icons/Filter.svelte';
   import Menu from 'svelte-material-icons/Menu.svelte';
 
   import type { MapSite } from '../queries/retrieve-map-sites';
@@ -42,15 +41,6 @@
         placeholder="Search..."
         use:popup={popupSettings}
       />
-    </div>
-    <div
-      use:popup={{
-        event: 'click',
-        target: 'filterPopup',
-        placement: 'bottom',
-      }}
-    >
-      <Filter size="30px" class="cursor-pointer" />
     </div>
   </div>
   <div data-popup="popupAutocomplete" class="card w-full max-h-52 overflow-hidden static">

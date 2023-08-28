@@ -35,24 +35,19 @@
   {#if !hidden}
     <div
       transition:fly={{ duration: 300, easing: sineIn, x: -384, opacity: 100 }}
-      class="w-96 absolute bg-white h-screen m-0 z-20"
+      class="w-96 absolute bg-white h-screen m-0 z-30"
     >
       <button class="mt-8 absolute left-full bg-white" on:click={hideMapDrawer}>
         <ArrowLeft size="40px" />
       </button>
       <AutoComplete bind:sites />
-      <div class="card p-4 w-72 shadow-xl" data-popup="filterPopup">
-        <div><p>Filters</p></div>
-        <input type="date" />
-        <div class="arrow bg-surface-100-800-token" />
-      </div>
       <pre>{JSON.stringify(selectedSite, null, 2)}</pre>
     </div>
   {/if}
   <!-- Drawer -->
 
   {#if hidden}
-    <button class="mt-8 absolute bg-white z-10" on:click={showMapDrawer}>
+    <button class="mt-8 absolute bg-white z-20" on:click={showMapDrawer}>
       <ArrowRight size="40px" />
     </button>
   {/if}
