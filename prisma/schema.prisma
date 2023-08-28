@@ -7,9 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
   // schemas   = ["public", "auth"]
 }
 
@@ -197,25 +197,26 @@ model CrewAssignment {
 }
 
 model Site {
-  site_id             String       @id @db.Uuid
-  customer            Customer     @relation(references: [customer_id], fields: [customer_id])
-  customer_id         String       @db.Uuid
-  client              Client       @relation(references: [client_id], fields: [client_id])
-  client_id           String       @db.Uuid
-  status              Status       @relation(references: [status_id], fields: [status_id])
-  status_id           String       @db.Uuid
-  job_number          String       @unique
-  site_name           String
-  location            Float[]
-  cluster_id          String?
-  estimated_hours     Float?
-  notes               String?
-  scheduled_date_time DateTime?
-  start_date_time     DateTime?
-  finished_date_time  DateTime?
-  created_at          DateTime     @default(now())
-  attachment          Attachment[]
-  phase               Phase[]
+  site_id                      String       @id @db.Uuid
+  customer                     Customer     @relation(references: [customer_id], fields: [customer_id])
+  customer_id                  String       @db.Uuid
+  client                       Client       @relation(references: [client_id], fields: [client_id])
+  client_id                    String       @db.Uuid
+  status                       Status       @relation(references: [status_id], fields: [status_id])
+  status_id                    String       @db.Uuid
+  job_number                   String       @unique
+  site_name                    String
+  location                     Float[]
+  cluster_id                   String?
+  estimated_hours              Float?
+  notes                        String?
+  scheduled_start_date_time    DateTime?
+  scheduled_finished_date_time DateTime?
+  actual_start_date_time       DateTime?
+  actual_finished_date_time    DateTime?
+  created_at                   DateTime     @default(now())
+  attachment                   Attachment[]
+  phase                        Phase[]
 
   @@map("site")
 }
@@ -261,9 +262,10 @@ model PhaseAssignment {
   mobilization_from_location      Float[]
   estimated_mobilization_duration Float?
   actual_mobilization_duration    Float?
-  scheduled_date_time             DateTime?
-  start_date_time                 DateTime?
-  finished_date_time              DateTime?
+  scheduled_start_date_time       DateTime?
+  scheduled_finished_date_time    DateTime?
+  actual_start_date_time          DateTime?
+  actual_finished_date_time       DateTime?
   created_at                      DateTime  @default(now())
 
   @@map("phase_assignment")

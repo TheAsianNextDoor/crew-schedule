@@ -7,10 +7,9 @@ export type MapSite = Pick<
   | 'job_number'
   | 'site_name'
   | 'estimated_hours'
-  | 'status_id'
   | 'location'
-  | 'start_date_time'
-  | 'finished_date_time'
+  | 'scheduled_start_date_time'
+  | 'scheduled_finished_date_time'
 > &
   Pick<Status, 'status_name'> &
   Pick<Client, 'client_name'>;
@@ -24,9 +23,8 @@ export const retrieveMapSites = async (customerId: string) =>
         site.site_name,
         site.estimated_hours,
         site.location,
-        site.scheduled_date_time,
-        site.start_date_time,
-        site.finished_date_time,
+        site.scheduled_start_date_time,
+        site.scheduled_finished_date_time,
         status.status_name,
         client.client_name
       FROM site
@@ -36,5 +34,5 @@ export const retrieveMapSites = async (customerId: string) =>
         on site.status_id = status.status_id
       WHERE site.customer_id = $1
     `,
-    [customerId]
+    [customerId],
   );
