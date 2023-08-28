@@ -5,9 +5,11 @@
   export let data;
 </script>
 
-<div class="z-20">
-  <MapDrawer sites={data.sites} />
-</div>
-<div class="w-full h-full absolute z-10">
-  <Map sites={data.sites} />
+<div class="z-0">
+  <div class="z-20 relative">
+    <MapDrawer sites={data.sites} />
+  </div>
+  <div class="w-full h-full z-10 absolute">
+    <Map sites={data.sites} />
+  </div>
 </div>

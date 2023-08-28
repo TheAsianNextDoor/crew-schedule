@@ -42,11 +42,8 @@
   });
 </script>
 
-<div bind:this={mapElement} />
+<div class="h-full" bind:this={mapElement} />
 
 <style>
   @import 'leaflet/dist/leaflet.css';
-  div {
-    height: 100%;
-  }
 </style>
