@@ -2,18 +2,18 @@ import { writable } from 'svelte/store';
 
 import type { MapSite } from '../queries/retrieve-map-sites';
 
-export const isMapDrawerHidden = writable(false);
+export const isMapMenuHidden = writable(false);
 export const searchHistoryList = writable<string[]>([]);
 export const selectedEntity = writable<MapSite>();
 
-export const hideMapDrawer = () => {
+export const hideMapMenu = () => {
   console.log('hide');
-  isMapDrawerHidden.set(true);
+  isMapMenuHidden.set(true);
 };
 
-export const showMapDrawer = () => {
+export const showMapMenu = () => {
   console.log('show');
-  isMapDrawerHidden.set(false);
+  isMapMenuHidden.set(false);
 };
 
 export const addToHistoryList = (item: string) => {
