@@ -29,13 +29,12 @@
   <!-- Menu -->
   {#if !hidden}
     <div transition:fly={{ duration: 300, easing: sineIn, x: -408, opacity: 100 }}>
-      <div class="sidebar-width overflow-y-auto absolute bg-white h-screen m-0">
+      <div class="sidebar-width overflow-y-auto absolute bg-white h-screen">
         <AutoComplete bind:sites />
         <pre>{JSON.stringify(selectedSite, null, 2)}</pre>
       </div>
-
-      <button class="close-arrow mt-8 absolute bg-white" on:click={hideMapMenu}>
-        <MenuLeft size="40px" />
+      <button class="arrow right-of-menu" on:click={hideMapMenu}>
+        <MenuLeft size="23px" />
       </button>
     </div>
   {/if}
@@ -44,10 +43,10 @@
   {#if hidden}
     <button
       transition:fly={{ duration: 300, easing: sineIn, x: 408, opacity: 0 }}
-      class="mt-8 absolute bg-white"
+      class="arrow"
       on:click={showMapMenu}
     >
-      <MenuRight size="40px" />
+      <MenuRight size="23px" />
     </button>
   {/if}
 </div>
@@ -55,9 +54,21 @@
 <style>
   .sidebar-width {
     width: 408px;
+    border-right: 1px solid gray;
   }
 
-  .close-arrow {
+  .arrow {
+    border-radius: 0 8px 8px 0;
+    border-left: 1px solid gray;
+    height: 3rem;
+    width: 1.5rem;
+    position: absolute;
+    background-color: white;
+    display: block;
+    top: calc(50vh - 3rem);
+  }
+
+  .right-of-menu {
     left: 408px;
   }
 </style>
