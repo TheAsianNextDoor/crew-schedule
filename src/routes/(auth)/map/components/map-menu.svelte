@@ -6,33 +6,29 @@
   import { fly } from 'svelte/transition';
 
   import type { MapSite } from '../queries/retrieve-map-sites';
-  import AutoComplete from './auto-complete.svelte';
-  import { hideMapMenu, isMapMenuHidden, selectedEntity, showMapMenu } from './map-menu-store';
+  import { hideMapMenu, isMapMenuVisible, showMapMenu } from './map-menu-store';
+  import MapSearchInfo from './map-search-info.svelte';
+  import MapFilter from './map-filter.svelte';
 
   export let sites: MapSite[];
 
-  let hidden: boolean;
-  let selectedSite: MapSite;
+  let isVisible: boolean;
 
-  const unsubSelectedSite = selectedEntity.subscribe((value) => {
-    selectedSite = value;
-  });
-  onDestroy(unsubSelectedSite);
-
-  const unsub = isMapMenuHidden.subscribe((value) => {
-    hidden = value;
+  const unsub = isMapMenuVisible.subscribe((value) => {
+    isVisible = value;
   });
   onDestroy(unsub);
+
+  const getFlyTransition = (x: number) => ({ duration: 300, easing: sineIn, x, opacity: 100 });
 </script>
 
 <div>
   <!-- Menu -->
-  {#if !hidden}
-    <div transition:fly={{ duration: 300, easing: sineIn, x: -408, opacity: 100 }}>
-      <div class="sidebar-width overflow-y-auto absolute bg-white h-screen">
-        <AutoComplete bind:sites />
-        <pre>{JSON.stringify(selectedSite, null, 2)}</pre>
-      </div>
+  {#if isVisible}
+    <div transition:fly={getFlyTransition(-408)}>
+      <MapSearchInfo bind:sites />
+      <MapFilter />
+      <button class="right-of-menu absolute filter ml-10 mt-5"> Filters </button>
       <button class="arrow right-of-menu" on:click={hideMapMenu}>
         <MenuLeft size="23px" />
       </button>
@@ -40,23 +36,14 @@
   {/if}
   <!-- Menu -->
 
-  {#if hidden}
-    <button
-      transition:fly={{ duration: 300, easing: sineIn, x: 408, opacity: 0 }}
-      class="arrow"
-      on:click={showMapMenu}
-    >
+  {#if !isVisible}
+    <button transition:fly={getFlyTransition(408)} class="arrow" on:click={showMapMenu}>
       <MenuRight size="23px" />
     </button>
   {/if}
 </div>
 
 <style>
-  .sidebar-width {
-    width: 408px;
-    border-right: 1px solid gray;
-  }
-
   .arrow {
     border-radius: 0 8px 8px 0;
     border-left: 1px solid gray;

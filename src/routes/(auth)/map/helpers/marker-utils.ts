@@ -1,12 +1,8 @@
 import type Leaflet from 'leaflet';
 import { get } from 'svelte/store';
 
-import type { MapSite } from '../../(auth)/map/queries/retrieve-map-sites';
-import {
-  isMapDrawerHidden,
-  setSelectedEntity,
-  showMapDrawer,
-} from '../components/map-drawer-store';
+import type { MapSite } from '../../map/queries/retrieve-map-sites';
+import { isMapMenuVisible, setSelectedEntity, showMapMenu } from '../components/map-menu-store';
 
 // const getMarkerIcon = (site: any) => {
 //   const LeafIcon = L.Icon.extend({
@@ -49,7 +45,7 @@ export const createMarker = (
   site: MapSite,
   // setSiteStore: SetStoreFunction<MapItems>,
   marker: typeof Leaflet.marker,
-  map: Leaflet.Map
+  map: Leaflet.Map,
 ) => {
   // const myMarker = marker(site.location, { icon: getMarkerIcon(site) });
   const myMarker = marker(site.location as [number, number]);
@@ -66,16 +62,16 @@ export const createMarker = (
     Name: ${site.site_name} <br>
     Job Number: ${site.job_number} <br>
     Status: ${site.status_name} <br>
-  `
+  `,
     )
     .on('click', async () => {
-      if (get(isMapDrawerHidden)) {
-        showMapDrawer();
+      if (get(isMapMenuVisible)) {
+        showMapMenu();
       }
-      const res = await fetch(`/api/map-drawer-info/${site.site_id}`);
-      const data = await res.json();
+      // const res = await fetch(`/api/map-drawer-info/${site.site_id}`);
+      // const data = await res.json();
 
-      setSelectedEntity(data);
+      setSelectedEntity(site);
     });
 
   // setSiteStore(
