@@ -2,33 +2,61 @@
   import { onDestroy } from 'svelte';
   import MenuLeft from 'svelte-material-icons/MenuLeft.svelte';
   import MenuRight from 'svelte-material-icons/MenuRight.svelte';
+  import Filter from 'svelte-material-icons/FilterOutline.svelte';
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
   import type { MapSite } from '../queries/retrieve-map-sites';
-  import { hideMapMenu, isMapMenuVisible, showMapMenu } from './map-menu-store';
+  import {
+    hideMapMenu,
+    isMapMenuFilterVisible,
+    isMapMenuVisible,
+    showMapMenu,
+    showMapMenuFilter,
+  } from './map-menu-store';
   import MapSearchInfo from './map-search-info.svelte';
   import MapFilter from './map-filter.svelte';
 
   export let sites: MapSite[];
 
-  let isVisible: boolean;
+  let isMenuVisible: boolean;
+  let isMenuFilterVisible: boolean;
 
-  const unsub = isMapMenuVisible.subscribe((value) => {
-    isVisible = value;
+  const unsubMenu = isMapMenuVisible.subscribe((value) => {
+    isMenuVisible = value;
   });
-  onDestroy(unsub);
+
+  const unsubFilter = isMapMenuFilterVisible.subscribe((value) => {
+    isMenuFilterVisible = value;
+  });
+
+  onDestroy(unsubMenu);
+  onDestroy(unsubFilter);
 
   const getFlyTransition = (x: number) => ({ duration: 300, easing: sineIn, x, opacity: 100 });
 </script>
 
 <div>
   <!-- Menu -->
-  {#if isVisible}
+  {#if isMenuVisible}
     <div transition:fly={getFlyTransition(-408)}>
-      <MapSearchInfo bind:sites />
-      <MapFilter />
-      <button class="right-of-menu absolute filter ml-10 mt-5"> Filters </button>
+      <div class="sidebar-width overflow-y-auto absolute bg-white h-screen">
+        {#if isMenuFilterVisible}
+          <MapFilter />
+        {:else}
+          <MapSearchInfo bind:sites />
+        {/if}
+      </div>
+
+      {#if !isMenuFilterVisible}
+        <button
+          class="flex justify-center items-center right-of-menu filter-button absolute filter w-20 h-8 rounded-lg bg-slate-50 m-6"
+          on:click={showMapMenuFilter}
+        >
+          <Filter size="18px" />
+          Filters
+        </button>
+      {/if}
       <button class="arrow right-of-menu" on:click={hideMapMenu}>
         <MenuLeft size="23px" />
       </button>
@@ -36,7 +64,7 @@
   {/if}
   <!-- Menu -->
 
-  {#if !isVisible}
+  {#if !isMenuVisible}
     <button transition:fly={getFlyTransition(408)} class="arrow" on:click={showMapMenu}>
       <MenuRight size="23px" />
     </button>
@@ -44,6 +72,11 @@
 </div>
 
 <style>
+  .sidebar-width {
+    width: 408px;
+    border-right: 1px solid gray;
+  }
+
   .arrow {
     border-radius: 0 8px 8px 0;
     border-left: 1px solid gray;

@@ -8,13 +8,19 @@ export const searchHistoryList = writable<string[]>([]);
 export const selectedEntity = writable<MapSite>();
 
 export const hideMapMenu = () => {
-  console.log('hide');
   isMapMenuVisible.set(false);
 };
 
 export const showMapMenu = () => {
-  console.log('show');
   isMapMenuVisible.set(true);
+};
+
+export const hideMapMenuFilter = () => {
+  isMapMenuFilterVisible.set(false);
+};
+
+export const showMapMenuFilter = () => {
+  isMapMenuFilterVisible.set(true);
 };
 
 export const addToHistoryList = (item: string) => {
