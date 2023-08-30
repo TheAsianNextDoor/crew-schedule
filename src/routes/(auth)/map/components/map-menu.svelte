@@ -7,26 +7,21 @@
   import { fly } from 'svelte/transition';
 
   import type { MapSite } from '../queries/retrieve-map-sites';
-  import {
-    hideMapMenu,
-    isMapMenuFilterVisible,
-    isMapMenuVisible,
-    showMapMenu,
-    showMapMenuFilter,
-  } from './map-menu-store';
+  import { mapFilterSubscribe, showMapFilter } from '../stores/map-filter-store';
   import MapSearchInfo from './map-search-info.svelte';
   import MapFilter from './map-filter.svelte';
+  import { hideMapMenu, showMapMenu, mapMenuSubscribe } from '../stores/map-menu-store';
 
   export let sites: MapSite[];
 
   let isMenuVisible: boolean;
   let isMenuFilterVisible: boolean;
 
-  const unsubMenu = isMapMenuVisible.subscribe((value) => {
+  const unsubMenu = mapMenuSubscribe((value) => {
     isMenuVisible = value;
   });
 
-  const unsubFilter = isMapMenuFilterVisible.subscribe((value) => {
+  const unsubFilter = mapFilterSubscribe((value) => {
     isMenuFilterVisible = value;
   });
 
@@ -51,7 +46,7 @@
       {#if !isMenuFilterVisible}
         <button
           class="flex justify-center items-center right-of-menu filter-button absolute filter w-20 h-8 rounded-lg bg-slate-50 m-6"
-          on:click={showMapMenuFilter}
+          on:click={showMapFilter}
         >
           <Filter size="18px" />
           Filters

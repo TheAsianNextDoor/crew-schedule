@@ -1,14 +1,8 @@
 import type Leaflet from 'leaflet';
-import { get } from 'svelte/store';
 
 import type { MapSite } from '../../map/queries/retrieve-map-sites';
-import {
-  hideMapMenuFilter,
-  isMapMenuFilterVisible,
-  isMapMenuVisible,
-  setSelectedEntity,
-  showMapMenu,
-} from '../components/map-menu-store';
+import { hideMapFilter, isMapFilterVisible } from '../stores/map-filter-store';
+import { isMapMenuVisible, setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
 
 // const getMarkerIcon = (site: any) => {
 //   const LeafIcon = L.Icon.extend({
@@ -71,12 +65,12 @@ export const createMarker = (
   `,
     )
     .on('click', async () => {
-      if (!get(isMapMenuVisible)) {
+      if (!isMapMenuVisible()) {
         showMapMenu();
       }
 
-      if (get(isMapMenuFilterVisible)) {
-        hideMapMenuFilter();
+      if (isMapFilterVisible()) {
+        hideMapFilter();
       }
       // const res = await fetch(`/api/map-drawer-info/${site.site_id}`);
       // const data = await res.json();

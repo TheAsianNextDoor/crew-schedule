@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { hideMapMenuFilter } from './map-menu-store';
+  import { hideMapFilter } from '../stores/map-filter-store';
   import LeftArrow from 'svelte-material-icons/ArrowLeft.svelte';
 
   const saveAndClose = () => {
-    hideMapMenuFilter();
+    hideMapFilter();
   };
 
   const clearAndClose = () => {
-    hideMapMenuFilter();
+    hideMapFilter();
   };
 </script>
 
