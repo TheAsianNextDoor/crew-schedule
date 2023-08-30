@@ -1,7 +1,7 @@
 import { queryDb } from '$lib/db/query';
 import type { Person } from '@prisma/client';
 
-type EmployeeInfo = Person & { role_name: string };
+export type EmployeeInfo = Person & { role_name: string };
 
 export const retrieveEmployeeInfo = (email: string) =>
   queryDb.findFirst<EmployeeInfo>(
@@ -14,5 +14,5 @@ export const retrieveEmployeeInfo = (email: string) =>
       ON person.role_id = "role".role_id
     WHERE email = $1 
   `,
-    [email]
+    [email],
   );
