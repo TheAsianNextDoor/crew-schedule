@@ -137,19 +137,20 @@ model Role {
 }
 
 model Person {
-  person_id         String           @id @db.Uuid
-  customer          Customer         @relation(references: [customer_id], fields: [customer_id])
-  customer_id       String           @db.Uuid
-  role              Role             @relation(references: [role_id], fields: [role_id])
-  role_id           String           @db.Uuid
+  person_id         String            @id @db.Uuid
+  customer          Customer          @relation(references: [customer_id], fields: [customer_id])
+  customer_id       String            @db.Uuid
+  role              Role              @relation(references: [role_id], fields: [role_id])
+  role_id           String            @db.Uuid
   person_first_name String
   person_last_name  String
   phone_number      String?
-  email             String           @unique
-  is_foreman        Boolean          @default(false)
-  created_at        DateTime         @default(now())
+  email             String            @unique
+  is_foreman        Boolean           @default(false)
+  created_at        DateTime          @default(now())
   profile           Profile[]
   crew_assignment   CrewAssignment[]
+  PhaseAssignment   PhaseAssignment[]
 
   @@map("person")
 }
@@ -258,6 +259,8 @@ model PhaseAssignment {
   crew_id                         String    @db.Uuid
   status                          Status    @relation(references: [status_id], fields: [status_id])
   status_id                       String    @db.Uuid
+  foreman_id                      String    @db.Uuid
+  foreman                         Person    @relation(references: [person_id], fields: [foreman_id])
   estimated_hours                 Float?
   mobilization_from_location      Float[]
   estimated_mobilization_duration Float?
