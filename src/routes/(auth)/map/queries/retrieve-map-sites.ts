@@ -31,7 +31,7 @@ export const retrieveMapSites = async (customerId: string) =>
       LEFT JOIN client
         ON site.client_id = client.client_id
       LEFT JOIN status
-        on site.status_id = status.status_id
+        ON site.status_id = status.status_id
       WHERE site.customer_id = $1
     `,
     [customerId],
