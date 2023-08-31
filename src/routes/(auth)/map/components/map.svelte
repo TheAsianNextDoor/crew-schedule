@@ -4,8 +4,11 @@
   import { onDestroy, onMount } from 'svelte';
 
   import { createMarker } from '../helpers/marker-utils';
+  import type { HydratedSite } from '../proxy+page.server';
+  import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
+  import { setMap } from '../stores/map-store';
 
-  export let sites: any[];
+  export let sites: HydratedSite[];
 
   let mapElement: HTMLDivElement;
   let map: Map;
@@ -15,6 +18,7 @@
       const leaflet = await import('leaflet');
 
       map = leaflet.map(mapElement, { zoomControl: false }).setView([51.505, -0.09], 12);
+      setMap(map);
 
       leaflet
         .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -31,9 +35,19 @@
       sites.forEach((site) => {
         createMarker(site, leaflet.marker, map);
       });
+
+      setFilteredHydratedMarkers(getBaseHydratedMarkers());
     }
   });
 
+  // let filteredMapSites: HydratedSite[];
+  // const unsubMapSite = mapSiteSubscribe((value) => {
+  //   sites.forEach((site) => {
+  //     createMarker(site, leaflet.marker, map);
+  //   });
+  // });
+
+  // onDestroy(unsubMapSite);
   onDestroy(async () => {
     if (map) {
       console.log('Unloading Leaflet map.');

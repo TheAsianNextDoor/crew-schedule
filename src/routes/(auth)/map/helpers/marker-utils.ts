@@ -1,8 +1,11 @@
 import type Leaflet from 'leaflet';
 
-import type { MapSite } from '../../map/queries/retrieve-map-sites';
 import { hideMapFilter, isMapFilterVisible } from '../stores/map-filter-store';
 import { isMapMenuVisible, setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
+import { addBaseHydratedMarker, getBaseHydratedMarkers } from '../stores/map-marker-store';
+import type { HydratedSite } from '../+page.server';
+import type { Map, Marker } from 'leaflet';
+import { getMap } from '../stores/map-store';
 
 // const getMarkerIcon = (site: any) => {
 //   const LeafIcon = L.Icon.extend({
@@ -42,7 +45,7 @@ import { isMapMenuVisible, setSelectedEntity, showMapMenu } from '../stores/map-
 // };
 
 export const createMarker = (
-  site: MapSite,
+  site: HydratedSite,
   // setSiteStore: SetStoreFunction<MapItems>,
   marker: typeof Leaflet.marker,
   map: Leaflet.Map,
@@ -50,13 +53,7 @@ export const createMarker = (
   // const myMarker = marker(site.location, { icon: getMarkerIcon(site) });
   const myMarker = marker(site.location as [number, number]);
 
-  // myMarker.on('click', () => {
-  //   setIsDrawerOpen(true);
-  //   setSelectedMarker(site);
-  // });
-
   myMarker
-    .addTo(map)
     .bindTooltip(
       `
     Name: ${site.site_name} <br>
@@ -72,15 +69,23 @@ export const createMarker = (
       if (isMapFilterVisible()) {
         hideMapFilter();
       }
-      // const res = await fetch(`/api/map-drawer-info/${site.site_id}`);
-      // const data = await res.json();
 
       setSelectedEntity(site);
     });
 
-  // setSiteStore(
-  //   produce((list) => {
-  //     list.push({ marker: myMarker, site });
-  //   })
-  // );
+  addBaseHydratedMarker({ marker: myMarker, site });
+
+  myMarker.addTo(map);
+};
+
+export const removeMarker = (marker: Marker) => {
+  marker.remove();
+};
+
+export const addMarker = (marker: Marker, map: Map) => {
+  marker.addTo(map);
+};
+
+export const showAllMarkers = () => {
+  getBaseHydratedMarkers().forEach(({ marker }) => marker.addTo(getMap()));
 };

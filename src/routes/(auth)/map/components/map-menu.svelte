@@ -6,13 +6,13 @@
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
-  import type { MapSite } from '../queries/retrieve-map-sites';
   import { mapFilterSubscribe, showMapFilter } from '../stores/map-filter-store';
   import MapSearchInfo from './map-search-info.svelte';
   import MapFilter from './map-filter.svelte';
   import { hideMapMenu, showMapMenu, mapMenuSubscribe } from '../stores/map-menu-store';
+  import type { HydratedSite } from '../proxy+page.server';
 
-  export let sites: MapSite[];
+  export let sites: HydratedSite[];
 
   let isMenuVisible: boolean;
   let isMenuFilterVisible: boolean;
