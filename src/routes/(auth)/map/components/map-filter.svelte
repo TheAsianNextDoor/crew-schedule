@@ -30,4 +30,12 @@
   </div>
 </div>
 
-<input bind:value={foremanName} on:input={(e) => filterByForeman(e.currentTarget.value)} />
+<div class="flex flex-row items-center">
+  <span>Foreman Name:</span>
+  <input bind:value={foremanName} on:input={(e) => filterByForeman(e.currentTarget.value)} />
+</div>
+
+<div class="flex flex-row items-center">
+  <span>Foreman Name:</span>
+  <input bind:value={foremanName} on:input={(e) => filterByForeman(e.currentTarget.value)} />
+</div>
