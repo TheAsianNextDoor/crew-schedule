@@ -31,40 +31,38 @@
   const getFlyTransition = (x: number) => ({ duration: 300, easing: sineIn, x, opacity: 100 });
 </script>
 
-<div>
-  <!-- Menu -->
-  {#if isMenuVisible}
-    <div transition:fly={getFlyTransition(-408)}>
-      <div class="sidebar-width overflow-y-auto absolute bg-white h-screen">
-        {#if isMenuFilterVisible}
-          <MapFilter />
-        {:else}
-          <MapSearchInfo bind:sites />
-        {/if}
-      </div>
-
-      {#if !isMenuFilterVisible}
-        <button
-          class="flex justify-center items-center right-of-menu filter-button absolute filter w-20 h-8 rounded-lg bg-slate-50 m-6"
-          on:click={showMapFilter}
-        >
-          <Filter size="18px" />
-          Filters
-        </button>
+<!-- Menu -->
+{#if isMenuVisible}
+  <div transition:fly={getFlyTransition(-408)}>
+    <div class="sidebar-width overflow-y-auto absolute bg-white h-screen">
+      {#if isMenuFilterVisible}
+        <MapFilter />
+      {:else}
+        <MapSearchInfo bind:sites />
       {/if}
-      <button class="arrow right-of-menu" on:click={hideMapMenu}>
-        <MenuLeft size="23px" />
-      </button>
     </div>
-  {/if}
-  <!-- Menu -->
 
-  {#if !isMenuVisible}
-    <button transition:fly={getFlyTransition(408)} class="arrow" on:click={showMapMenu}>
-      <MenuRight size="23px" />
+    {#if !isMenuFilterVisible}
+      <button
+        class="flex justify-center items-center right-of-menu filter-button absolute filter w-20 h-8 rounded-lg bg-slate-50 m-6"
+        on:click={showMapFilter}
+      >
+        <Filter size="18px" />
+        Filters
+      </button>
+    {/if}
+    <button class="arrow right-of-menu" on:click={hideMapMenu}>
+      <MenuLeft size="23px" />
     </button>
-  {/if}
-</div>
+  </div>
+{/if}
+<!-- Menu -->
+
+{#if !isMenuVisible}
+  <button transition:fly={getFlyTransition(408)} class="arrow" on:click={showMapMenu}>
+    <MenuRight size="23px" />
+  </button>
+{/if}
 
 <style>
   .sidebar-width {

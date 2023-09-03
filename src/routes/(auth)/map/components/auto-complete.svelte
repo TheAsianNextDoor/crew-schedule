@@ -29,13 +29,14 @@
   }));
 </script>
 
-<div class="text-token w-full p-3">
+<div class="w-full p-4">
   <div class="card w-full flex items-center gap-1 bg-slate-100">
     <div class="pl-4 hover:cursor-pointer">
       <Menu size="25px" />
     </div>
     <input
       class="no-outline w-10/12 border-none bg-slate-100"
+      autocomplete="off"
       type="search"
       name="autocomplete-search"
       bind:value={searchValue}
@@ -43,18 +44,24 @@
       use:popup={popupSettings}
     />
   </div>
-  <div
-    data-popup="popupAutocomplete"
-    class="popup card w-full max-h-52 overflow-hidden absolute bg-slate-100"
-  >
-    <Autocomplete bind:input={searchValue} options={siteOptions} on:selection={onPopupDemoSelect} />
-  </div>
+</div>
+
+<div
+  data-popup="popupAutocomplete"
+  class="popup card w-full p-4 max-h-52 overflow-y-auto absolute bg-slate-100"
+>
+  <Autocomplete
+    class="list"
+    bind:input={searchValue}
+    options={siteOptions}
+    on:selection={onPopupDemoSelect}
+  />
 </div>
 
 <style>
   .popup {
-    width: 382px;
-    transform: translateX(-5px);
+    width: 376px;
+    transform: translateX(-7px);
   }
 
   .no-outline:focus {

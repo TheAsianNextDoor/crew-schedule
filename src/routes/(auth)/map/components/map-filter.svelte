@@ -2,6 +2,7 @@
   import { hideMapFilter } from '../stores/map-filter-store';
   import LeftArrow from 'svelte-material-icons/ArrowLeft.svelte';
   import { clearFilteredHydratedMarkers, filterByForeman } from '../stores/map-marker-store';
+  import FilterSection from './filter-section.svelte';
 
   let foremanName = '';
 
@@ -20,9 +21,9 @@
   };
 </script>
 
-<div class="flex justify-between p-6 border-slate-400 border-solid border-b">
+<div class="flex justify-between p-4 border-slate-400 border-solid border-b">
   <button on:click={clearFiltersAndClose}>
-    <LeftArrow size="32px" />
+    <LeftArrow size="30px" />
   </button>
   <div class="flex gap-4">
     <button on:click={clearFilters}>Clear</button>
@@ -30,12 +31,20 @@
   </div>
 </div>
 
-<div class="flex flex-row items-center">
-  <span>Foreman Name:</span>
-  <input bind:value={foremanName} on:input={(e) => filterByForeman(e.currentTarget.value)} />
-</div>
+<div class="py-4 px-6">
+  <FilterSection label="Foreman">
+    <input
+      class="input variant-form-material"
+      bind:value={foremanName}
+      on:input={(e) => filterByForeman(e.currentTarget.value)}
+    />
+  </FilterSection>
 
-<div class="flex flex-row items-center">
-  <span>Foreman Name:</span>
-  <input bind:value={foremanName} on:input={(e) => filterByForeman(e.currentTarget.value)} />
+  <FilterSection label="Current Phase Estimated Hours">
+    <input
+      class="input variant-form-material"
+      bind:value={foremanName}
+      on:input={(e) => filterByForeman(e.currentTarget.value)}
+    />
+  </FilterSection>
 </div>
