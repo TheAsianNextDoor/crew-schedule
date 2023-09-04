@@ -4,7 +4,7 @@ import { hideMapFilter, isMapFilterVisible } from '../stores/map-filter-store';
 import { isMapMenuVisible, setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
 import { addBaseHydratedMarker, getBaseHydratedMarkers } from '../stores/map-marker-store';
 import type { HydratedSite } from '../+page.server';
-import type { Map, Marker } from 'leaflet';
+import type { Marker } from 'leaflet';
 import { getMap } from '../stores/map-store';
 
 // const getMarkerIcon = (site: any) => {
@@ -78,12 +78,12 @@ export const createMarker = (
   myMarker.addTo(map);
 };
 
-export const removeMarker = (marker: Marker) => {
+export const removeMarkerFromMap = (marker: Marker) => {
   marker.remove();
 };
 
-export const addMarker = (marker: Marker, map: Map) => {
-  marker.addTo(map);
+export const addMarkerToMap = (marker: Marker) => {
+  marker.addTo(getMap());
 };
 
 export const showAllMarkers = () => {
