@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { hideMapFilter } from '../stores/map-filter-store';
+  import {
+    estimatedHours,
+    estimatedHoursCondition,
+    foremanName,
+    hideMapFilter,
+    phaseStatus,
+  } from '../stores/map-filter-store';
   import LeftArrow from 'svelte-material-icons/ArrowLeft.svelte';
   import {
     clearFilteredHydratedMarkers,
@@ -12,17 +18,18 @@
     filterByStatusName,
   } from '../helpers/filter-funcs';
   import { STATUS_ENUM } from '$lib/constants/status';
-
-  let foremanName = '';
-  let estimatedHours: number;
-  let status: '';
+  import { EQUALITY_ENUM } from '../helpers/equality-utils';
 
   const saveAndClose = () => {
     hideMapFilter();
   };
 
   const clearFilters = () => {
-    foremanName = '';
+    foremanName.set('');
+    estimatedHoursCondition.set(EQUALITY_ENUM.eq);
+    estimatedHours.set(undefined);
+    phaseStatus.set('');
+
     clearFilteredHydratedMarkers();
     clearFilterConditionFuncs();
   };
@@ -47,27 +54,38 @@
   <FilterSection label="Foreman">
     <input
       class="input variant-form-material"
-      bind:value={foremanName}
+      bind:value={$foremanName}
       on:input={filterByForeman}
     />
   </FilterSection>
 
   <FilterSection label="Estimated Hours">
-    <input
-      class="input variant-form-material"
-      type="number"
-      bind:value={estimatedHours}
-      on:input={filterByEstimatedHours}
-    />
+    <div class="flex gap-4">
+      <select
+        class="select w-min"
+        bind:value={$estimatedHoursCondition}
+        on:change={() => filterByEstimatedHours($estimatedHoursCondition, $estimatedHours)}
+      >
+        <option value={EQUALITY_ENUM.lt}>less than</option>
+        <option selected value={EQUALITY_ENUM.eq}>equal</option>
+        <option value={EQUALITY_ENUM.gt}>greater than</option>
+      </select>
+      <input
+        class="input variant-form-material grow basis-0"
+        type="number"
+        bind:value={$estimatedHours}
+        on:input={() => filterByEstimatedHours($estimatedHoursCondition, $estimatedHours)}
+      />
+    </div>
   </FilterSection>
 
   <FilterSection label="Status">
-    <select bind:value={status} on:change={filterByStatusName} class="select">
-      <option selected value=""> -- select an option -- </option>
-      <option value={STATUS_ENUM.PENDING}>{STATUS_ENUM.PENDING}</option>
-      <option value={STATUS_ENUM.SCHEDULED}>{STATUS_ENUM.SCHEDULED}</option>
-      <option value={STATUS_ENUM.IN_PROGRESS}>{STATUS_ENUM.IN_PROGRESS}</option>
-      <option value={STATUS_ENUM.COMPLETED}>{STATUS_ENUM.COMPLETED}</option>
+    <select bind:value={$phaseStatus} on:change={filterByStatusName} class="select">
+      <option selected value="">any status</option>
+      <option value={STATUS_ENUM.PENDING}>pending</option>
+      <option value={STATUS_ENUM.SCHEDULED}>scheduled</option>
+      <option value={STATUS_ENUM.IN_PROGRESS}>in progress</option>
+      <option value={STATUS_ENUM.COMPLETED}>completed</option>
     </select>
   </FilterSection>
 </div>

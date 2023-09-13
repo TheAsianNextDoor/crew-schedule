@@ -3,6 +3,9 @@ import type { HydratedSite } from '../+page.server';
 import type { Marker } from 'leaflet';
 import { getMap } from './map-store';
 import { addMarkerToMap, removeMarkerFromMap, showAllMarkers } from '../helpers/marker-utils';
+import type { Phase } from '$lib/data';
+import type { MapSite } from '../queries/retrieve-map-sites';
+import type { MapPhase } from '../queries/retreive-phases-by-site';
 
 export type HydratedMapMarker = {
   site: HydratedSite;
@@ -29,17 +32,40 @@ export { mapSiteSubscribe, addBaseHydratedMarker, getBaseHydratedMarkers };
 /**
  * Functions to filter the map
  */
-export type FilterConditionFunc = (hydratedMapMarker: HydratedMapMarker) => boolean;
-const filterConditionStore = writable<Record<string, FilterConditionFunc>>({});
+export type FilterSiteConditionFunc = (site: MapSite) => boolean;
+export type FilterPhaseConditionFunc = (phases: MapPhase) => boolean;
+export type FilterType = 'site' | 'phase';
+export type FilterConfig = {
+  siteConditionFunc?: FilterSiteConditionFunc;
+  phaseConditionFunc?: FilterPhaseConditionFunc;
+  type: FilterType;
+};
+const filterConditionStore = writable<Record<string, FilterConfig>>({});
 const { subscribe: filterConditionSubscribe } = filterConditionStore;
 
 const getFilterConditionKeys = () => Object.keys(get(filterConditionStore));
 
 const getFilterConditionFuncs = () => Object.values(get(filterConditionStore));
 
-const addFilterConditionFunc = (filterName: string, filterFunc: FilterConditionFunc) => {
+const addFilterConditionFunc = (
+  filterName: string,
+  filterConditionFunc: FilterSiteConditionFunc | FilterPhaseConditionFunc,
+  filterType: FilterType,
+) => {
   filterConditionStore.update((store) => {
-    store[filterName] = filterFunc;
+    if (filterType === 'site') {
+      store[filterName] = {
+        siteConditionFunc: filterConditionFunc as FilterSiteConditionFunc,
+        type: filterType,
+      };
+    }
+
+    if (filterType === 'phase') {
+      store[filterName] = {
+        phaseConditionFunc: filterConditionFunc as FilterPhaseConditionFunc,
+        type: filterType,
+      };
+    }
 
     return store;
   });
@@ -83,6 +109,23 @@ const setFilteredHydratedMarkers = (sites: HydratedMapMarker[]) => {
   filteredHydratedMarkerStore.set(sites);
 };
 
+const shouldShowMarker = (hydratedMarker: HydratedMapMarker) => {
+  const conditionConfigs = getFilterConditionFuncs();
+
+  const siteConfigs = conditionConfigs.filter(({ type }) => type === 'site');
+  const phaseConfigs = conditionConfigs.filter(({ type }) => type === 'phase');
+
+  const passesSiteConditions = siteConfigs.every(
+    ({ siteConditionFunc }) => siteConditionFunc?.(hydratedMarker.site),
+  );
+
+  const passesPhaseConditions = hydratedMarker.site.phases.some((phase) =>
+    phaseConfigs.every(({ phaseConditionFunc }) => phaseConditionFunc?.(phase)),
+  );
+
+  return passesSiteConditions && passesPhaseConditions;
+};
+
 const filterMapMarkers = () => {
   if (getFilterConditionFuncs().length === 0) {
     filteredHydratedMarkerStore.set(getBaseHydratedMarkers());
@@ -92,7 +135,7 @@ const filterMapMarkers = () => {
   }
 
   getBaseHydratedMarkers().filter((hydratedMarker) => {
-    if (getFilterConditionFuncs().every((conditionFunc) => conditionFunc(hydratedMarker))) {
+    if (shouldShowMarker(hydratedMarker)) {
       addMarkerToMap(hydratedMarker.marker);
 
       return true;

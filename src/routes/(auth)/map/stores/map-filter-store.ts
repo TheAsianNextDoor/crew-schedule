@@ -1,4 +1,5 @@
 import { get, writable } from 'svelte/store';
+import { EQUALITY_ENUM } from '../helpers/equality-utils';
 
 /**
  * Map filter visibility
@@ -16,3 +17,11 @@ const showMapFilter = () => {
 };
 
 export { mapFilterSubscribe, isMapFilterVisible, hideMapFilter, showMapFilter };
+
+/**
+ * Form Values
+ */
+export const foremanName = writable('');
+export const estimatedHoursCondition = writable(EQUALITY_ENUM.eq);
+export const estimatedHours = writable<number | undefined>();
+export const phaseStatus = writable('');

@@ -1,18 +1,21 @@
+import type { MapPhase } from '../queries/retreive-phases-by-site';
+import type { MapSite } from '../queries/retrieve-map-sites';
 import {
   addFilterConditionFunc,
   filterMapMarkers,
   removeFilterConditionFunc,
-  type FilterConditionFunc,
-  type HydratedMapMarker,
+  type FilterType,
 } from '../stores/map-marker-store';
+import type { EQUALITY_ENUM } from './equality-utils';
 
 const maybeFilterByValue = (
   filterName: string,
   shouldFilter: boolean,
-  filterConditionFunc: FilterConditionFunc,
+  filterConditionFunc: ((phase: MapPhase) => boolean) | ((site: MapSite) => boolean),
+  filterType: FilterType,
 ) => {
   if (shouldFilter) {
-    addFilterConditionFunc(filterName, filterConditionFunc);
+    addFilterConditionFunc(filterName, filterConditionFunc, filterType);
   } else {
     removeFilterConditionFunc(filterName);
   }
@@ -20,8 +23,8 @@ const maybeFilterByValue = (
   filterMapMarkers();
 };
 
-const filterByForemanFunc = ({ site }: HydratedMapMarker, foremanName: string) =>
-  site.currentPhase?.foreman_name.includes(foremanName) ?? false;
+const filterByForemanFunc = (phase: MapPhase, foremanName: string) =>
+  phase.foreman_name.includes(foremanName) ?? false;
 
 export const filterByForeman = (
   e: Event & {
@@ -31,39 +34,58 @@ export const filterByForeman = (
   const value = e.currentTarget.value;
   const shouldFilter = value.length !== 0;
 
-  maybeFilterByValue('foreman', shouldFilter, (hydratedMapMarker) =>
-    filterByForemanFunc(hydratedMapMarker, value),
+  maybeFilterByValue(
+    'foreman',
+    shouldFilter,
+    (phase: MapPhase) => filterByForemanFunc(phase, value),
+    'phase',
   );
 };
 
-const filterByEstimatedHoursFunc = ({ site }: HydratedMapMarker, estimatedHours: number) =>
-  site.currentPhase?.estimated_hours === estimatedHours ?? false;
+const filterByEstimatedHoursFunc = (
+  phase: MapPhase,
+  condition: (typeof EQUALITY_ENUM)[keyof typeof EQUALITY_ENUM],
+  hours: number,
+) => {
+  if (condition === 'lt') return hours > phase.estimated_hours;
+  if (condition === 'eq') return hours === phase.estimated_hours;
+  if (condition === 'gt') return hours < phase.estimated_hours;
+
+  console.error('[filterByEstimatedHoursFunc] bad condition');
+
+  return false;
+};
 
 export const filterByEstimatedHours = (
-  e: Event & {
-    currentTarget: EventTarget & HTMLInputElement;
-  },
+  condition: (typeof EQUALITY_ENUM)[keyof typeof EQUALITY_ENUM],
+  estimatedHours: number | undefined,
 ) => {
-  const value = Number(e.currentTarget.value);
-  const shouldFilter = value !== 0;
+  const hours = estimatedHours ?? 0;
+  const shouldFilter = hours !== 0;
 
-  maybeFilterByValue('estimatedHours', shouldFilter, (hydratedMapMarker) =>
-    filterByEstimatedHoursFunc(hydratedMapMarker, value),
+  maybeFilterByValue(
+    'estimatedHours',
+    shouldFilter,
+    (phase: MapPhase) => filterByEstimatedHoursFunc(phase, condition, hours),
+    'phase',
   );
 };
 
-const filterByStatusFunc = ({ site }: HydratedMapMarker, status: string) =>
-  site.currentPhase?.status_name === status ?? false;
+const filterByStatusFunc = (phase: MapPhase, phaseStatus: string) =>
+  phase.status_name === phaseStatus ?? false;
 
 export const filterByStatusName = (
   e: Event & {
-    currentTarget: EventTarget & HTMLInputElement;
+    currentTarget: EventTarget & HTMLSelectElement;
   },
 ) => {
   const value = e?.target?.value;
   const shouldFilter = value !== '';
 
-  maybeFilterByValue('estimatedHours', shouldFilter, (hydratedMapMarker) =>
-    filterByStatusFunc(hydratedMapMarker, value),
+  maybeFilterByValue(
+    'phaseStatus',
+    shouldFilter,
+    (phase: MapPhase) => filterByStatusFunc(phase, value),
+    'phase',
   );
 };
