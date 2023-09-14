@@ -1,3 +1,4 @@
+import { STATUS_ENUM } from '$lib/constants/status';
 import type { MapPhase } from '../queries/retreive-phases-by-site';
 import type { MapSite } from '../queries/retrieve-map-sites';
 import {
@@ -71,8 +72,12 @@ export const filterByEstimatedHours = (
   );
 };
 
-const filterByStatusFunc = (phase: MapPhase, phaseStatus: string) =>
-  phase.status_name === phaseStatus ?? false;
+const filterByStatusFunc = (phase: MapPhase, phaseStatus: string) => {
+  if (phaseStatus === STATUS_ENUM.SOLD) {
+    return phase.status_name !== STATUS_ENUM.COMPLETED ?? false;
+  }
+  return phase.status_name === phaseStatus ?? false;
+};
 
 export const filterByStatusName = (
   e: Event & {
@@ -86,6 +91,20 @@ export const filterByStatusName = (
     'phaseStatus',
     shouldFilter,
     (phase: MapPhase) => filterByStatusFunc(phase, value),
+    'phase',
+  );
+};
+
+const filterByDisciplineFunc = (phase: MapPhase, discipline: string) =>
+  phase.discipline_name === discipline ?? false;
+
+export const filterByDiscipline = (disciplineName: string) => {
+  const shouldFilter = disciplineName !== '';
+
+  maybeFilterByValue(
+    'discipline',
+    shouldFilter,
+    (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
     'phase',
   );
 };

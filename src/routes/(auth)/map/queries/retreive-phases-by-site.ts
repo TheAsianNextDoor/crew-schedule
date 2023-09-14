@@ -1,5 +1,5 @@
 import { queryDb } from '$lib/db/query';
-import type { Phase, PhaseAssignment, Status } from '@prisma/client';
+import type { Discipline, Phase, PhaseAssignment, Status } from '@prisma/client';
 
 export type MapPhase = Pick<Phase, 'phase_id' | 'order' | 'estimated_hours' | 'personnel_count'> &
   Pick<Status, 'status_name'> &
@@ -9,7 +9,7 @@ export type MapPhase = Pick<Phase, 'phase_id' | 'order' | 'estimated_hours' | 'p
     | 'estimated_mobilization_duration'
     | 'scheduled_start_date_time'
     | 'scheduled_finished_date_time'
-  > & { foreman_name: string };
+  > & { foreman_name: string } & Pick<Discipline, 'discipline_name'>;
 
 export const retrievePhasesBySite = (siteId: string) =>
   queryDb.findMany<MapPhase>(

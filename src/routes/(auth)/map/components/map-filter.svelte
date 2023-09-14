@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    disciplineName,
     estimatedHours,
     estimatedHoursCondition,
     foremanName,
@@ -13,6 +14,7 @@
   } from '../stores/map-marker-store';
   import FilterSection from './filter-section.svelte';
   import {
+    filterByDiscipline,
     filterByEstimatedHours,
     filterByForeman,
     filterByStatusName,
@@ -51,12 +53,23 @@
 </div>
 
 <div class="py-4 px-6">
-  <FilterSection label="Foreman">
+  <FilterSection label="Discipline">
     <input
-      class="input variant-form-material"
-      bind:value={$foremanName}
-      on:input={filterByForeman}
+      class="input variant-form-material grow basis-0"
+      bind:value={$disciplineName}
+      on:input={() => filterByDiscipline($disciplineName)}
     />
+  </FilterSection>
+
+  <FilterSection label="Status">
+    <select bind:value={$phaseStatus} on:change={filterByStatusName} class="select">
+      <option selected value="">any status</option>
+      <option selected value={STATUS_ENUM.SOLD}>sold</option>
+      <option value={STATUS_ENUM.PENDING}>pending</option>
+      <option value={STATUS_ENUM.SCHEDULED}>scheduled</option>
+      <option value={STATUS_ENUM.IN_PROGRESS}>in progress</option>
+      <option value={STATUS_ENUM.COMPLETED}>completed</option>
+    </select>
   </FilterSection>
 
   <FilterSection label="Estimated Hours">
@@ -79,13 +92,15 @@
     </div>
   </FilterSection>
 
-  <FilterSection label="Status">
-    <select bind:value={$phaseStatus} on:change={filterByStatusName} class="select">
-      <option selected value="">any status</option>
-      <option value={STATUS_ENUM.PENDING}>pending</option>
-      <option value={STATUS_ENUM.SCHEDULED}>scheduled</option>
-      <option value={STATUS_ENUM.IN_PROGRESS}>in progress</option>
-      <option value={STATUS_ENUM.COMPLETED}>completed</option>
-    </select>
+  <FilterSection label="Date Interval">
+    <input type="date" />
+  </FilterSection>
+
+  <FilterSection label="Foreman">
+    <input
+      class="input variant-form-material"
+      bind:value={$foremanName}
+      on:input={filterByForeman}
+    />
   </FilterSection>
 </div>
