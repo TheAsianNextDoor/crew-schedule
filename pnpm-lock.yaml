@@ -5,6 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@easepick/core':
+    specifier: ^1.2.1
+    version: 1.2.1
+  '@easepick/datetime':
+    specifier: ^1.2.1
+    version: 1.2.1
+  '@easepick/range-plugin':
+    specifier: ^1.2.1
+    version: 1.2.1
   '@floating-ui/dom':
     specifier: ^1.5.1
     version: 1.5.1
@@ -316,6 +325,28 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@easepick/base-plugin@1.2.1:
+    resolution: {integrity: sha512-aonBQaRyZwNH/gmPzSzZDVjQjgy/rxWd+TXnM0E3Nxkeu4yMbXV+GnWVQbBwTvJx74M7iSCHJowdmZ5T46B7Vg==}
+    dependencies:
+      '@easepick/core': 1.2.1
+    dev: false
+
+  /@easepick/core@1.2.1:
+    resolution: {integrity: sha512-V/blEia/ykAq+0mnQ9djOU5wvMZ+iffL5iuQrKLObpMOw38kL/qo4inH4pCbB3wm7sDjrJTuDKf+6+FrgdFGsw==}
+    dependencies:
+      '@easepick/datetime': 1.2.1
+    dev: false
+
+  /@easepick/datetime@1.2.1:
+    resolution: {integrity: sha512-KIUvWo/kEipwBqPTazjfUf6R7dKb2ztPizPoB/0ZMYz3HrWJptsLSZQma3R1nM/zkaexnk/e4L4nX+vDjwBtYA==}
+    dev: false
+
+  /@easepick/range-plugin@1.2.1:
+    resolution: {integrity: sha512-yEHLUq32Kj0exLz4txxchALQVJUbwyXvnovfN7yxTrCJLpi6uMmPXcW4lyYig2P9+xM9JqF6JsNqOsi0+5GlHQ==}
+    dependencies:
+      '@easepick/base-plugin': 1.2.1
+    dev: false
 
   /@esbuild-kit/cjs-loader@2.4.2:
     resolution: {integrity: sha512-BDXFbYOJzT/NBEtp71cvsrGPwGAMGRB/349rwKuoxNSiKjPraNNnlK6MIIabViCjqZugu6j+xeMDlEkWdHHJSg==}

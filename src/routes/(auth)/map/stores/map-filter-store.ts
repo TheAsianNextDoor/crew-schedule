@@ -26,3 +26,4 @@ export const estimatedHoursCondition = writable(EQUALITY_ENUM.eq);
 export const estimatedHours = writable<number | undefined>();
 export const phaseStatus = writable('');
 export const disciplineName = writable('');
+export const dateRange = writable({});

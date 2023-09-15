@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    dateRange,
     disciplineName,
     estimatedHours,
     estimatedHoursCondition,
@@ -14,6 +15,7 @@
   } from '../stores/map-marker-store';
   import FilterSection from './filter-section.svelte';
   import {
+    filterByDateRange,
     filterByDiscipline,
     filterByEstimatedHours,
     filterByForeman,
@@ -21,16 +23,57 @@
   } from '../helpers/filter-funcs';
   import { STATUS_ENUM } from '$lib/constants/status';
   import { EQUALITY_ENUM } from '../helpers/equality-utils';
+  import { easepick } from '@easepick/core';
+  import { RangePlugin } from '@easepick/range-plugin';
+  import { onMount } from 'svelte';
+
+  let datePickerElement: HTMLInputElement;
+  let datePicker: easepick.Core;
+
+  onMount(() => {
+    datePicker = new easepick.create({
+      element: datePickerElement,
+      css: [
+        'https://cdn.jsdelivr.net/npm/@easepick/core@1.2.1/dist/index.css',
+        'https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.1/dist/index.css',
+      ],
+      plugins: [RangePlugin],
+      setup: (picker) => {
+        picker.on('select', () => {
+          const start = picker.getStartDate();
+          const end = picker.getEndDate();
+
+          dateRange.set({
+            start,
+            end,
+          });
+          filterByDateRange($dateRange);
+        });
+      },
+    });
+  });
 
   const saveAndClose = () => {
     hideMapFilter();
   };
 
   const clearFilters = () => {
-    foremanName.set('');
+    // discipline
+    disciplineName.set('');
+
+    // status
+    phaseStatus.set('');
+
+    // estimatedHours
     estimatedHoursCondition.set(EQUALITY_ENUM.eq);
     estimatedHours.set(undefined);
-    phaseStatus.set('');
+
+    // dateRange
+    dateRange.set({});
+    datePicker.clear();
+
+    // foremanName
+    foremanName.set('');
 
     clearFilteredHydratedMarkers();
     clearFilterConditionFuncs();
@@ -62,7 +105,11 @@
   </FilterSection>
 
   <FilterSection label="Status">
-    <select bind:value={$phaseStatus} on:change={filterByStatusName} class="select">
+    <select
+      bind:value={$phaseStatus}
+      on:change={() => filterByStatusName($phaseStatus)}
+      class="select"
+    >
       <option selected value="">any status</option>
       <option selected value={STATUS_ENUM.SOLD}>sold</option>
       <option value={STATUS_ENUM.PENDING}>pending</option>
@@ -93,14 +140,14 @@
   </FilterSection>
 
   <FilterSection label="Date Interval">
-    <input type="date" />
+    <input bind:this={datePickerElement} />
   </FilterSection>
 
   <FilterSection label="Foreman">
     <input
       class="input variant-form-material"
       bind:value={$foremanName}
-      on:input={filterByForeman}
+      on:input={() => filterByForeman($foremanName)}
     />
   </FilterSection>
 </div>

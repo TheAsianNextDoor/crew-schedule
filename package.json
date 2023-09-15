@@ -5,7 +5,7 @@
   "scripts": {
     "build": "vite build",
     "clean": "del-cli pnpm-lock.yaml && del-cli ./node_modules && pnpm i",
-    "db:reset": "del-cli ./prisma/migrations && prisma migrate reset --force && prisma db push && tsx ./prisma/seed.ts",
+    "db:reset": "del-cli ./prisma/migrations && prisma migrate reset --force && prisma db push && tsx ./prisma/seed.ts && prisma generate",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "dev": "vite dev",
@@ -17,6 +17,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@easepick/core": "^1.2.1",
+    "@easepick/datetime": "^1.2.1",
+    "@easepick/range-plugin": "^1.2.1",
     "@floating-ui/dom": "^1.5.1",
     "@prisma/client": "5.2.0",
     "@supabase/auth-helpers-sveltekit": "^0.10.2",

@@ -24,21 +24,34 @@ const maybeFilterByValue = (
   filterMapMarkers();
 };
 
-const filterByForemanFunc = (phase: MapPhase, foremanName: string) =>
-  phase.foreman_name.includes(foremanName) ?? false;
+const filterByDisciplineFunc = (phase: MapPhase, discipline: string) =>
+  phase.discipline_name === discipline ?? false;
 
-export const filterByForeman = (
-  e: Event & {
-    currentTarget: EventTarget & HTMLInputElement;
-  },
-) => {
-  const value = e.currentTarget.value;
-  const shouldFilter = value.length !== 0;
+export const filterByDiscipline = (disciplineName: string) => {
+  const shouldFilter = disciplineName !== '';
 
   maybeFilterByValue(
-    'foreman',
+    'discipline',
     shouldFilter,
-    (phase: MapPhase) => filterByForemanFunc(phase, value),
+    (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
+    'phase',
+  );
+};
+
+const filterByStatusFunc = (phase: MapPhase, phaseStatus: string) => {
+  if (phaseStatus === STATUS_ENUM.SOLD) {
+    return phase.status_name !== STATUS_ENUM.COMPLETED ?? false;
+  }
+  return phase.status_name === phaseStatus ?? false;
+};
+
+export const filterByStatusName = (phaseStatus: string) => {
+  const shouldFilter = phaseStatus !== '';
+
+  maybeFilterByValue(
+    'phaseStatus',
+    shouldFilter,
+    (phase: MapPhase) => filterByStatusFunc(phase, phaseStatus),
     'phase',
   );
 };
@@ -48,6 +61,7 @@ const filterByEstimatedHoursFunc = (
   condition: (typeof EQUALITY_ENUM)[keyof typeof EQUALITY_ENUM],
   hours: number,
 ) => {
+  if (phase.estimated_hours === null) return false;
   if (condition === 'lt') return hours > phase.estimated_hours;
   if (condition === 'eq') return hours === phase.estimated_hours;
   if (condition === 'gt') return hours < phase.estimated_hours;
@@ -72,39 +86,35 @@ export const filterByEstimatedHours = (
   );
 };
 
-const filterByStatusFunc = (phase: MapPhase, phaseStatus: string) => {
-  if (phaseStatus === STATUS_ENUM.SOLD) {
-    return phase.status_name !== STATUS_ENUM.COMPLETED ?? false;
-  }
-  return phase.status_name === phaseStatus ?? false;
+const filterByDateRangeFunc = (
+  { scheduled_start_date_time }: MapPhase,
+  { start, end }: { start?: Date; end?: Date },
+) => {
+  if (scheduled_start_date_time === null || !start || !end) return false;
+  return scheduled_start_date_time <= end && scheduled_start_date_time >= start;
 };
 
-export const filterByStatusName = (
-  e: Event & {
-    currentTarget: EventTarget & HTMLSelectElement;
-  },
-) => {
-  const value = e?.target?.value;
-  const shouldFilter = value !== '';
+export const filterByDateRange = (dateRange: { start?: Date; end?: Date }) => {
+  const shouldFilter = !!(dateRange?.start && dateRange.end);
 
   maybeFilterByValue(
-    'phaseStatus',
+    'dateRange',
     shouldFilter,
-    (phase: MapPhase) => filterByStatusFunc(phase, value),
+    (phase: MapPhase) => filterByDateRangeFunc(phase, dateRange),
     'phase',
   );
 };
 
-const filterByDisciplineFunc = (phase: MapPhase, discipline: string) =>
-  phase.discipline_name === discipline ?? false;
+const filterByForemanFunc = (phase: MapPhase, foremanName: string) =>
+  phase.foreman_name.includes(foremanName) ?? false;
 
-export const filterByDiscipline = (disciplineName: string) => {
-  const shouldFilter = disciplineName !== '';
+export const filterByForeman = (foremanName: string) => {
+  const shouldFilter = foremanName.length !== 0;
 
   maybeFilterByValue(
-    'discipline',
+    'foreman',
     shouldFilter,
-    (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
+    (phase: MapPhase) => filterByForemanFunc(phase, foremanName),
     'phase',
   );
 };
