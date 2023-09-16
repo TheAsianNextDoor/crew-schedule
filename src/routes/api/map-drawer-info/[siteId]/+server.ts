@@ -39,7 +39,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
         on site.status_id = status.status_id
       WHERE site.site_id = $1;
     `,
-    [params.siteId]
+    [params.siteId],
   );
 
   const currentPhase = await queryDb.findFirst<{ phase_id: string }>(
@@ -53,7 +53,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
           WHERE status_name = 'in_progress'
         )
     `,
-    [params.siteId]
+    [params.siteId],
   );
 
   return json({ ...siteAndClientInfo, ...currentPhase });

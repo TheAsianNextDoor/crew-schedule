@@ -17,7 +17,7 @@ export const queryDatabase = async <QueryResultType>(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
-  retryConfig = DEFAULT_RETRY_CONFIG
+  retryConfig = DEFAULT_RETRY_CONFIG,
 ) => {
   console.log('\n[QUERY]: ', query);
   return retry(async (_bail) => {
@@ -43,7 +43,7 @@ export const getQuery = async <QueryReturnType>(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
-  retryConfig?: Options
+  retryConfig?: Options,
 ) => {
   const result = await queryDatabase<QueryReturnType>(query, params, retryConfig);
 
@@ -58,7 +58,7 @@ export const getFirstQuery = async <QueryReturnType>(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
-  retryConfig?: Options
+  retryConfig?: Options,
 ) => {
   const result = await queryDatabase<QueryReturnType>(query, params, retryConfig);
 
@@ -73,7 +73,7 @@ export const mutateAndReturnQuery = async <QueryReturnType>(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
-  retryConfig = DEFAULT_MUTATE_RETRY_CONFIG
+  retryConfig = DEFAULT_MUTATE_RETRY_CONFIG,
 ) => {
   const result = await queryDatabase<QueryReturnType>(query, params, retryConfig);
 
@@ -84,7 +84,7 @@ export const mutateQuery = async (
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any[],
-  retryConfig = DEFAULT_MUTATE_RETRY_CONFIG
+  retryConfig = DEFAULT_MUTATE_RETRY_CONFIG,
 ) => {
   await queryDatabase(query, params, retryConfig);
 };
