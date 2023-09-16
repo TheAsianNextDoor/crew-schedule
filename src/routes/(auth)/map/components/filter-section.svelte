@@ -3,9 +3,9 @@
 </script>
 
 <div class="py-4">
-  <span class="block">
+  <h2 class="block !font-normal">
     {label}
-  </span>
+  </h2>
 
   <slot />
 </div>

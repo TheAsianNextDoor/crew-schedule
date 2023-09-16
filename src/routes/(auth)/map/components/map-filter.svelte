@@ -140,7 +140,7 @@
   </FilterSection>
 
   <FilterSection label="Date Interval">
-    <input bind:this={datePickerElement} />
+    <input class="w-full text-center" bind:this={datePickerElement} />
   </FilterSection>
 
   <FilterSection label="Foreman">
