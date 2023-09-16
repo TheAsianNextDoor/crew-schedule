@@ -31,15 +31,100 @@ const main = async () => {
     },
   });
 
-  const address = await prisma.address.create({
-    data: {
-      address_id: '180390a3-2df5-46a4-bb59-4d972b595bab',
-      city_id: fargo.city_id,
-      state_id: ND.state_id,
-      zip_code_id: zip.zip_code_id,
-      country_id: US.country_id,
-      street: 'abc street N',
-    },
+  const address1 = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+  const address2 = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+  const address3 = '550e8400-e29b-41d4-a716-446655440000';
+  const address4 = '5a036ddf-8e16-4f63-9388-23c8b9a0e497';
+  const address5 = 'efd65889-9d93-487d-bf10-93331d7ac7d5';
+  const address6 = '4e90a750-ec50-4e68-951e-464b0e5f8fa5';
+  const address7 = '965f70d3-8c52-4e97-8e42-5e3d75c60d75';
+  const address8 = '38f3c520-6d2f-4e61-bc40-12baf92df1d9';
+  const address9 = 'ab4a6c84-eb07-4947-b142-643229bc8db0';
+  const address10 = 'd82b8a3e-413d-4dfb-b6ea-214a98e4a41c';
+
+  await prisma.address.createMany({
+    data: [
+      {
+        address_id: address1,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '123 Oak Street',
+      },
+      {
+        address_id: address2,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '456 Maple Avenue',
+      },
+      {
+        address_id: address3,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '789 Elm Road',
+      },
+      {
+        address_id: address4,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '321 Pine Lane',
+      },
+      {
+        address_id: address5,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '567 Cedar Drive',
+      },
+      {
+        address_id: address6,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '890 Birch Court',
+      },
+      {
+        address_id: address7,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '234 Walnut Place',
+      },
+      {
+        address_id: address8,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '678 Spruce Street',
+      },
+      {
+        address_id: address9,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '901 Redwood Boulevard',
+      },
+      {
+        address_id: address10,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '345 Aspen Lane',
+      },
+    ],
   });
 
   const customer1 = '8c619eb3-b8b1-4520-bc6a-f51e0677ec37';
@@ -48,35 +133,35 @@ const main = async () => {
     data: [
       {
         customer_id: customer1,
-        address_id: address.address_id,
+        address_id: address1,
         customer_name: 'Customer 1',
         phone_number: '1234567890',
         email: 'customer1@example.com',
       },
       {
         customer_id: '0123e406-c408-4b88-88dc-8b2f27c741ab',
-        address_id: address.address_id,
+        address_id: address2,
         customer_name: 'Customer 2',
         phone_number: '1234567890',
         email: 'customer2@example.com',
       },
       {
         customer_id: 'f380f753-9ed5-44df-9e7a-67946cc2ab17',
-        address_id: address.address_id,
+        address_id: address3,
         customer_name: 'Customer 3',
         phone_number: '1234567890',
         email: 'customer3@example.com',
       },
       {
         customer_id: '049d87ce-7bb9-48b3-b651-4b7b1708ae8d',
-        address_id: address.address_id,
+        address_id: address4,
         customer_name: 'Customer 4',
         phone_number: '1234567890',
         email: 'customer4@example.com',
       },
       {
         customer_id: 'a13502fb-d3e0-4c7e-a444-5d4943c34f46',
-        address_id: address.address_id,
+        address_id: address5,
         customer_name: 'Customer 5',
         phone_number: '1234567890',
         email: 'customer5@example.com',
@@ -148,7 +233,7 @@ const main = async () => {
     data: [
       {
         client_id: client1,
-        address_id: address.address_id,
+        address_id: address1,
         customer_id: customer1,
         client_name: 'Client 1',
         contact_first_name: 'John',
@@ -158,7 +243,7 @@ const main = async () => {
       },
       {
         client_id: client2,
-        address_id: address.address_id,
+        address_id: address2,
         customer_id: customer1,
         client_name: 'Client 2',
         contact_first_name: 'Emily',
@@ -168,7 +253,7 @@ const main = async () => {
       },
       {
         client_id: client3,
-        address_id: address.address_id,
+        address_id: address3,
         customer_id: customer1,
         client_name: 'Client 3',
         contact_first_name: 'Jane',
@@ -178,7 +263,7 @@ const main = async () => {
       },
       {
         client_id: client4,
-        address_id: address.address_id,
+        address_id: address4,
         customer_id: customer1,
         client_name: 'Client 4',
         contact_first_name: 'Michael',
@@ -188,7 +273,7 @@ const main = async () => {
       },
       {
         client_id: client5,
-        address_id: address.address_id,
+        address_id: address5,
         customer_id: customer1,
         client_name: 'Client 5',
         contact_first_name: 'David',
@@ -439,6 +524,7 @@ const main = async () => {
         site_id: site1,
         customer_id: customer1,
         client_id: client1,
+        address_id: address1,
         job_number: 'Job001',
         site_name: 'Site 1',
         status_id: pending,
@@ -455,6 +541,7 @@ const main = async () => {
         site_id: site2,
         customer_id: customer1,
         client_id: client2,
+        address_id: address2,
         job_number: 'Job002',
         site_name: 'Site 2',
         status_id: pending,
@@ -471,6 +558,7 @@ const main = async () => {
         site_id: site3,
         customer_id: customer1,
         client_id: client3,
+        address_id: address3,
         job_number: 'Job003',
         site_name: 'Site 3',
         status_id: pending,
@@ -487,6 +575,7 @@ const main = async () => {
         site_id: site4,
         customer_id: customer1,
         client_id: client4,
+        address_id: address4,
         job_number: 'Job004',
         site_name: 'Site 4',
         status_id: scheduled,
@@ -503,6 +592,7 @@ const main = async () => {
         site_id: site5,
         customer_id: customer1,
         client_id: client5,
+        address_id: address5,
         job_number: 'Job005',
         site_name: 'Site 5',
         status_id: scheduled,
@@ -519,6 +609,7 @@ const main = async () => {
         site_id: site6,
         customer_id: customer1,
         client_id: client5,
+        address_id: address6,
         job_number: 'Job006',
         site_name: 'Site 6',
         status_id: scheduled,
@@ -535,6 +626,7 @@ const main = async () => {
         site_id: site7,
         customer_id: customer1,
         client_id: client5,
+        address_id: address7,
         job_number: 'Job007',
         site_name: 'Site 7',
         status_id: in_progress,
@@ -551,6 +643,7 @@ const main = async () => {
         site_id: site8,
         customer_id: customer1,
         client_id: client5,
+        address_id: address8,
         job_number: 'Job008',
         site_name: 'Site 8',
         status_id: in_progress,
@@ -567,6 +660,7 @@ const main = async () => {
         site_id: site9,
         customer_id: customer1,
         client_id: client5,
+        address_id: address9,
         job_number: 'Job009',
         site_name: 'Site 9',
         status_id: in_progress,
@@ -583,6 +677,7 @@ const main = async () => {
         site_id: site10,
         customer_id: customer1,
         client_id: client5,
+        address_id: address10,
         job_number: 'Job010',
         site_name: 'Site 10',
         status_id: completed,
@@ -599,6 +694,7 @@ const main = async () => {
         site_id: site11,
         customer_id: customer1,
         client_id: client5,
+        address_id: address1,
         job_number: 'Job011',
         site_name: 'Site 11',
         status_id: completed,
@@ -615,6 +711,7 @@ const main = async () => {
         site_id: site12,
         customer_id: customer1,
         client_id: client5,
+        address_id: address2,
         job_number: 'Job012',
         site_name: 'Site 12',
         status_id: completed,

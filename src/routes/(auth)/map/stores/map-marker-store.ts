@@ -1,14 +1,13 @@
 import { get, writable } from 'svelte/store';
-import type { HydratedSite } from '../+page.server';
+import type { HydratedMapSite } from '../+page.server';
 import type { Marker } from 'leaflet';
 import { getMap } from './map-store';
 import { addMarkerToMap, removeMarkerFromMap, showAllMarkers } from '../helpers/marker-utils';
-import type { Phase } from '$lib/data';
 import type { MapSite } from '../queries/retrieve-map-sites';
 import type { MapPhase } from '../queries/retreive-phases-by-site';
 
 export type HydratedMapMarker = {
-  site: HydratedSite;
+  site: HydratedMapSite;
   marker: Marker;
 };
 

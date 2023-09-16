@@ -10,9 +10,9 @@
   import MapSearchInfo from './map-search-info.svelte';
   import MapFilter from './map-filter.svelte';
   import { hideMapMenu, showMapMenu, mapMenuSubscribe } from '../stores/map-menu-store';
-  import type { HydratedSite } from '../proxy+page.server';
+  import type { HydratedMapSite } from '../proxy+page.server';
 
-  export let sites: HydratedSite[];
+  export let sites: HydratedMapSite[];
 
   let isMenuVisible: boolean;
   let isMenuFilterVisible: boolean;

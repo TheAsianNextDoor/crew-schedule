@@ -1,13 +1,13 @@
 import { get, writable } from 'svelte/store';
 
-import type { MapSite } from '../queries/retrieve-map-sites';
+import type { HydratedMapSite } from '../+page.server';
 
 /**
  * The selected map entity to display in the menu
  */
-const selectedEntityStore = writable<MapSite>();
+const selectedEntityStore = writable<HydratedMapSite>();
 const { subscribe: selectedEntitySubscribe } = selectedEntityStore;
-const setSelectedEntity = (site: MapSite) => {
+const setSelectedEntity = (site: HydratedMapSite) => {
   selectedEntityStore.set(site);
 };
 

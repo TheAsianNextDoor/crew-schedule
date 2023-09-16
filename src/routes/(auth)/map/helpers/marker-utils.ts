@@ -3,7 +3,7 @@ import type Leaflet from 'leaflet';
 import { hideMapFilter, isMapFilterVisible } from '../stores/map-filter-store';
 import { isMapMenuVisible, setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
 import { addBaseHydratedMarker, getBaseHydratedMarkers } from '../stores/map-marker-store';
-import type { HydratedSite } from '../+page.server';
+import type { HydratedMapSite } from '../+page.server';
 import type { Marker } from 'leaflet';
 import { getMap } from '../stores/map-store';
 
@@ -45,7 +45,7 @@ import { getMap } from '../stores/map-store';
 // };
 
 export const createMarker = (
-  site: HydratedSite,
+  site: HydratedMapSite,
   // setSiteStore: SetStoreFunction<MapItems>,
   marker: typeof Leaflet.marker,
   map: Leaflet.Map,

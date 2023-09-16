@@ -58,6 +58,7 @@ model Address {
   street      String
   Customer    Customer[]
   Client      Client[]
+  Site        Site[]
 
   @@map("address")
 }
@@ -204,7 +205,9 @@ model Site {
   client                       Client       @relation(references: [client_id], fields: [client_id])
   client_id                    String       @db.Uuid
   status                       Status       @relation(references: [status_id], fields: [status_id])
+  address_id                   String       @db.Uuid
   status_id                    String       @db.Uuid
+  address                      Address      @relation(references: [address_id], fields: [address_id])
   job_number                   String       @unique
   site_name                    String
   location                     Float[]

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import type { MapSite } from '../queries/retrieve-map-sites';
   import AutoComplete from './auto-complete.svelte';
   import { selectedEntitySubscribe } from '../stores/map-menu-store';
+  import type { HydratedMapSite } from '../proxy+page.server';
 
-  export let sites: MapSite[];
+  export let sites: HydratedMapSite[];
 
-  let selectedSite: MapSite;
+  let selectedSite: HydratedMapSite;
 
   const unsubSelectedSite = selectedEntitySubscribe((value) => {
     selectedSite = value;

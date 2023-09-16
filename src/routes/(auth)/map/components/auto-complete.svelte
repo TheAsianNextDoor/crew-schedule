@@ -7,9 +7,9 @@
   } from '@skeletonlabs/skeleton';
   import Menu from 'svelte-material-icons/Menu.svelte';
 
-  import type { MapSite } from '../queries/retrieve-map-sites';
+  import type { HydratedMapSite } from '../+page.server';
 
-  export let sites: MapSite[];
+  export let sites: HydratedMapSite[];
 
   let searchValue = '';
   let popupSettings: PopupSettings = {
@@ -25,7 +25,7 @@
   const siteOptions: AutocompleteOption[] = sites.map((site) => ({
     label: site.site_name,
     value: site.site_id,
-    keywords: [site.job_number, site.status_name],
+    keywords: [site.job_number, site.status_name, site.address],
   }));
 </script>
 

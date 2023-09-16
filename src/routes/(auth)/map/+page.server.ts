@@ -4,7 +4,19 @@ import { retrieveMapSites, type MapSite } from './queries/retrieve-map-sites.js'
 
 const findCurrentPhase = (phase: MapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
 
-export type HydratedSite = MapSite & { currentPhase: MapPhase | null; phases: MapPhase[] };
+export type HydratedMapSite = MapSite & {
+  currentPhase: MapPhase | null;
+  phases: MapPhase[];
+  address: string;
+};
+
+const buildAddress = (
+  street: string,
+  city: string,
+  state: string,
+  zipCode: string,
+  country: string,
+) => `${street} ${city}, ${state}, ${zipCode}, ${country}`;
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ parent }) {
@@ -20,7 +32,12 @@ export async function load({ parent }) {
 
       const currentPhase = phases.find(findCurrentPhase) || null;
 
-      return { ...site, currentPhase, phases };
+      return {
+        ...site,
+        address: buildAddress(site.street, site.city, site.state, site.zip_code, site.country),
+        currentPhase,
+        phases,
+      };
     }),
   );
 
