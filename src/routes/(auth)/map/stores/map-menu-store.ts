@@ -1,17 +1,18 @@
 import { get, writable } from 'svelte/store';
 
-import type { HydratedMapSite } from '../+page.server';
+import type { HydratedMapMarker } from './map-marker-store';
 
 /**
  * The selected map entity to display in the menu
  */
-const selectedEntityStore = writable<HydratedMapSite>();
+const selectedEntityStore = writable<HydratedMapMarker>();
 const { subscribe: selectedEntitySubscribe } = selectedEntityStore;
-const setSelectedEntity = (site: HydratedMapSite) => {
-  selectedEntityStore.set(site);
+const getSelectedEntity = () => get(selectedEntityStore);
+const setSelectedEntity = (mapMarker: HydratedMapMarker) => {
+  selectedEntityStore.set(mapMarker);
 };
 
-export { selectedEntitySubscribe, setSelectedEntity };
+export { selectedEntitySubscribe, getSelectedEntity, setSelectedEntity };
 
 /**
  * Map menu visibility flag

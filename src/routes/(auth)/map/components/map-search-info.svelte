@@ -9,7 +9,7 @@
   let selectedSite: HydratedMapSite;
 
   const unsubSelectedSite = selectedEntitySubscribe((value) => {
-    selectedSite = value;
+    selectedSite = value?.site;
   });
   onDestroy(unsubSelectedSite);
 </script>

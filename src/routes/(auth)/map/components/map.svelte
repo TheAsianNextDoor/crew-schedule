@@ -16,6 +16,7 @@
   onMount(async () => {
     if (browser) {
       const leaflet = await import('leaflet');
+      await import('leaflet.smooth_marker_bouncing');
 
       map = leaflet.map(mapElement, { zoomControl: false }).setView([51.505, -0.09], 12);
       setMap(map);
@@ -27,27 +28,14 @@
         })
         .addTo(map);
 
-      // const populatedSites = siteList.map((site) => ({
-      //   ...site,
-      //   currentPhase: phases.find((phase) => phase.phaseId === site.currentPhaseId) || null,
-      // }));
-
       sites.forEach((site) => {
-        createMarker(site, leaflet.marker, map);
+        createMarker(site, leaflet.marker, map, leaflet);
       });
 
       setFilteredHydratedMarkers(getBaseHydratedMarkers());
     }
   });
 
-  // let filteredMapSites: HydratedMapSite[];
-  // const unsubMapSite = mapSiteSubscribe((value) => {
-  //   sites.forEach((site) => {
-  //     createMarker(site, leaflet.marker, map);
-  //   });
-  // });
-
-  // onDestroy(unsubMapSite);
   onDestroy(async () => {
     if (map) {
       console.log('Unloading Leaflet map.');

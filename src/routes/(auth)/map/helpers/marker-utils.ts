@@ -1,67 +1,52 @@
 import type Leaflet from 'leaflet';
 
 import { hideMapFilter, isMapFilterVisible } from '../stores/map-filter-store';
-import { isMapMenuVisible, setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
+import {
+  getSelectedEntity,
+  isMapMenuVisible,
+  setSelectedEntity,
+  showMapMenu,
+} from '../stores/map-menu-store';
 import { addBaseHydratedMarker, getBaseHydratedMarkers } from '../stores/map-marker-store';
 import type { HydratedMapSite } from '../+page.server';
 import type { Marker } from 'leaflet';
 import { getMap } from '../stores/map-store';
 
-// const getMarkerIcon = (site: any) => {
-//   const LeafIcon = L.Icon.extend({
-//     options: {
-//       shadowUrl: '/src/assets/marker-shadow.png',
-//       iconSize: [40, 40],
-//       shadowSize: [50, 50],
-//       iconAnchor: [25, 40],
-//       shadowAnchor: [20, 50],
-//       popupAnchor: [-3, -76],
-//     },
-//   });
+const createIcon = (leafletInstance: typeof Leaflet, iconUrl: string) => {
+  const LeafIcon = leafletInstance.Icon.extend({
+    options: {
+      shadowUrl: '/src/lib/images/marker-shadow.png',
+      iconSize: [40, 40],
+      shadowSize: [50, 50],
+      iconAnchor: [25, 40],
+      shadowAnchor: [20, 50],
+      popupAnchor: [-3, -76],
+    },
+  });
 
-//   const redDefaultIcon = new LeafIcon({
-//     iconUrl: '/src/assets/red-default.png',
-//   });
-//   const greenDefaultIcon = new LeafIcon({
-//     iconUrl: '/src/assets/green-default.png',
-//   });
-//   const blueDefaultIcon = new LeafIcon({
-//     iconUrl: '/src/assets/blue-default.png',
-//   });
-
-//   if (site.currentPhase?.discipline === 'concrete') {
-//     return redDefaultIcon;
-//   }
-
-//   if (site.currentPhase?.discipline === 'asphalt') {
-//     return greenDefaultIcon;
-//   }
-
-//   if (site.currentPhase?.discipline === 'striping') {
-//     return blueDefaultIcon;
-//   }
-
-//   return redDefaultIcon;
-// };
+  return new LeafIcon({ iconUrl });
+};
 
 export const createMarker = (
   site: HydratedMapSite,
-  // setSiteStore: SetStoreFunction<MapItems>,
-  marker: typeof Leaflet.marker,
+  markerFunc: typeof Leaflet.marker,
   map: Leaflet.Map,
+  leafletInstance: typeof Leaflet,
 ) => {
-  // const myMarker = marker(site.location, { icon: getMarkerIcon(site) });
-  const myMarker = marker(site.location as [number, number]);
+  const defaultIcon = createIcon(leafletInstance, '/src/lib/images/default-marker.png');
+  // const selectedIcon = createIcon(leafletInstance, '/src/lib/images/selected-marker.gif');
 
-  myMarker
-    .bindTooltip(
-      `
-    Name: ${site.site_name} <br>
-    Job Number: ${site.job_number} <br>
-    Status: ${site.status_name} <br>
-  `,
-    )
-    .on('click', async () => {
+  const marker = markerFunc(site.location as [number, number], { icon: defaultIcon });
+
+  marker
+    // .bindTooltip(
+    //   `
+    //   Name: ${site.site_name} <br>
+    //   Job Number: ${site.job_number} <br>
+    //   Status: ${site.status_name} <br>
+    // `,
+    // )
+    .on('click', async (e) => {
       if (!isMapMenuVisible()) {
         showMapMenu();
       }
@@ -70,12 +55,15 @@ export const createMarker = (
         hideMapFilter();
       }
 
-      setSelectedEntity(site);
+      getSelectedEntity()?.marker?.stopBouncing();
+      e.target.bounce(4);
+
+      setSelectedEntity({ site, marker });
     });
 
-  addBaseHydratedMarker({ marker: myMarker, site });
+  addBaseHydratedMarker({ marker: marker, site });
 
-  myMarker.addTo(map);
+  marker.addTo(map);
 };
 
 export const removeMarkerFromMap = (marker: Marker) => {
