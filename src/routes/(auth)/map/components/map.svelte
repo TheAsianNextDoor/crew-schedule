@@ -16,6 +16,8 @@
   onMount(async () => {
     if (browser) {
       const leaflet = await import('leaflet');
+      // https://github.com/hosuaby/Leaflet.SmoothMarkerBouncing
+      // @ts-ignore
       await import('leaflet.smooth_marker_bouncing');
 
       map = leaflet.map(mapElement, { zoomControl: false }).setView([51.505, -0.09], 12);

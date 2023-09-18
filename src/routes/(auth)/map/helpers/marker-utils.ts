@@ -24,6 +24,7 @@ const createIcon = (leafletInstance: typeof Leaflet, iconUrl: string) => {
     },
   });
 
+  // @ts-ignore
   return new LeafIcon({ iconUrl });
 };
 
@@ -55,6 +56,7 @@ export const createMarker = (
         hideMapFilter();
       }
 
+      // @ts-ignore
       getSelectedEntity()?.marker?.stopBouncing();
       e.target.bounce(4);
 
