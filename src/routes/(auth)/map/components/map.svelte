@@ -1,12 +1,13 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import type { Map } from 'leaflet';
-  import { onDestroy, onMount } from 'svelte';
+  import { Loader } from '@googlemaps/js-api-loader';
+  import { onMount } from 'svelte';
 
-  import { createMarker } from '../helpers/marker-utils';
+  import { createMarker, type Map } from '../helpers/marker-utils';
   import type { HydratedMapSite } from '../proxy+page.server';
   import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
+  import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
 
   export let sites: HydratedMapSite[];
 
@@ -15,39 +16,39 @@
 
   onMount(async () => {
     if (browser) {
-      const leaflet = await import('leaflet');
-      // https://github.com/hosuaby/Leaflet.SmoothMarkerBouncing
-      // @ts-ignore
-      await import('leaflet.smooth_marker_bouncing');
-
-      map = leaflet.map(mapElement, { zoomControl: false }).setView([51.505, -0.09], 12);
-      setMap(map);
-
-      leaflet
-        .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution:
-            '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        })
-        .addTo(map);
-
-      sites.forEach((site) => {
-        createMarker(site, leaflet.marker, map, leaflet);
+      const loader = new Loader({
+        apiKey: PUBLIC_GOOGLE_MAPS_API_KEY,
+        version: 'weekly',
+        libraries: ['places'],
       });
 
-      setFilteredHydratedMarkers(getBaseHydratedMarkers());
-    }
-  });
+      try {
+        const { Map, InfoWindow } = await loader.importLibrary('maps');
 
-  onDestroy(async () => {
-    if (map) {
-      console.log('Unloading Leaflet map.');
-      map.remove();
+        const infoWindow = new InfoWindow();
+
+        const options: google.maps.MapOptions = {
+          center: {
+            lat: 51.505,
+            lng: -0.15,
+          },
+          zoom: 12,
+          mapId: 'map',
+        };
+
+        const map = new Map(mapElement, options);
+        setMap(map);
+
+        sites.forEach((site) => {
+          createMarker({ site, map, infoWindow });
+        });
+
+        setFilteredHydratedMarkers(getBaseHydratedMarkers());
+      } catch (e) {
+        console.log(e);
+      }
     }
   });
 </script>
 
 <div class="h-full" bind:this={mapElement} />
-
-<style>
-  @import 'leaflet/dist/leaflet.css';
-</style>

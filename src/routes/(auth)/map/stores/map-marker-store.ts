@@ -1,8 +1,11 @@
 import { get, writable } from 'svelte/store';
 import type { HydratedMapSite } from '../+page.server';
-import type { Marker } from 'leaflet';
-import { getMap } from './map-store';
-import { addMarkerToMap, removeMarkerFromMap, showAllMarkers } from '../helpers/marker-utils';
+import {
+  addMarkerToMap,
+  removeMarkerFromMap,
+  showAllMarkers,
+  type Marker,
+} from '../helpers/marker-utils';
 import type { MapSite } from '../queries/retrieve-map-sites';
 import type { MapPhase } from '../queries/retreive-phases-by-site';
 
@@ -100,7 +103,7 @@ const filteredHydratedMarkerStore = writable<HydratedMapMarker[]>([]);
 const { subscribe: filteredMapMarkerSubscribe } = filteredHydratedMarkerStore;
 
 const clearFilteredHydratedMarkers = () => {
-  getBaseHydratedMarkers().forEach(({ marker }) => marker.addTo(getMap()));
+  showAllMarkers();
   filteredHydratedMarkerStore.set(getBaseHydratedMarkers());
 };
 
