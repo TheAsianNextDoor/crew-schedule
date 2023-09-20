@@ -1,3 +1,4 @@
+/** @type {import('eslint').ESLint.ConfigData} */
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -7,6 +8,9 @@ module.exports = {
     extraFileExtensions: ['.svelte'],
     project: 'tsconfig.eslint.json',
     tsconfigRootDir: './',
+  },
+  globals: {
+    google: 'readonly',
   },
   env: {
     browser: true,
