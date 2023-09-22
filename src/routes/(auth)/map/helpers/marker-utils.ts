@@ -9,53 +9,95 @@ import { addBaseHydratedMarker, getBaseHydratedMarkers } from '../stores/map-mar
 import type { HydratedMapSite } from '../+page.server';
 import { getMap } from '../stores/map-store';
 
-export type Marker = google.maps.Marker;
-export type Map = google.maps.Map;
+export type Marker = google.maps.marker.AdvancedMarkerElement;
+
+const markerClickEventListener = (marker: Marker, site: HydratedMapSite) => {
+  if (!isMapMenuVisible()) {
+    showMapMenu();
+  }
+
+  if (isMapFilterVisible()) {
+    hideMapFilter();
+  }
+
+  const content = marker.content as HTMLElement;
+
+  const previouslySelected = getSelectedEntity();
+  if (previouslySelected) {
+    // buggy and not working
+    previouslySelected.marker.style.animationName = 'bounce';
+    previouslySelected.marker.style.animationPlayState = 'paused';
+  }
+
+  content.style.animation = '';
+  content.offsetWidth;
+  content.style.animation = 'bounce .75s linear 0s 3';
+
+  setSelectedEntity({ site, marker });
+};
+
+const dropAnimation = (content: HTMLElement) => {
+  content.style.cssText = 'cursor: pointer';
+  content.style.opacity = '0';
+  content.addEventListener('animationend', () => {
+    content.classList.remove('drop');
+    content.style.opacity = '1';
+  });
+  const time = Math.random(); // delay for easy to see the animation
+  content.style.setProperty('--delay-time', time + 's');
+};
 
 interface CreateMarkerArgs {
   site: HydratedMapSite;
-  map: Map;
-  infoWindow: google.maps.InfoWindow;
+  map: google.maps.Map;
+  AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement;
+  PinElement: typeof google.maps.marker.PinElement;
+  LatLng: typeof google.maps.LatLng;
+  intersectionObserver: IntersectionObserver;
 }
 
-export const createMarker = ({ site, map, infoWindow }: CreateMarkerArgs) => {
-  const marker = new google.maps.Marker({
+export const createMarker = ({
+  site,
+  map,
+  AdvancedMarkerElement,
+  PinElement,
+  LatLng,
+  intersectionObserver,
+}: CreateMarkerArgs) => {
+  // const icon = document.createElement('div');
+  // icon.style.cssText = 'cursor: pointer;';
+  // icon.innerHTML = `<i class="fa fa-pizza-slice fa-lg"></i>`;
+  // const faPin = new PinElement({
+  //   glyph: icon,
+  //   glyphColor: '#ff8300',
+  //   background: '#FFD514',
+  //   borderColor: '#ff8300',
+  // });
+
+  const marker = new AdvancedMarkerElement({
     map,
-    position: {
-      lat: site.location[0],
-      lng: site.location[1],
-    },
-    animation: google.maps.Animation.DROP,
+    position: new LatLng(site.location[0], site.location[1]),
+    title: site.site_name,
   });
 
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  marker.addListener('click', async ({ domEvent, latLng, pixel }) => {
-    if (!isMapMenuVisible()) {
-      showMapMenu();
-    }
+  const content = marker.content as HTMLElement;
+  dropAnimation(content);
+  intersectionObserver.observe(content);
 
-    if (isMapFilterVisible()) {
-      hideMapFilter();
-    }
-
-    getSelectedEntity()?.marker?.setAnimation(null);
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-
-    setSelectedEntity({ site, marker });
-  });
-
+  content.addEventListener('click', () => markerClickEventListener(marker, site));
   addBaseHydratedMarker({ marker: marker, site });
+
+  return marker;
 };
 
 export const removeMarkerFromMap = (marker: Marker) => {
-  marker.setMap(null);
+  marker.map = null;
 };
 
 export const addMarkerToMap = (marker: Marker) => {
-  marker.setMap(getMap());
+  marker.map = getMap();
 };
 
 export const showAllMarkers = () => {
-  getBaseHydratedMarkers().forEach(({ marker }) => marker.setMap(getMap()));
+  getBaseHydratedMarkers().forEach(({ marker }) => addMarkerToMap(marker));
 };

@@ -1,52 +1,56 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import { Loader } from '@googlemaps/js-api-loader';
   import { onMount } from 'svelte';
 
-  import { createMarker, type Map } from '../helpers/marker-utils';
+  import { createMarker } from '../helpers/marker-utils';
   import type { HydratedMapSite } from '../proxy+page.server';
   import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
-  import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
 
   export let sites: HydratedMapSite[];
+  export let Map: typeof google.maps.Map;
+  export let AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement;
+  export let PinElement: typeof google.maps.marker.PinElement;
+  export let LatLng: typeof google.maps.LatLng;
 
   let mapElement: HTMLDivElement;
-  let map: Map;
+
+  const intersectionObserver = new window.IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('drop');
+        intersectionObserver.unobserve(entry.target);
+      }
+    }
+  });
 
   onMount(async () => {
-    if (browser) {
-      const loader = new Loader({
-        apiKey: PUBLIC_GOOGLE_MAPS_API_KEY,
-        version: 'weekly',
-        libraries: ['places'],
-      });
+    try {
+      const options: google.maps.MapOptions = {
+        center: {
+          lat: 51.505,
+          lng: -0.15,
+        },
+        zoom: 12,
+        mapId: 'map',
+      };
 
-      try {
-        const { Map, InfoWindow } = await loader.importLibrary('maps');
+      const map = new Map(mapElement, options);
+      setMap(map);
 
-        const infoWindow = new InfoWindow();
+      sites.map((site) =>
+        createMarker({
+          site,
+          map,
+          AdvancedMarkerElement,
+          PinElement,
+          LatLng,
+          intersectionObserver,
+        }),
+      );
 
-        const options: google.maps.MapOptions = {
-          center: {
-            lat: 51.505,
-            lng: -0.15,
-          },
-          zoom: 12,
-          mapId: 'map',
-        };
-
-        const map = new Map(mapElement, options);
-        setMap(map);
-
-        sites.forEach((site) => {
-          createMarker({ site, map, infoWindow });
-        });
-
-        setFilteredHydratedMarkers(getBaseHydratedMarkers());
-      } catch (e) {
-        console.log(e);
-      }
+      setFilteredHydratedMarkers(getBaseHydratedMarkers());
+    } catch (e) {
+      console.log(e);
     }
   });
 </script>
