@@ -58,7 +58,7 @@ devDependencies:
   '@fontsource/fira-mono':
     specifier: ^5.0.8
     version: 5.0.8
-  '@fortawesome/free-solid-svg-icons':
+  '@fortawesome/fontawesome-free':
     specifier: ^6.4.2
     version: 6.4.2
   '@neoconfetti/svelte':
@@ -166,9 +166,6 @@ devDependencies:
   svelte-check:
     specifier: ^3.5.1
     version: 3.5.1(postcss-load-config@4.0.1)(postcss@8.4.29)(svelte@4.2.0)
-  svelte-fa:
-    specifier: ^3.0.4
-    version: 3.0.4
   tailwind-merge:
     specifier: ^1.14.0
     version: 1.14.0
@@ -612,18 +609,10 @@ packages:
     resolution: {integrity: sha512-8OJiUK2lzJjvDlkmamEfhtpL1cyFApg1Pk4kE5Pw5UTf1ETF3Yy/pprgwV5I+LQPDjuFvinsinT9xSUZ2b/zuQ==}
     dev: true
 
-  /@fortawesome/fontawesome-common-types@6.4.2:
-    resolution: {integrity: sha512-1DgP7f+XQIJbLFCTX1V2QnxVmpLdKdzzo2k8EmvDOePfchaIGQ9eCHj2up3/jNEbZuBqel5OxiaOJf37TWauRA==}
+  /@fortawesome/fontawesome-free@6.4.2:
+    resolution: {integrity: sha512-m5cPn3e2+FDCOgi1mz0RexTUvvQibBebOUlUlW0+YrMjDTPkiJ6VTKukA1GRsvRw+12KyJndNjj0O4AgTxm2Pg==}
     engines: {node: '>=6'}
     requiresBuild: true
-    dev: true
-
-  /@fortawesome/free-solid-svg-icons@6.4.2:
-    resolution: {integrity: sha512-sYwXurXUEQS32fZz9hVCUUv/xu49PEJEyUOsA51l6PU/qVgfbTb2glsTEaJngVVT8VqBATRIdh7XVgV1JF1LkA==}
-    engines: {node: '>=6'}
-    requiresBuild: true
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.4.2
     dev: true
 
   /@googlemaps/google-maps-services-js@3.3.38:
@@ -5789,10 +5778,6 @@ packages:
       postcss: 8.4.29
       postcss-scss: 4.0.7(postcss@8.4.29)
       svelte: 4.2.0
-    dev: true
-
-  /svelte-fa@3.0.4:
-    resolution: {integrity: sha512-y04vEuAoV1wwVDItSCzPW7lzT6v1bj/y1p+W1V+NtIMpQ+8hj8MBkx7JFD7JHSnalPU1QiI8BVfguqheEA3nPg==}
     dev: true
 
   /svelte-hmr@0.15.3(svelte@4.2.0):

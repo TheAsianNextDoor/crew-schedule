@@ -11,7 +11,31 @@ import { getMap } from '../stores/map-store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
-const markerClickEventListener = (marker: Marker, site: HydratedMapSite) => {
+const addBaseMarkerFunctionality = (marker: Marker) => {
+  const content = marker.content as HTMLElement;
+  content.style.cursor = 'pointer';
+};
+
+const routeClickEventListener = (
+  marker: Marker,
+  PinElement: typeof google.maps.marker.PinElement,
+) => {
+  const icon = document.createElement('div');
+  icon.innerHTML = '<i class="fa-solid fa-trowel fa-beat-fade"></i>';
+  const faPin = new PinElement({
+    glyph: icon,
+    glyphColor: 'red',
+    background: 'blue',
+    borderColor: '#ff8300',
+  });
+  marker.content = faPin.element;
+
+  const content = marker.content as HTMLElement;
+  content.style.cursor = 'pointer';
+  // content.addEventListener('click', () => markerClickEventListener(marker, site));
+};
+
+const selectedMarkerClickEventListener = (marker: Marker, site: HydratedMapSite) => {
   if (!isMapMenuVisible()) {
     showMapMenu();
   }
@@ -24,20 +48,20 @@ const markerClickEventListener = (marker: Marker, site: HydratedMapSite) => {
 
   const previouslySelected = getSelectedEntity();
   if (previouslySelected) {
-    // buggy and not working
-    previouslySelected.marker.style.animationName = 'bounce';
-    previouslySelected.marker.style.animationPlayState = 'paused';
+    const previousContent = previouslySelected.marker.content as HTMLElement;
+    previousContent.style.animationName = '';
   }
 
-  content.style.animation = '';
   content.offsetWidth;
   content.style.animation = 'bounce .75s linear 0s 3';
+  setTimeout(() => {
+    content.style.animation = '';
+  }, 2250);
 
   setSelectedEntity({ site, marker });
 };
 
-const dropAnimation = (content: HTMLElement) => {
-  content.style.cssText = 'cursor: pointer';
+const dropAnimation = (content: HTMLElement, intersectionObserver: IntersectionObserver) => {
   content.style.opacity = '0';
   content.addEventListener('animationend', () => {
     content.classList.remove('drop');
@@ -45,6 +69,7 @@ const dropAnimation = (content: HTMLElement) => {
   });
   const time = Math.random(); // delay for easy to see the animation
   content.style.setProperty('--delay-time', time + 's');
+  intersectionObserver.observe(content);
 };
 
 interface CreateMarkerArgs {
@@ -64,27 +89,28 @@ export const createMarker = ({
   LatLng,
   intersectionObserver,
 }: CreateMarkerArgs) => {
-  // const icon = document.createElement('div');
-  // icon.style.cssText = 'cursor: pointer;';
-  // icon.innerHTML = `<i class="fa fa-pizza-slice fa-lg"></i>`;
-  // const faPin = new PinElement({
-  //   glyph: icon,
-  //   glyphColor: '#ff8300',
-  //   background: '#FFD514',
-  //   borderColor: '#ff8300',
-  // });
+  const icon = document.createElement('div');
+  icon.innerHTML = '<i class="fa-solid fa-trowel fa-beat-fade"></i>';
+  const faPin = new PinElement({
+    glyph: icon,
+    glyphColor: 'red',
+    background: '#FFD514',
+    borderColor: '#ff8300',
+  });
 
   const marker = new AdvancedMarkerElement({
     map,
     position: new LatLng(site.location[0], site.location[1]),
     title: site.site_name,
+    content: faPin.element,
   });
 
   const content = marker.content as HTMLElement;
-  dropAnimation(content);
-  intersectionObserver.observe(content);
 
-  content.addEventListener('click', () => markerClickEventListener(marker, site));
+  addBaseMarkerFunctionality(marker);
+  dropAnimation(content, intersectionObserver);
+  content.addEventListener('click', () => selectedMarkerClickEventListener(marker, site));
+
   addBaseHydratedMarker({ marker: marker, site });
 
   return marker;
