@@ -5,6 +5,7 @@
   import type { HydratedMapSite } from '../proxy+page.server';
   import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
+  import { PUBLIC_GOOGLE_MAP_ID } from '$env/static/public';
 
   export let sites: HydratedMapSite[];
   export let Map: typeof google.maps.Map;
@@ -25,30 +26,30 @@
 
   onMount(async () => {
     try {
-      const options: google.maps.MapOptions = {
+      const map = new Map(mapElement, {
         center: {
           lat: 51.505,
           lng: -0.15,
         },
         zoom: 12,
-        mapId: 'map',
-      };
-
-      const map = new Map(mapElement, options);
+        mapId: PUBLIC_GOOGLE_MAP_ID,
+      });
       setMap(map);
 
-      sites.map((site) =>
-        createMarker({
-          site,
-          map,
-          AdvancedMarkerElement,
-          PinElement,
-          LatLng,
-          intersectionObserver,
-        }),
-      );
+      setTimeout(() => {
+        sites.map((site) =>
+          createMarker({
+            site,
+            map,
+            AdvancedMarkerElement,
+            PinElement,
+            LatLng,
+            intersectionObserver,
+          }),
+        );
 
-      setFilteredHydratedMarkers(getBaseHydratedMarkers());
+        setFilteredHydratedMarkers(getBaseHydratedMarkers());
+      }, 800);
     } catch (e) {
       console.log(e);
     }
