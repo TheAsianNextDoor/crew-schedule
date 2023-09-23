@@ -57,3 +57,7 @@ body {
 		transform:         translateY(0)
 	}
 }
+
+.map-icon {
+  cursor: pointer;
+}
