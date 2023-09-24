@@ -1,11 +1,13 @@
 import { get, writable } from 'svelte/store';
 
-type MapMode = 'base' | 'route';
+export type MapMode = 'base' | 'routes';
 
 export const mapModeStore = writable<MapMode>('base');
+const mapModeSubscribe = mapModeStore.subscribe;
+
 const getMapMode = () => get(mapModeStore);
-const setMapModeName = (name: MapMode) => {
+const setMapMode = (name: MapMode) => {
   mapModeStore.set(name);
 };
 
-export { getMapMode, setMapModeName };
+export { getMapMode, setMapMode, mapModeSubscribe };

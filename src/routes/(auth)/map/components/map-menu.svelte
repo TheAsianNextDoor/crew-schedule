@@ -3,6 +3,7 @@
   import MenuLeft from 'svelte-material-icons/MenuLeft.svelte';
   import MenuRight from 'svelte-material-icons/MenuRight.svelte';
   import Filter from 'svelte-material-icons/FilterOutline.svelte';
+  import Routes from 'svelte-material-icons/Routes.svelte';
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
@@ -11,21 +12,28 @@
   import MapFilter from './map-filter.svelte';
   import { hideMapMenu, showMapMenu, mapMenuSubscribe } from '../stores/map-menu-store';
   import type { HydratedMapSite } from '../proxy+page.server';
+  import { getMapMode, setMapMode } from '../stores/map-mode-store';
 
   export let sites: HydratedMapSite[];
 
-  let isMenuVisible: boolean;
-  let isMenuFilterVisible: boolean;
+  const setRoutesMode = () => {
+    if (getMapMode() === 'routes') {
+      setMapMode('base');
+    } else if (getMapMode() === 'base') {
+      setMapMode('routes');
+    }
+  };
 
+  let isMenuVisible: boolean;
   const unsubMenu = mapMenuSubscribe((value) => {
     isMenuVisible = value;
   });
+  onDestroy(unsubMenu);
 
+  let isMenuFilterVisible: boolean;
   const unsubFilter = mapFilterSubscribe((value) => {
     isMenuFilterVisible = value;
   });
-
-  onDestroy(unsubMenu);
   onDestroy(unsubFilter);
 
   const getFlyTransition = (x: number) => ({ duration: 300, easing: sineIn, x, opacity: 100 });
@@ -42,15 +50,24 @@
       {/if}
     </div>
 
-    {#if !isMenuFilterVisible}
+    <div class="right-of-menu flex absolute gap-6 mt-6">
+      {#if !isMenuFilterVisible}
+        <button
+          class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50 ml-6"
+          on:click={showMapFilter}
+        >
+          <Filter size="18px" />
+          Filters
+        </button>
+      {/if}
       <button
-        class="flex justify-center items-center right-of-menu filter-button absolute filter w-20 h-8 rounded-lg bg-slate-50 m-6"
-        on:click={showMapFilter}
+        class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50"
+        on:click={setRoutesMode}
       >
-        <Filter size="18px" />
-        Filters
+        <Routes size="18px" />
+        Routes
       </button>
-    {/if}
+    </div>
     <button class="arrow right-of-menu" on:click={hideMapMenu}>
       <MenuLeft size="23px" />
     </button>

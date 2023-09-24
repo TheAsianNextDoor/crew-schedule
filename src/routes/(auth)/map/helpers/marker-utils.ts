@@ -34,7 +34,7 @@ const markerClickEventListener = (marker: Marker, site: HydratedMapSite) => {
     selectedClickAnimation(marker.content as HTMLElement);
 
     setSelectedEntity({ site, marker });
-  } else if (getMapMode() === 'route') {
+  } else if (getMapMode() === 'routes') {
     showMapMenu();
     hideMapFilter();
   } else {
