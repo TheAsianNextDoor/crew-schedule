@@ -50,7 +50,7 @@
       {/if}
     </div>
 
-    <div class="right-of-menu flex absolute gap-6 mt-6">
+    <div class="right-of-menu flex absolute mt-6">
       {#if !isMenuFilterVisible}
         <button
           class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50 ml-6"
@@ -61,7 +61,7 @@
         </button>
       {/if}
       <button
-        class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50"
+        class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50 ml-6"
         on:click={setRoutesMode}
       >
         <Routes size="18px" />
