@@ -12,15 +12,15 @@
   import MapFilter from './map-filter.svelte';
   import { hideMapMenu, showMapMenu, mapMenuSubscribe } from '../stores/map-menu-store';
   import type { HydratedMapSite } from '../proxy+page.server';
-  import { getMapMode, setMapMode } from '../stores/map-mode-store';
+  import { getMapMode, setMapModeBase, setMapModeRoutes } from '../stores/map-mode-store';
 
   export let sites: HydratedMapSite[];
 
   const setRoutesMode = () => {
     if (getMapMode() === 'routes') {
-      setMapMode('base');
+      setMapModeBase();
     } else if (getMapMode() === 'base') {
-      setMapMode('routes');
+      setMapModeRoutes();
     }
   };
 
