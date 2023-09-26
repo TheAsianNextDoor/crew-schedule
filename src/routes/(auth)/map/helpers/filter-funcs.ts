@@ -98,13 +98,29 @@ export const filterByStatusName = (
 const filterByDisciplineFunc = (phase: MapPhase, discipline: string) =>
   phase.discipline_name === discipline ?? false;
 
-export const filterByDiscipline = (disciplineName: string) => {
-  const shouldFilter = disciplineName !== '';
+export const filterByDiscipline = (
+  e: Event & {
+    currentTarget: EventTarget & HTMLSelectElement;
+  },
+) => {
+  const value = e?.target?.value;
+  const shouldFilter = value !== '';
 
   maybeFilterByValue(
     'discipline',
     shouldFilter,
-    (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
+    (phase: MapPhase) => filterByDisciplineFunc(phase, value),
     'phase',
   );
 };
+
+// export const filterByDiscipline = (disciplineName: string) => {
+//   const shouldFilter = disciplineName !== '';
+
+//   maybeFilterByValue(
+//     'discipline',
+//     shouldFilter,
+//     (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
+//     'phase',
+//   );
+// };

@@ -61,6 +61,12 @@
     />
   </FilterSection>
 
+  <FilterSection label="Discipline">
+    <select bind:value={$disciplineName} on:change={filterByDiscipline} class="select">
+
+    </select>
+  </FilterSection>
+
   <FilterSection label="Status">
     <select bind:value={$phaseStatus} on:change={filterByStatusName} class="select">
       <option selected value="">any status</option>
