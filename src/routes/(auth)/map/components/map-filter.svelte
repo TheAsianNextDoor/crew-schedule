@@ -96,17 +96,17 @@
 </div>
 
 <div class="py-4 px-6">
-  <FilterSection label="Discipline">
+  <!-- <FilterSection label="Discipline">
     <input
       class="input variant-form-material grow basis-0"
       bind:value={$disciplineName}
       on:input={() => filterByDiscipline($disciplineName)}
     />
-  </FilterSection>
+  </FilterSection> -->
 
   <FilterSection label="Discipline">
     <select bind:value={$disciplineName} on:change={filterByDiscipline} class="select">
-
+      <option selected value={}>{}</option>
     </select>
   </FilterSection>
 
