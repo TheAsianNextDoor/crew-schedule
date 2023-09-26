@@ -33,6 +33,7 @@
         },
         zoom: 12,
         mapId: PUBLIC_GOOGLE_MAP_ID,
+        clickableIcons: false,
       });
       setMap(map);
 
