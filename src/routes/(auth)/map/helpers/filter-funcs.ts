@@ -110,11 +110,30 @@ const filterByForemanFunc = (phase: MapPhase, foremanName: string) =>
 
 export const filterByForeman = (foremanName: string) => {
   const shouldFilter = foremanName.length !== 0;
+export const filterByDiscipline = (
+  e: Event & {
+    currentTarget: EventTarget & HTMLSelectElement;
+  },
+) => {
+  const value = e?.target?.value;
+  const shouldFilter = value !== '';
 
   maybeFilterByValue(
     'foreman',
     shouldFilter,
     (phase: MapPhase) => filterByForemanFunc(phase, foremanName),
+    (phase: MapPhase) => filterByDisciplineFunc(phase, value),
     'phase',
   );
 };
+
+// export const filterByDiscipline = (disciplineName: string) => {
+//   const shouldFilter = disciplineName !== '';
+
+//   maybeFilterByValue(
+//     'discipline',
+//     shouldFilter,
+//     (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
+//     'phase',
+//   );
+// };
