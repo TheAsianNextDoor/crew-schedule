@@ -10,6 +10,7 @@ import type { MapSite } from '../queries/retrieve-map-sites';
 import type { MapPhase } from '../queries/retreive-phases-by-site';
 
 export type HydratedMapMarker = {
+  id: string;
   site: HydratedMapSite;
   marker: Marker;
 };

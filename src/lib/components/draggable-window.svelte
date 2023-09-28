@@ -25,7 +25,10 @@
   }
 </script>
 
-<section class={`absolute z-10 ${containerClass}`} style="left: {left}px; top: {top}px;">
+<section
+  class={`absolute z-10 flex flex-col ${containerClass}`}
+  style="left: {left}px; top: {top}px;"
+>
   <!-- eslint-disable-next-line svelte/valid-compile  -->
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div on:mousedown={onMouseDown} role="dialog" class="draggable w-full">

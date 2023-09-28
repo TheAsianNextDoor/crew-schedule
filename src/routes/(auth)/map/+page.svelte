@@ -3,7 +3,7 @@
   import MapMenu from './components/map-menu.svelte';
   import Map from './components/map.svelte';
   import { mapModeSubscribe, type MapMode } from './stores/map-mode-store';
-  import MapRoutesModal from './components/map-routes-modal.svelte';
+  import MapRoutesModal from './components/routes-modal.svelte';
 
   export let data;
 

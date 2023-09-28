@@ -17,6 +17,9 @@ dependencies:
   '@floating-ui/dom':
     specifier: ^1.5.1
     version: 1.5.1
+  '@fortawesome/fontawesome-free':
+    specifier: ^6.4.2
+    version: 6.4.2
   '@googlemaps/google-maps-services-js':
     specifier: ^3.3.38
     version: 3.3.38
@@ -26,6 +29,9 @@ dependencies:
   '@prisma/client':
     specifier: 5.2.0
     version: 5.2.0(prisma@5.2.0)
+  '@skeletonlabs/skeleton':
+    specifier: ^2.0.0
+    version: 2.0.0(svelte@4.2.0)
   '@supabase/auth-helpers-sveltekit':
     specifier: ^0.10.2
     version: 0.10.2(@supabase/supabase-js@2.33.1)(@sveltejs/kit@1.24.0)
@@ -47,6 +53,9 @@ dependencies:
   pino:
     specifier: ^8.15.0
     version: 8.15.0
+  svelte-dnd-action:
+    specifier: ^0.9.30
+    version: 0.9.30(svelte@4.2.0)
   svelte-material-icons:
     specifier: ^3.0.5
     version: 3.0.5(svelte@4.2.0)
@@ -58,18 +67,9 @@ devDependencies:
   '@fontsource/fira-mono':
     specifier: ^5.0.8
     version: 5.0.8
-  '@fortawesome/fontawesome-free':
-    specifier: ^6.4.2
-    version: 6.4.2
-  '@neoconfetti/svelte':
-    specifier: ^1.0.0
-    version: 1.0.0
   '@playwright/test':
     specifier: ^1.37.1
     version: 1.37.1
-  '@skeletonlabs/skeleton':
-    specifier: ^2.0.0
-    version: 2.0.0(svelte@4.2.0)
   '@skeletonlabs/tw-plugin':
     specifier: ^0.1.0
     version: 0.1.0(tailwindcss@3.3.3)
@@ -613,7 +613,7 @@ packages:
     resolution: {integrity: sha512-m5cPn3e2+FDCOgi1mz0RexTUvvQibBebOUlUlW0+YrMjDTPkiJ6VTKukA1GRsvRw+12KyJndNjj0O4AgTxm2Pg==}
     engines: {node: '>=6'}
     requiresBuild: true
-    dev: true
+    dev: false
 
   /@googlemaps/google-maps-services-js@3.3.38:
     resolution: {integrity: sha512-DGLPj0KzZSMv0mPaWGvthOMsVrpE8rU2dsESlj6CKYT3KA68mgoR/PgoIlsFXLKaJBAgtI+xIZ66JeQhZeUvQw==}
@@ -702,10 +702,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
-
-  /@neoconfetti/svelte@1.0.0:
-    resolution: {integrity: sha512-SmksyaJAdSlMa9cTidVSIqYo1qti+WTsviNDwgjNVm+KQ3DRP2Df9umDIzC4vCcpEYY+chQe0i2IKnLw03AT8Q==}
-    dev: true
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -910,7 +906,7 @@ packages:
     dependencies:
       esm-env: 1.0.0
       svelte: 4.2.0
-    dev: true
+    dev: false
 
   /@skeletonlabs/tw-plugin@0.1.0(tailwindcss@3.3.3):
     resolution: {integrity: sha512-ufnm4FS+s/khuho4yJ/uqfW91u2YXnH3E5N541MtX9XjmoimQzYIcxWyTIuX9AM/brIPP6M6l0et3nRx17CRoQ==}
@@ -5762,6 +5758,14 @@ packages:
       - stylus
       - sugarss
     dev: true
+
+  /svelte-dnd-action@0.9.30(svelte@4.2.0):
+    resolution: {integrity: sha512-AwgmH/XmqiPThAOB0k47dmg7vL1uM5/rzT+AB5deFKg5Z7I3f5eP0PpHUeWAFrIt5knsFsvVtNETYLJc9vRt6g==}
+    peerDependencies:
+      svelte: '>=3.23.0'
+    dependencies:
+      svelte: 4.2.0
+    dev: false
 
   /svelte-eslint-parser@0.33.0(svelte@4.2.0):
     resolution: {integrity: sha512-5awZ6Bs+Tb/zQwa41PSdcLynAVQTwW0HGyCBjtbAQ59taLZqDgQSMzRlDmapjZdDtzERm0oXDZNE0E+PKJ6ryg==}

@@ -13,11 +13,13 @@
   import { hideMapMenu, showMapMenu, mapMenuSubscribe } from '../stores/map-menu-store';
   import type { HydratedMapSite } from '../proxy+page.server';
   import { getMapMode, setMapModeBase, setMapModeRoutes } from '../stores/map-mode-store';
+  import { clearMapRoutes } from '../stores/map-routes-store';
 
   export let sites: HydratedMapSite[];
 
   const setRoutesMode = () => {
     if (getMapMode() === 'routes') {
+      clearMapRoutes();
       setMapModeBase();
     } else if (getMapMode() === 'base') {
       setMapModeRoutes();
