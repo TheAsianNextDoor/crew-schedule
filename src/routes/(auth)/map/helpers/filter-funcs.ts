@@ -109,38 +109,13 @@ export const filterByDateRange = (dateRange: { start?: Date; end?: Date }) => {
 const filterByForemanFunc = (phase: MapPhase, foremanName: string) =>
   phase.foreman_name.includes(foremanName) ?? false;
 
-<<<<<<< HEAD
 export const filterByForeman = (foremanName: string) => {
   const shouldFilter = foremanName.length !== 0;
-=======
-export const filterByDiscipline = (
-  e: Event & {
-    currentTarget: EventTarget & HTMLSelectElement;
-  },
-) => {
-  const value = e?.target?.value;
-  const shouldFilter = value !== '';
->>>>>>> 4c786939c90f5f902aada27ca6e3d82ed6d91e19
 
   maybeFilterByValue(
     'foreman',
     shouldFilter,
-<<<<<<< HEAD
     (phase: MapPhase) => filterByForemanFunc(phase, foremanName),
-=======
-    (phase: MapPhase) => filterByDisciplineFunc(phase, value),
->>>>>>> 4c786939c90f5f902aada27ca6e3d82ed6d91e19
     'phase',
   );
 };
-
-// export const filterByDiscipline = (disciplineName: string) => {
-//   const shouldFilter = disciplineName !== '';
-
-//   maybeFilterByValue(
-//     'discipline',
-//     shouldFilter,
-//     (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
-//     'phase',
-//   );
-// };
