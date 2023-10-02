@@ -1,5 +1,5 @@
 import { STATUS_ENUM } from '$lib/constants/status.js';
-import { retrievePhasesBySite, type MapPhase } from './queries/retreive-phases-by-site.js';
+import { retrievePhasesBySite, type MapPhase } from './queries/retrieve-phases-by-site.js';
 import { retrieveMapSites, type MapSite } from './queries/retrieve-map-sites.js';
 
 const findCurrentPhase = (phase: MapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;

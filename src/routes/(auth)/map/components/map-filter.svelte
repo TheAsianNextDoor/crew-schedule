@@ -26,9 +26,12 @@
   import { easepick } from '@easepick/core';
   import { RangePlugin } from '@easepick/range-plugin';
   import { onMount } from 'svelte';
+  import { retrieveDisciplines } from '../queries/retrieve-disciplines-by-customer';
 
   let datePickerElement: HTMLInputElement;
   let datePicker: easepick.Core;
+
+  let disciplines: string[];
 
   onMount(() => {
     datePicker = new easepick.create({
@@ -51,6 +54,7 @@
         });
       },
     });
+    disciplines = retrieveDisciplines();
   });
 
   const saveAndClose = () => {
@@ -96,17 +100,13 @@
 </div>
 
 <div class="py-4 px-6">
-  <!-- <FilterSection label="Discipline">
-    <input
-      class="input variant-form-material grow basis-0"
-      bind:value={$disciplineName}
-      on:input={() => filterByDiscipline($disciplineName)}
-    />
-  </FilterSection> -->
-
   <FilterSection label="Discipline">
-    <select bind:value={$disciplineName} on:change={filterByDiscipline} class="select">
-      <option selected value={}>{}</option>
+    <select
+      bind:value={$disciplineName}
+      on:change={() => filterByDiscipline($disciplineName)}
+      class="select"
+    >
+      <option selected value="asphalt">Asphalt</option>
     </select>
   </FilterSection>
 

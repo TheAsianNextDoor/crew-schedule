@@ -1,5 +1,5 @@
 import { STATUS_ENUM } from '$lib/constants/status';
-import type { MapPhase } from '../queries/retreive-phases-by-site';
+import type { MapPhase } from '../queries/retrieve-phases-by-site';
 import type { MapSite } from '../queries/retrieve-map-sites';
 import {
   addFilterConditionFunc,
@@ -24,8 +24,9 @@ const maybeFilterByValue = (
   filterMapMarkers();
 };
 
-const filterByDisciplineFunc = (phase: MapPhase, discipline: string) =>
-  phase.discipline_name === discipline ?? false;
+const filterByDisciplineFunc = (phase: MapPhase, discipline: string) => {
+  return phase.discipline_name === discipline ?? false;
+};
 
 export const filterByDiscipline = (disciplineName: string) => {
   const shouldFilter = disciplineName !== '';
@@ -110,30 +111,11 @@ const filterByForemanFunc = (phase: MapPhase, foremanName: string) =>
 
 export const filterByForeman = (foremanName: string) => {
   const shouldFilter = foremanName.length !== 0;
-export const filterByDiscipline = (
-  e: Event & {
-    currentTarget: EventTarget & HTMLSelectElement;
-  },
-) => {
-  const value = e?.target?.value;
-  const shouldFilter = value !== '';
 
   maybeFilterByValue(
     'foreman',
     shouldFilter,
     (phase: MapPhase) => filterByForemanFunc(phase, foremanName),
-    (phase: MapPhase) => filterByDisciplineFunc(phase, value),
     'phase',
   );
 };
-
-// export const filterByDiscipline = (disciplineName: string) => {
-//   const shouldFilter = disciplineName !== '';
-
-//   maybeFilterByValue(
-//     'discipline',
-//     shouldFilter,
-//     (phase: MapPhase) => filterByDisciplineFunc(phase, disciplineName),
-//     'phase',
-//   );
-// };
