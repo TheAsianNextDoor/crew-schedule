@@ -54,6 +54,7 @@
         });
       },
     });
+    // TODO: properly query disciplines into disciplines array to load into options
     disciplines = retrieveDisciplines();
   });
 
@@ -106,6 +107,7 @@
       on:change={() => filterByDiscipline($disciplineName)}
       class="select"
     >
+      <!-- TODO: replace asphalt with queried disciplines -->
       <option selected value="asphalt">Asphalt</option>
     </select>
   </FilterSection>
