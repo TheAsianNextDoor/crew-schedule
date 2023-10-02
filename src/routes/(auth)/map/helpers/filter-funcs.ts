@@ -24,9 +24,8 @@ const maybeFilterByValue = (
   filterMapMarkers();
 };
 
-const filterByDisciplineFunc = (phase: MapPhase, discipline: string) => {
-  return phase.discipline_name === discipline ?? false;
-};
+const filterByDisciplineFunc = (phase: MapPhase, discipline: string) =>
+  phase.discipline_name === discipline ?? false;
 
 export const filterByDiscipline = (disciplineName: string) => {
   const shouldFilter = disciplineName !== '';
