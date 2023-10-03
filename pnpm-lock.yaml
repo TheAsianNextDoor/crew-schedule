@@ -59,9 +59,6 @@ dependencies:
   svelte-dnd-action:
     specifier: ^0.9.30
     version: 0.9.30(svelte@4.2.0)
-  svelte-material-icons:
-    specifier: ^3.0.5
-    version: 3.0.5(svelte@4.2.0)
   zod:
     specifier: ^3.22.2
     version: 3.22.2
@@ -5885,14 +5882,6 @@ packages:
       svelte: ^3.19.0 || ^4.0.0
     dependencies:
       svelte: 4.2.0
-
-  /svelte-material-icons@3.0.5(svelte@4.2.0):
-    resolution: {integrity: sha512-UbhAa+Btd5y6e6DMljVccP+cbJ8lvesltMippiCOvfIUtYe2TsQqM+P6osfrVsZHV47b1tY6AmqCuSpMKnwMOQ==}
-    peerDependencies:
-      svelte: ^3.0.0 || ^4.0.0
-    dependencies:
-      svelte: 4.2.0
-    dev: false
 
   /svelte-preprocess@5.0.4(postcss@8.4.29)(svelte@4.2.0)(typescript@5.2.2):
     resolution: {integrity: sha512-ABia2QegosxOGsVlsSBJvoWeXy1wUKSfF7SWJdTjLAbx/Y3SrVevvvbFNQqrSJw89+lNSsM58SipmZJ5SRi5iw==}

@@ -5,7 +5,6 @@
     type PopupSettings,
     popup,
   } from '@skeletonlabs/skeleton';
-  import Menu from 'svelte-material-icons/Menu.svelte';
 
   import type { HydratedMapSite } from '../+page.server';
 
@@ -32,7 +31,7 @@
 <div class="w-full p-4">
   <div class="card w-full flex items-center gap-1 bg-slate-100">
     <div class="pl-4 hover:cursor-pointer">
-      <Menu size="25px" />
+      <i class="fa-solid fa-bars"></i>
     </div>
     <input
       class="no-outline w-10/12 border-none bg-slate-100"

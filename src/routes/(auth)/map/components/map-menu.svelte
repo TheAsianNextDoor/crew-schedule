@@ -1,9 +1,5 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import MenuLeft from 'svelte-material-icons/MenuLeft.svelte';
-  import MenuRight from 'svelte-material-icons/MenuRight.svelte';
-  import Filter from 'svelte-material-icons/FilterOutline.svelte';
-  import Routes from 'svelte-material-icons/Routes.svelte';
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
@@ -58,7 +54,7 @@
           class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50 ml-6"
           on:click={showMapFilter}
         >
-          <Filter size="18px" />
+          <i class="fa-solid fa-filter fa-sm"></i>
           Filters
         </button>
       {/if}
@@ -66,12 +62,12 @@
         class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50 ml-6"
         on:click={setRoutesMode}
       >
-        <Routes size="18px" />
+        <i class="fa-solid fa-route fa-sm"></i>
         Routes
       </button>
     </div>
     <button class="arrow right-of-menu" on:click={hideMapMenu}>
-      <MenuLeft size="23px" />
+      <i class="fa-solid fa-caret-left"></i>
     </button>
   </div>
 {/if}
@@ -79,7 +75,7 @@
 
 {#if !isMenuVisible}
   <button transition:fly={getFlyTransition(408)} class="arrow" on:click={showMapMenu}>
-    <MenuRight size="23px" />
+    <i class="fa-solid fa-caret-right"></i>
   </button>
 {/if}
 

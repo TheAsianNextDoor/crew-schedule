@@ -35,7 +35,6 @@
     "pg": "^8.11.3",
     "pino": "^8.15.0",
     "svelte-dnd-action": "^0.9.30",
-    "svelte-material-icons": "^3.0.5",
     "zod": "^3.22.2"
   },
   "devDependencies": {
