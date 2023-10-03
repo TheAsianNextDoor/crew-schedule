@@ -2,12 +2,13 @@
   import { onMount } from 'svelte';
   import { invalidate } from '$app/navigation';
 
-  import { initializeStores } from '@skeletonlabs/skeleton';
+  import { initializeStores, AppShell } from '@skeletonlabs/skeleton';
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
   import { storePopup } from '@skeletonlabs/skeleton';
 
   import './styles.css';
   import '../app.postcss';
+  import Header from './Header.svelte';
 
   export let data;
 
@@ -30,14 +31,11 @@
   });
 </script>
 
-<div class="h-full">
-  <!-- <Header /> -->
+<AppShell class="h-full">
+  <svelte:fragment slot="header">
+    <Header />
+  </svelte:fragment>
 
-  <main class="w-full h-full">
-    <slot />
-  </main>
-
-  <!-- <footer>
-    <p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-  </footer> -->
-</div>
+  <svelte:fragment slot="sidebarLeft"></svelte:fragment>
+  <slot />
+</AppShell>
