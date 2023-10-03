@@ -6,6 +6,11 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 export const load = async ({ fetch, data, depends }) => {
   depends('supabase:auth');
 
+  console.log('supabase: ', {
+    PUBLIC_SUPABASE_URL,
+    PUBLIC_SUPABASE_ANON_KEY,
+  });
+
   const supabase = createSupabaseLoadClient({
     supabaseUrl: PUBLIC_SUPABASE_URL,
     supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
