@@ -31,11 +31,13 @@
   });
 </script>
 
-<AppShell class="h-full">
+<slot />
+
+<!-- <AppShell class="h-full">
   <svelte:fragment slot="header">
     <Header />
   </svelte:fragment>
 
   <svelte:fragment slot="sidebarLeft"></svelte:fragment>
   <slot />
-</AppShell>
+</AppShell> -->
