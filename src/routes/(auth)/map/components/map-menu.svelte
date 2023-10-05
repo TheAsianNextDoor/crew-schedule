@@ -11,6 +11,7 @@
   import { getMapMode, setMapModeBase, setMapModeRoutes } from '../stores/map-mode-store';
   import { clearMapRoutes } from '../stores/map-routes-store';
 
+  export let disciplines: string[];
   export let sites: HydratedMapSite[];
 
   const setRoutesMode = () => {
@@ -42,7 +43,7 @@
   <div transition:fly={getFlyTransition(-408)}>
     <div class="sidebar-width overflow-y-auto absolute bg-white h-screen">
       {#if isMenuFilterVisible}
-        <MapFilter />
+        <MapFilter bind:disciplines />
       {:else}
         <MapSearchInfo bind:sites />
       {/if}

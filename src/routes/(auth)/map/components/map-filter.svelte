@@ -25,12 +25,11 @@
   import { easepick } from '@easepick/core';
   import { RangePlugin } from '@easepick/range-plugin';
   import { onMount } from 'svelte';
-  import { retrieveDisciplines } from '../queries/retrieve-disciplines-by-customer';
+
+  export let disciplines: string[];
 
   let datePickerElement: HTMLInputElement;
   let datePicker: easepick.Core;
-
-  let disciplines: string[];
 
   onMount(() => {
     datePicker = new easepick.create({
@@ -53,8 +52,6 @@
         });
       },
     });
-    // TODO: properly query disciplines into disciplines array to load into options
-    disciplines = retrieveDisciplines();
   });
 
   const saveAndClose = () => {
@@ -106,8 +103,10 @@
       on:change={() => filterByDiscipline($disciplineName)}
       class="select"
     >
-      <!-- TODO: replace asphalt with queried disciplines -->
-      <option selected value="asphalt">Asphalt</option>
+      <option selected value="">any status</option>
+      {#each disciplines as discipline}
+        <option selected value={discipline}>{discipline}</option>
+      {/each}
     </select>
   </FilterSection>
 

@@ -19,7 +19,7 @@
 </script>
 
 <div class="z-20 relative">
-  <MapMenu sites={data.sites} />
+  <MapMenu disciplines={data.disciplines} sites={data.sites} />
 </div>
 <div class="w-full h-full z-10 absolute">
   <Map
