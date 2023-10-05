@@ -1,6 +1,10 @@
 import { hideMapFilter } from '../stores/map-filter-store';
 import { setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
-import { addBaseHydratedMarker, getBaseHydratedMarkers } from '../stores/map-marker-store';
+import {
+  addBaseHydratedMarker,
+  getBaseHydratedMarkers,
+  type HydratedMapMarker,
+} from '../stores/map-marker-store';
 import type { HydratedMapSite } from '../+page.server';
 import { getMap } from '../stores/map-store';
 import { getMapMode } from '../stores/map-mode-store';
@@ -12,14 +16,15 @@ import {
   getMarkerPinElement,
   isMarkerPinOfType,
 } from './marker-pin-utils';
+import { addToMapRoutes } from '../stores/map-routes-store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
 export const markerClickEventListener = (
-  marker: Marker,
-  site: HydratedMapSite,
+  hydratedMapMarker: HydratedMapMarker,
   PinElement: typeof google.maps.marker.PinElement,
 ) => {
+  const { marker, site } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
   showMapMenu();
@@ -28,11 +33,10 @@ export const markerClickEventListener = (
   setSelectedEntity({ site, marker });
 
   if (getMapMode() === 'routes') {
-    console.log('routes mode click');
-
     const pinElement = getMarkerPinElement(marker.content as HTMLElement);
 
     if (!isMarkerPinOfType(pinElement, MARKER_PINS.routes.type)) {
+      addToMapRoutes(hydratedMapMarker);
       changeMarkerPin(marker, PinElement, MARKER_PINS.routes);
     }
   }
@@ -71,14 +75,14 @@ export const createMarker = ({
     title: site.site_name,
     content: container,
   });
+  const hydratedMapMarker: HydratedMapMarker = { id: site.site_id, marker, site };
 
   const content = marker.content as HTMLElement;
   content.classList.add('map-marker');
-
   dropAnimation(content, intersectionObserver);
-  content.addEventListener('click', () => markerClickEventListener(marker, site, PinElement));
+  content.addEventListener('click', () => markerClickEventListener(hydratedMapMarker, PinElement));
 
-  addBaseHydratedMarker({ marker: marker, site });
+  addBaseHydratedMarker(hydratedMapMarker);
 
   return marker;
 };

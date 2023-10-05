@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-import { retrieveEmployeeInfo, type EmployeeInfo } from './login/retrieve-employee-info';
+import { retrieveEmployeeInfo, type EmployeeInfo } from './retrieve-employee-info';
 
 export const load: LayoutServerLoad = async ({ locals: { getSession } }) => {
   const session = await getSession();

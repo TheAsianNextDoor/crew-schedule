@@ -8,7 +8,6 @@
     hideMapFilter,
     phaseStatus,
   } from '../stores/map-filter-store';
-  import LeftArrow from 'svelte-material-icons/ArrowLeft.svelte';
   import {
     clearFilteredHydratedMarkers,
     clearFilterConditionFuncs,
@@ -92,7 +91,7 @@
 
 <div class="flex justify-between p-4 border-slate-400 border-solid border-b">
   <button on:click={clearFiltersAndClose}>
-    <LeftArrow size="30px" />
+    <i class="fa-solid fa-arrow-left fa-lg"></i>
   </button>
   <div class="flex gap-4">
     <button on:click={clearFilters}>Clear</button>
