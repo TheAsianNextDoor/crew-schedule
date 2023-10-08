@@ -308,6 +308,8 @@ const main = async () => {
   const person4 = '5e8d43db-86a0-4e3a-bff2-973d43251d94';
   const person5 = '69b45d89-301e-4b5f-ba0e-1ed5fd3e678b';
   const person6 = '71b45d89-301e-4b5f-ba0e-1ed5fd3e678b';
+  const person7 = '51b45d89-301e-4b5f-ba0e-1ed5fd3e678a';
+  const person8 = '91b45d89-301e-4b5f-ba0e-1ed5fd3e678c';
 
   await prisma.person.createMany({
     data: [
@@ -319,6 +321,26 @@ const main = async () => {
         person_last_name: 'last 1',
         phone_number: '1234567890',
         email: 'aaron.o.scherling@gmail.com',
+        is_foreman: true,
+      },
+      {
+        person_id: person8,
+        customer_id: customer1,
+        role_id: standard,
+        person_first_name: 'aaron',
+        person_last_name: 'scherling',
+        phone_number: '1234567890',
+        email: 'aaron.scherling11490@gmail.com',
+        is_foreman: true,
+      },
+      {
+        person_id: person7,
+        customer_id: customer1,
+        role_id: standard,
+        person_first_name: 'aaron',
+        person_last_name: 'solie',
+        phone_number: '1234567890',
+        email: 'solieaaron@gmail.com',
         is_foreman: true,
       },
       {
