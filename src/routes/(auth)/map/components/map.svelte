@@ -6,12 +6,11 @@
   import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
   import { PUBLIC_GOOGLE_MAP_ID } from '$env/static/public';
+  import { getGoogleMaps } from '$lib/constants/google-maps';
 
   export let sites: HydratedMapSite[];
-  export let Map: typeof google.maps.Map;
-  export let AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement;
-  export let PinElement: typeof google.maps.marker.PinElement;
-  export let LatLng: typeof google.maps.LatLng;
+
+  const { Map, AdvancedMarkerElement, PinElement, LatLng } = getGoogleMaps();
 
   let mapElement: HTMLDivElement;
 

@@ -22,13 +22,7 @@
   <MapMenu sites={data.sites} />
 </div>
 <div class="w-full h-full z-10 absolute">
-  <Map
-    sites={data.sites}
-    Map={data.Map}
-    AdvancedMarkerElement={data.AdvancedMarkerElement}
-    PinElement={data.PinElement}
-    LatLng={data.LatLng}
-  />
+  <Map sites={data.sites} />
 </div>
 
 {#if mapMode === 'routes'}

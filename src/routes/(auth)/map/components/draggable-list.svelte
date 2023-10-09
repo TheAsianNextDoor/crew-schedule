@@ -1,6 +1,6 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
-  import { dndzone } from 'svelte-dnd-action';
+  import { dndzone, type DndEvent } from 'svelte-dnd-action';
   import { mapRoutesSubscribe, setMapRoutes } from '../stores/map-routes-store';
   import { onDestroy } from 'svelte';
   import type { HydratedMapMarker } from '../stores/map-marker-store';
@@ -13,11 +13,16 @@
   onDestroy(mapRoutesUnsub);
 
   const flipDurationMs = 100;
-  function handleDndConsider(e) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleDndConsider<T>(
+    e: CustomEvent<DndEvent<HydratedMapMarker>> & { target: EventTarget & T },
+  ) {
     const newOrderedList = e.detail.items;
     setMapRoutes(newOrderedList);
   }
-  function handleDndFinalize(e) {
+  function handleDndFinalize<T>(
+    e: CustomEvent<DndEvent<HydratedMapMarker>> & { target: EventTarget & T },
+  ) {
     const newOrderedList = e.detail.items;
     setMapRoutes(newOrderedList);
   }
@@ -34,7 +39,7 @@
     on:consider={handleDndConsider}
     on:finalize={handleDndFinalize}
   >
-    {#each items as item, i (item.id)}
+    {#each items as item (item.id)}
       <div
         class={`cursor-grab h-8 border border-black m-1`}
         animate:flip={{ duration: flipDurationMs }}

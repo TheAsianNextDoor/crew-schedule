@@ -30,7 +30,7 @@ export const markerClickEventListener = (
   showMapMenu();
   hideMapFilter();
   selectedClickAnimation(content);
-  setSelectedEntity({ site, marker });
+  setSelectedEntity({ id: site.site_id, site, marker });
 
   if (getMapMode() === 'routes') {
     const pinElement = getMarkerPinElement(marker.content as HTMLElement);
