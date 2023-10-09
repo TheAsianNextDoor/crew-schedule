@@ -15,4 +15,6 @@
 </script>
 
 <AutoComplete bind:sites />
-<pre>{JSON.stringify(selectedSite, null, 2)}</pre>
+<pre>
+  {JSON.stringify(selectedSite, null, 2)}
+</pre>

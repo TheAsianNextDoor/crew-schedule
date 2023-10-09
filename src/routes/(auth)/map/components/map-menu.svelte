@@ -40,7 +40,7 @@
 <!-- Menu -->
 {#if isMenuVisible}
   <div transition:fly={getFlyTransition(-408)}>
-    <div class="sidebar-width overflow-y-auto absolute bg-white h-screen">
+    <div class="sidebar-width overflow-y-auto absolute bg-surface-100-800-token h-screen">
       {#if isMenuFilterVisible}
         <MapFilter />
       {:else}
@@ -51,22 +51,22 @@
     <div class="right-of-menu flex absolute mt-6">
       {#if !isMenuFilterVisible}
         <button
-          class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50 ml-6"
+          class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
           on:click={showMapFilter}
         >
-          <i class="fa-solid fa-filter fa-sm"></i>
+          <i class="pr-1 fa-solid fa-filter fa-sm"></i>
           Filters
         </button>
       {/if}
       <button
-        class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-slate-50 ml-6"
+        class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
         on:click={setRoutesMode}
       >
-        <i class="fa-solid fa-route fa-sm"></i>
+        <i class="pr-1 fa-solid fa-route fa-sm"></i>
         Routes
       </button>
     </div>
-    <button class="arrow right-of-menu" on:click={hideMapMenu}>
+    <button class="arrow right-of-menu bg-surface-100-800-token" on:click={hideMapMenu}>
       <i class="fa-solid fa-caret-left"></i>
     </button>
   </div>
@@ -74,7 +74,11 @@
 <!-- Menu -->
 
 {#if !isMenuVisible}
-  <button transition:fly={getFlyTransition(408)} class="arrow" on:click={showMapMenu}>
+  <button
+    transition:fly={getFlyTransition(408)}
+    class="arrow bg-surface-100-800-token"
+    on:click={showMapMenu}
+  >
     <i class="fa-solid fa-caret-right"></i>
   </button>
 {/if}
@@ -91,7 +95,6 @@
     height: 3rem;
     width: 1.5rem;
     position: absolute;
-    background-color: white;
     display: block;
     top: calc(50vh - 3rem);
   }

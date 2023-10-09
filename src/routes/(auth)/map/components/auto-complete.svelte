@@ -29,19 +29,21 @@
 </script>
 
 <div class="w-full p-4">
-  <div class="card w-full flex items-center gap-1 bg-slate-100">
-    <div class="pl-4 hover:cursor-pointer">
-      <i class="fa-solid fa-bars"></i>
+  <div class="card w-full bg-slate-100">
+    <div class="flex items-center gap-1 p-1">
+      <div class="pl-4 hover:cursor-pointer">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <input
+        class="bg-surface-100-800-token no-outline w-10/12 border-none bg-slate-100"
+        autocomplete="off"
+        type="search"
+        name="autocomplete-search"
+        bind:value={searchValue}
+        placeholder="Search..."
+        use:popup={popupSettings}
+      />
     </div>
-    <input
-      class="no-outline w-10/12 border-none bg-slate-100"
-      autocomplete="off"
-      type="search"
-      name="autocomplete-search"
-      bind:value={searchValue}
-      placeholder="Search..."
-      use:popup={popupSettings}
-    />
   </div>
 </div>
 

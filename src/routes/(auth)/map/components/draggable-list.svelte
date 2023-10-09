@@ -41,7 +41,7 @@
   >
     {#each items as item (item.id)}
       <div
-        class={`cursor-grab h-8 border border-black m-1`}
+        class="cursor-grab h-8 border border-black dark:border-slate-400 m-1"
         animate:flip={{ duration: flipDurationMs }}
       >
         {item.site.site_name}
