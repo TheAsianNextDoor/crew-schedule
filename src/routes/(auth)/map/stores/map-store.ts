@@ -1,7 +1,7 @@
+import type { MapInstance } from '$lib/constants/google-maps';
 import { get, writable } from 'svelte/store';
-import type { Map } from '../helpers/marker-utils';
 
-const mapStore = writable<Map>();
+const mapStore = writable<MapInstance>();
 const { subscribe: mapStoreSubscribe, set: setMap } = mapStore;
 
 const getMap = () => get(mapStore);

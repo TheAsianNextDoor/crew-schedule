@@ -41,9 +41,6 @@
           createMarker({
             site,
             map,
-            AdvancedMarkerElement,
-            PinElement,
-            LatLng,
             intersectionObserver,
           }),
         );
