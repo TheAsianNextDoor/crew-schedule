@@ -53,7 +53,7 @@
   >
     {#each items as item (item.id)}
       <div
-        class="card cursor-grab border items-center justify-between flex px-2 h-10 border-black bg-slate-300"
+        class="card shadow-lg cursor-grab border items-center justify-between flex px-2 h-10 border-black bg-slate-300"
         animate:flip={{ duration: flipDurationMs }}
       >
         <span>
