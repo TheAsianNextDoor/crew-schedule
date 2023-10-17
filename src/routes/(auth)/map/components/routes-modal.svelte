@@ -1,15 +1,9 @@
 <script>
   import DraggableWindow from '$lib/components/draggable-window.svelte';
-  import { onDestroy } from 'svelte';
-  import { mapRoutesSubscribe } from '../stores/map-routes-store';
   import DraggableList from './draggable-list.svelte';
+  import { mapRoutesStore } from '../stores/map-routes-store';
 
-  let calculateButtonDisabled = true;
-
-  const unsubMapRoutes = mapRoutesSubscribe((val) => {
-    calculateButtonDisabled = val.length < 2;
-  });
-  onDestroy(unsubMapRoutes);
+  $: calculateButtonDisabled = $mapRoutesStore.length < 2;
 
   const handleRouteCalculate = async () => {
     const result = await (await fetch('/api/v1/auth/distance')).json();
@@ -26,16 +20,16 @@
     Route Calculation
   </div>
   <div
-    class="bg-surface-100-800-token pl-4 pt-4 pb-4 overflow-auto box-border flex flex-1 flex-col"
+    class="bg-surface-100-800-token p-4 overflow-auto box-border flex flex-1 flex-col"
     slot="content"
   >
     <DraggableList />
-    <div class="text-right pr-4">
-      <button
-        disabled={calculateButtonDisabled}
-        on:click={handleRouteCalculate}
-        class="btn btn-md variant-filled">Calculate</button
-      >
-    </div>
+  </div>
+  <div class="text-right p-4 bg-surface-100-800-token" slot="footer">
+    <button
+      disabled={calculateButtonDisabled}
+      on:click={handleRouteCalculate}
+      class="btn btn-md variant-filled">Calculate</button
+    >
   </div>
 </DraggableWindow>

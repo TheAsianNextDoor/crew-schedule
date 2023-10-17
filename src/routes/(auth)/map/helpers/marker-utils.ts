@@ -16,8 +16,9 @@ import {
   getMarkerPinElement,
   isMarkerPinOfType,
 } from './marker-pin-utils';
-import { addToMapRoutes } from '../stores/map-routes-store';
+import { addToMapRoutes, getMapRoutes, isMaxRouteItemsStore } from '../stores/map-routes-store';
 import { getGoogleMaps, type MapInstance } from '$lib/constants/google-maps';
+import { get } from 'svelte/store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -33,7 +34,7 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   if (getMapMode() === 'routes') {
     const pinElement = getMarkerPinElement(marker.content as HTMLElement);
 
-    if (!isMarkerPinOfType(pinElement, MARKER_PINS.routes.type)) {
+    if (!isMarkerPinOfType(pinElement, MARKER_PINS.routes.type) && !get(isMaxRouteItemsStore)) {
       addToMapRoutes(hydratedMapMarker);
       changeMarkerPin(marker, getGoogleMaps().PinElement, MARKER_PINS.routes);
     }

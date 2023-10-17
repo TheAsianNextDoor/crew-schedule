@@ -1,18 +1,10 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
   import { dndzone, type DndEvent } from 'svelte-dnd-action';
-  import { mapRoutesSubscribe, setMapRoutes } from '../stores/map-routes-store';
-  import { onDestroy } from 'svelte';
+  import { isMaxRouteItemsStore, mapRoutesStore, setMapRoutes } from '../stores/map-routes-store';
   import type { HydratedMapMarker } from '../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
   import { getGoogleMaps } from '$lib/constants/google-maps';
-
-  let items: HydratedMapMarker[] = [];
-
-  const mapRoutesUnsub = mapRoutesSubscribe((val) => {
-    items = val;
-  });
-  onDestroy(mapRoutesUnsub);
 
   const flipDurationMs = 100;
 
@@ -32,26 +24,26 @@
 
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
-    setMapRoutes(items.filter(({ id }) => id !== itemIdToRemove));
+    setMapRoutes($mapRoutesStore.filter(({ id }) => id !== itemIdToRemove));
     changeMarkerPin(item.marker, getGoogleMaps().PinElement, MARKER_PINS.default);
   };
 </script>
 
-<div class="grid-container w-full h-full">
-  <div class="flex flex-col flex-y-1">
-    {#each items as _, i}
+<div class="grid-container">
+  <div class="flex flex-col gap-y-1">
+    {#each $mapRoutesStore as _, i}
       <div class="flex items-center h-10">
-        <span>{i}:</span>
+        <span>{i + 1}:</span>
       </div>
     {/each}
   </div>
   <section
-    class="flex flex-col gap-y-1 mr-4"
-    use:dndzone={{ items, flipDurationMs }}
+    class="flex flex-col gap-y-1"
+    use:dndzone={{ items: $mapRoutesStore, flipDurationMs }}
     on:consider={handleDndConsider}
     on:finalize={handleDndFinalize}
   >
-    {#each items as item (item.id)}
+    {#each $mapRoutesStore as item (item.id)}
       <div
         class="card shadow-lg cursor-grab border items-center justify-between flex px-2 h-10 border-black bg-slate-300"
         animate:flip={{ duration: flipDurationMs }}
@@ -66,6 +58,10 @@
     {/each}
   </section>
 </div>
+
+{#if $isMaxRouteItemsStore}
+  <span class="text-warning-500">At max items of 10</span>
+{/if}
 
 <style>
   .grid-container {
