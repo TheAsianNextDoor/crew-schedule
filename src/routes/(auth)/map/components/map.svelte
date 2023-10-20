@@ -7,10 +7,11 @@
   import { setMap } from '../stores/map-store';
   import { PUBLIC_GOOGLE_MAP_ID } from '$env/static/public';
   import { getGoogleMaps } from '$lib/constants/google-maps';
+  import { setInfoWindow } from '../stores/infow-window-store';
 
   export let sites: HydratedMapSite[];
 
-  const { Map, AdvancedMarkerElement, PinElement, LatLng } = getGoogleMaps();
+  const { Map, InfoWindow } = getGoogleMaps();
 
   let mapElement: HTMLDivElement;
 
@@ -25,6 +26,7 @@
 
   onMount(async () => {
     try {
+      setInfoWindow(new InfoWindow());
       const map = new Map(mapElement, {
         center: {
           lat: 51.505,
