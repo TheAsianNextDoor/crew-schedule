@@ -16,5 +16,5 @@
 
 <AutoComplete bind:sites />
 <pre>
-  {JSON.stringify(selectedSite, null, 2)}
+  {JSON.stringify(selectedSite, null, 2) || ''}
 </pre>
