@@ -5,10 +5,12 @@
   import { initializeStores, AppShell } from '@skeletonlabs/skeleton';
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
   import { storePopup } from '@skeletonlabs/skeleton';
+  import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 
   import './styles.css';
   import '../app.postcss';
   import Header from './Header.svelte';
+  import { browser } from '$app/environment';
 
   export let data;
 
@@ -17,6 +19,14 @@
 
   let { supabase, session } = data;
   $: ({ supabase, session } = data);
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        enabled: browser,
+      },
+    },
+  });
 
   onMount(() => {
     const {
@@ -31,7 +41,9 @@
   });
 </script>
 
-<slot />
+<QueryClientProvider client={queryClient}>
+  <slot />
+</QueryClientProvider>
 
 <!-- <AppShell class="h-full">
   <svelte:fragment slot="header">
