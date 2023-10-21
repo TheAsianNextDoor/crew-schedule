@@ -3,24 +3,26 @@
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
-  import { mapFilterSubscribe, showMapFilter } from '../stores/map-filter-store';
+  import { mapFilterSubscribe, toggleMapFilter } from '../stores/map-filter-store';
   import MapSearchInfo from './map-search-info.svelte';
   import MapFilter from './map-filter.svelte';
   import { hideMapMenu, showMapMenu, mapMenuSubscribe } from '../stores/map-menu-store';
   import type { HydratedMapSite } from '../proxy+page.server';
-  import { getMapMode, setMapModeBase, setMapModeRoutes } from '../stores/map-mode-store';
+  import {
+    getMapMode,
+    mapModeSubscribe,
+    setMapModeBase,
+    setMapModeRoutes,
+  } from '../stores/map-mode-store';
   import { clearMapRoutes } from '../stores/map-routes-store';
 
   export let sites: HydratedMapSite[];
 
-  const setRoutesMode = () => {
-    if (getMapMode() === 'routes') {
-      clearMapRoutes();
-      setMapModeBase();
-    } else if (getMapMode() === 'base') {
-      setMapModeRoutes();
-    }
-  };
+  let mapMode: string;
+  const unsubMapMode = mapModeSubscribe((value) => {
+    mapMode = value;
+  });
+  onDestroy(unsubMapMode);
 
   let isMenuVisible: boolean;
   const unsubMenu = mapMenuSubscribe((value) => {
@@ -33,6 +35,15 @@
     isMenuFilterVisible = value;
   });
   onDestroy(unsubFilter);
+
+  const setRoutesMode = () => {
+    if (getMapMode() === 'routes') {
+      clearMapRoutes();
+      setMapModeBase();
+    } else if (getMapMode() === 'base') {
+      setMapModeRoutes();
+    }
+  };
 
   const getFlyTransition = (x: number) => ({ duration: 300, easing: sineIn, x, opacity: 100 });
 </script>
@@ -49,17 +60,17 @@
     </div>
 
     <div class="right-of-menu flex absolute mt-6">
-      {#if !isMenuFilterVisible}
-        <button
-          class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
-          on:click={showMapFilter}
-        >
-          <i class="pr-1 fa-solid fa-filter fa-sm"></i>
-          Filters
-        </button>
-      {/if}
       <button
-        class="flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
+        class="flex {isMenuFilterVisible &&
+          'variant-outline-secondary'} justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
+        on:click={toggleMapFilter}
+      >
+        <i class="pr-1 fa-solid fa-filter fa-sm"></i>
+        Filters
+      </button>
+      <button
+        class="btn {mapMode === 'routes' &&
+          'variant-outline-secondary'} flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
         on:click={setRoutesMode}
       >
         <i class="pr-1 fa-solid fa-route fa-sm"></i>

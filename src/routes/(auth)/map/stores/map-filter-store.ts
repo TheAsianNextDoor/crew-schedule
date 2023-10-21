@@ -12,11 +12,11 @@ const isMapFilterVisible = () => get(mapFilterStore);
 const hideMapFilter = () => {
   set(false);
 };
-const showMapFilter = () => {
-  set(true);
+const toggleMapFilter = () => {
+  mapFilterStore.update((value) => !value);
 };
 
-export { mapFilterSubscribe, isMapFilterVisible, hideMapFilter, showMapFilter };
+export { mapFilterSubscribe, isMapFilterVisible, hideMapFilter, toggleMapFilter };
 
 /**
  * Form Values
