@@ -3,14 +3,12 @@
   import DraggableList from './draggable-list.svelte';
   import { getMapRoutes, mapRoutesStore } from '../stores/map-routes-store';
   import type { routesData } from '$lib/routes-filter';
-  import { getGoogleMaps } from '$lib/constants/google-maps';
-  import { getMap } from '../stores/map-store';
-  import { getRouteColor } from '$lib/utils/colors';
-  import { getInfoWindow } from '../stores/infow-window-store';
+  import { addRouteCalcPolyline, type Leg } from '../helpers/polyline-utils';
 
   $: calculateButtonDisabled = $mapRoutesStore.length < 2;
 
-  const { encoding, Polyline } = getGoogleMaps();
+  let legs: Leg[];
+  let showRouteCalcInfo = false;
 
   const handleRouteCalculate = async () => {
     const routes = getMapRoutes().map(({ site }) => site.location);
@@ -21,28 +19,16 @@
     const [data] = result.data.routes as typeof routesData;
 
     data.legs.forEach((leg, index) => {
-      const path = encoding.decodePath(leg.polyline.encodedPolyline);
-      const strokeColor = getRouteColor(index + 4);
-
-      const poly = new Polyline({
-        map: getMap(),
-        path,
-        geodesic: true,
-        strokeColor,
-        strokeOpacity: 1.0,
-        strokeWeight: 4,
-        clickable: true,
-      });
-
-      poly.addListener('click', (e: MouseEvent) => {
-        // @ts-expect-error
-        getInfoWindow().setPosition(e.latLng);
-        getInfoWindow().setContent(
-          `<div>Distance: ${leg.localizedValues.distance.text}</div><div>Duration: ${leg.localizedValues.duration.text}</div>`,
-        );
-        getInfoWindow().open(getMap());
-      });
+      addRouteCalcPolyline(leg, index);
     });
+
+    legs = data.legs;
+    showRouteCalcInfo = true;
+  };
+
+  const handleCalcAnotherRoute = () => {
+    legs = [];
+    showRouteCalcInfo = false;
   };
 </script>
 
@@ -57,13 +43,31 @@
     class="bg-surface-100-800-token p-4 overflow-auto box-border flex flex-1 flex-col"
     slot="content"
   >
-    <DraggableList />
+    {#if !showRouteCalcInfo}
+      <DraggableList />
+    {:else}
+      {#each legs as leg, index}
+        <div class="p-2">
+          <h1>
+            {$mapRoutesStore[index].site.site_name} to {$mapRoutesStore[index + 1].site.site_name}
+          </h1>
+          <div>Distance: {leg.localizedValues.distance.text}</div>
+          <div>Duration: {leg.localizedValues.duration.text}</div>
+        </div>
+      {/each}
+    {/if}
   </div>
-  <div class="text-right p-4 bg-surface-100-800-token" slot="footer">
-    <button
-      disabled={calculateButtonDisabled}
-      on:click={handleRouteCalculate}
-      class="btn btn-md variant-filled">Calculate</button
-    >
+  <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
+    {#if !showRouteCalcInfo}
+      <button
+        disabled={calculateButtonDisabled}
+        on:click={handleRouteCalculate}
+        class="btn btn-md variant-filled">Calculate</button
+      >
+    {:else}
+      <button on:click={handleCalcAnotherRoute} class="btn btn-md variant-filled"
+        >Calculate Another Route</button
+      >
+    {/if}
   </div>
 </DraggableWindow>

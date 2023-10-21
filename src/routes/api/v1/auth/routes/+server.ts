@@ -4,7 +4,6 @@ import { getGoogleRoutes } from './get-google-routes';
 
 export const POST: RequestHandler = async ({ request, fetch }) => {
   const { routes } = (await request.json()) as { routes: [string, string][] };
-  console.log('hello: ', routes);
 
   const [origin, ...intermediates] = routes;
   const destination = intermediates.pop() as [string, string];
