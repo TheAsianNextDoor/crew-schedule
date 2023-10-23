@@ -5,12 +5,8 @@ import { getBaseHydratedMarkers } from './map-marker-store';
 export type MapMode = 'base' | 'routes';
 
 export const mapModeStore = writable<MapMode>('base');
-const mapModeSubscribe = mapModeStore.subscribe;
 
 const getMapMode = () => get(mapModeStore);
-const setMapMode = (name: MapMode) => {
-  mapModeStore.set(name);
-};
 
 const setMapModeBase = () => {
   mapModeStore.set('base');
@@ -24,4 +20,4 @@ const setMapModeRoutes = () => {
   mapModeStore.set('routes');
 };
 
-export { getMapMode, setMapMode, setMapModeBase, setMapModeRoutes, mapModeSubscribe };
+export { getMapMode, setMapModeBase, setMapModeRoutes };

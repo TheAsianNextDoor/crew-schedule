@@ -4,19 +4,20 @@ import { EQUALITY_ENUM } from '../helpers/equality-utils';
 /**
  * Map filter visibility
  */
-const mapFilterStore = writable(false);
-const { subscribe: mapFilterSubscribe, set } = mapFilterStore;
+export const isMapFilterVisibleStore = writable(false);
+const { set } = isMapFilterVisibleStore;
 
-const isMapFilterVisible = () => get(mapFilterStore);
+const isMapFilterVisible = () => get(isMapFilterVisibleStore);
 
 const hideMapFilter = () => {
   set(false);
 };
+
 const toggleMapFilter = () => {
-  mapFilterStore.update((value) => !value);
+  isMapFilterVisibleStore.update((value) => !value);
 };
 
-export { mapFilterSubscribe, isMapFilterVisible, hideMapFilter, toggleMapFilter };
+export { isMapFilterVisible, hideMapFilter, toggleMapFilter };
 
 /**
  * Form Values

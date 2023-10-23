@@ -19,7 +19,6 @@ export type HydratedMapMarker = {
  * Base Hydrated Map Markers to have a baseline to filter from
  */
 const baseHydratedMarkerStore = writable<HydratedMapMarker[]>([]);
-const { subscribe: mapSiteSubscribe } = baseHydratedMarkerStore;
 
 const addBaseHydratedMarker = (hydratedMarker: HydratedMapMarker) => {
   baseHydratedMarkerStore.update((mapMarkers) => {
@@ -30,7 +29,7 @@ const addBaseHydratedMarker = (hydratedMarker: HydratedMapMarker) => {
 
 const getBaseHydratedMarkers = () => get(baseHydratedMarkerStore);
 
-export { mapSiteSubscribe, addBaseHydratedMarker, getBaseHydratedMarkers };
+export { addBaseHydratedMarker, getBaseHydratedMarkers };
 
 /**
  * Functions to filter the map
@@ -44,7 +43,6 @@ export type FilterConfig = {
   type: FilterType;
 };
 const filterConditionStore = writable<Record<string, FilterConfig>>({});
-const { subscribe: filterConditionSubscribe } = filterConditionStore;
 
 const getFilterConditionKeys = () => Object.keys(get(filterConditionStore));
 
@@ -90,18 +88,12 @@ const clearFilterConditionFuncs = () => {
   filterConditionStore.set({});
 };
 
-export {
-  filterConditionSubscribe,
-  addFilterConditionFunc,
-  removeFilterConditionFunc,
-  clearFilterConditionFuncs,
-};
+export { addFilterConditionFunc, removeFilterConditionFunc, clearFilterConditionFuncs };
 
 /**
  * Filtered Hydrated Map Markers
  */
 const filteredHydratedMarkerStore = writable<HydratedMapMarker[]>([]);
-const { subscribe: filteredMapMarkerSubscribe } = filteredHydratedMarkerStore;
 
 const clearFilteredHydratedMarkers = () => {
   showAllMarkers();
@@ -150,9 +142,4 @@ const filterMapMarkers = () => {
   });
 };
 
-export {
-  filteredMapMarkerSubscribe,
-  clearFilteredHydratedMarkers,
-  setFilteredHydratedMarkers,
-  filterMapMarkers,
-};
+export { clearFilteredHydratedMarkers, setFilteredHydratedMarkers, filterMapMarkers };

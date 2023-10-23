@@ -1,6 +1,6 @@
 import { getGoogleMaps } from '$lib/constants/google-maps';
 import { getRouteColor } from '$lib/utils/colors';
-import { getInfoWindow } from '../stores/infow-window-store';
+import { getInfoWindow } from '../stores/info-window-store';
 import { getMap } from '../stores/map-store';
 
 export type Leg = {

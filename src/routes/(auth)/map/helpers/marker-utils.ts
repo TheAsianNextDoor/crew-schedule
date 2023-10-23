@@ -1,5 +1,5 @@
 import { hideMapFilter } from '../stores/map-filter-store';
-import { setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
+import { setSelectedEntity, showMapSidebar } from '../stores/map-sidebar-store';
 import {
   addBaseHydratedMarker,
   getBaseHydratedMarkers,
@@ -26,7 +26,7 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   const { marker, site } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
-  showMapMenu();
+  showMapSidebar();
   hideMapFilter();
   selectedClickAnimation(content);
   setSelectedEntity({ id: site.site_id, site, marker });
