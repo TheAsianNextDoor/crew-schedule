@@ -1,21 +1,10 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
-  import MapMenu from './components/map-menu.svelte';
+  import MapMenu from './components/map-sidebar.svelte';
   import Map from './components/map.svelte';
-  import { mapModeSubscribe, type MapMode } from './stores/map-mode-store';
+  import { mapModeStore } from './stores/map-mode-store';
   import MapRoutesModal from './components/routes-modal.svelte';
 
   export let data;
-
-  let mapMode: MapMode;
-
-  const mapModeUnsub = mapModeSubscribe((value) => {
-    mapMode = value;
-  });
-
-  onDestroy(() => {
-    mapModeUnsub();
-  });
 </script>
 
 <div class="z-20 relative">
@@ -25,6 +14,6 @@
   <Map sites={data.sites} />
 </div>
 
-{#if mapMode === 'routes'}
+{#if $mapModeStore === 'routes'}
   <MapRoutesModal />
 {/if}

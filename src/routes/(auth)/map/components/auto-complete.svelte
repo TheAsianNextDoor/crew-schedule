@@ -7,6 +7,11 @@
   } from '@skeletonlabs/skeleton';
 
   import type { HydratedMapSite } from '../+page.server';
+  import {
+    hideMapSidebar,
+    selectedEntityStore,
+    setSelectedEntity,
+  } from '../stores/map-sidebar-store';
 
   export let sites: HydratedMapSite[];
 
@@ -26,16 +31,21 @@
     value: site.site_id,
     keywords: [site.job_number, site.status_name, site.address],
   }));
+
+  const handleCloseEntity = () => {
+    setSelectedEntity(null);
+    hideMapSidebar();
+  };
 </script>
 
 <div class="w-full p-4">
   <div class="card w-full bg-slate-100">
-    <div class="flex items-center gap-1 p-1">
-      <div class="pl-4 hover:cursor-pointer">
+    <div class="flex items-center gap-1 px-4">
+      <div class="hover:cursor-pointer">
         <i class="fa-solid fa-bars"></i>
       </div>
       <input
-        class="bg-surface-100-800-token no-outline w-10/12 border-none bg-slate-100"
+        class="bg-surface-100-800-token no-outline w-11/12 border-none bg-slate-100"
         autocomplete="off"
         type="search"
         name="autocomplete-search"
@@ -43,13 +53,18 @@
         placeholder="Search..."
         use:popup={popupSettings}
       />
+      {#if $selectedEntityStore}
+        <button on:click={handleCloseEntity} class="hover:cursor-pointer">
+          <i class="fa-solid fa-lg fa-xmark"></i>
+        </button>
+      {/if}
     </div>
   </div>
 </div>
 
 <div
   data-popup="popupAutocomplete"
-  class="popup card w-full p-4 max-h-52 overflow-y-auto absolute bg-slate-100"
+  class="popup card p-4 max-h-52 overflow-y-auto absolute bg-slate-100 z-30"
 >
   <Autocomplete
     class="list"
