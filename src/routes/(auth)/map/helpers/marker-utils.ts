@@ -16,7 +16,7 @@ import {
   getMarkerPinElement,
   isMarkerPinOfType,
 } from './marker-pin-utils';
-import { addToMapRoutes, getMapRoutes, isMaxRouteItemsStore } from '../stores/map-routes-store';
+import { addToMapRoutes, isMaxRouteItemsStore } from '../stores/map-routes-store';
 import { getGoogleMaps, type MapInstance } from '$lib/constants/google-maps';
 import { get } from 'svelte/store';
 

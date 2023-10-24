@@ -11,7 +11,9 @@
     hideMapSidebar,
     selectedEntityStore,
     setSelectedEntity,
+    showMapSidebar,
   } from '../../stores/map-sidebar-store';
+  import { getBaseHydratedMarkers } from '../../stores/map-marker-store';
 
   export let sites: HydratedMapSite[];
 
@@ -22,9 +24,13 @@
     placement: 'bottom',
   };
 
-  function handlePopupSelect(event: CustomEvent<AutocompleteOption>): void {
+  const handlePopupSelect = (event: CustomEvent<AutocompleteOption>) => {
     searchValue = event.detail.label;
-  }
+    setSelectedEntity(
+      getBaseHydratedMarkers().find((item) => item.site.site_name === searchValue) || null,
+    );
+    showMapSidebar();
+  };
 
   const siteOptions: AutocompleteOption[] = sites.map((site) => ({
     label: site.site_name,
