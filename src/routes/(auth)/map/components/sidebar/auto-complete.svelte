@@ -6,12 +6,12 @@
     popup,
   } from '@skeletonlabs/skeleton';
 
-  import type { HydratedMapSite } from '../+page.server';
+  import type { HydratedMapSite } from '../../+page.server';
   import {
     hideMapSidebar,
     selectedEntityStore,
     setSelectedEntity,
-  } from '../stores/map-sidebar-store';
+  } from '../../stores/map-sidebar-store';
 
   export let sites: HydratedMapSite[];
 
@@ -22,7 +22,7 @@
     placement: 'bottom',
   };
 
-  function onPopupDemoSelect(event: CustomEvent<AutocompleteOption>): void {
+  function handlePopupSelect(event: CustomEvent<AutocompleteOption>): void {
     searchValue = event.detail.label;
   }
 
@@ -70,7 +70,7 @@
     class="list"
     bind:input={searchValue}
     options={siteOptions}
-    on:selection={onPopupDemoSelect}
+    on:selection={handlePopupSelect}
   />
 </div>
 

@@ -2,7 +2,7 @@
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
-  import { isMapFilterVisibleStore, toggleMapFilter } from '../stores/map-filter-store';
+  import { isMapFilterVisibleStore, toggleMapFilter } from '../../stores/map-filter-store';
   import MapSearchInfo from './map-search-info.svelte';
   import MapFilter from './map-filter.svelte';
   import {
@@ -12,15 +12,15 @@
     isMapSidebarVisibleStore,
     getSelectedEntity,
     isMapSidebarVisible,
-  } from '../stores/map-sidebar-store';
-  import type { HydratedMapSite } from '../proxy+page.server';
+  } from '../../stores/map-sidebar-store';
+  import type { HydratedMapSite } from '../../proxy+page.server';
   import {
     getMapMode,
     mapModeStore,
     setMapModeBase,
     setMapModeRoutes,
-  } from '../stores/map-mode-store';
-  import { clearMapRoutes } from '../stores/map-routes-store';
+  } from '../../stores/map-mode-store';
+  import { clearMapRoutes } from '../../stores/map-routes-store';
   import AutoComplete from './auto-complete.svelte';
 
   export let sites: HydratedMapSite[];

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import MapMenu from './components/map-sidebar.svelte';
+  import MapMenu from './components/sidebar/map-sidebar.svelte';
   import Map from './components/map.svelte';
   import { mapModeStore } from './stores/map-mode-store';
   import MapRoutesModal from './components/routes-modal.svelte';
