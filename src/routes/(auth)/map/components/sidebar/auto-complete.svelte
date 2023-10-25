@@ -27,18 +27,21 @@
   const handlePopupSelect = (event: CustomEvent<AutocompleteOption>) => {
     searchValue = event.detail.label;
     setSelectedEntity(
-      getBaseHydratedMarkers().find((item) => item.site.site_name === searchValue) || null,
+      getBaseHydratedMarkers().find(
+        (item) => item.site.site_name === searchValue.split('(')[0].trim(),
+      ) || null,
     );
     showMapSidebar();
   };
 
   const siteOptions: AutocompleteOption[] = sites.map((site) => ({
-    label: site.site_name,
+    label: `${site.site_name} (${site.job_number})`,
     value: site.site_id,
-    keywords: [site.job_number, site.status_name, site.address],
+    keywords: [site.job_number, site.status_name, site.address, site.client_name],
   }));
 
   const handleCloseEntity = () => {
+    searchValue = '';
     setSelectedEntity(null);
     hideMapSidebar();
   };
@@ -53,7 +56,6 @@
       <input
         class="bg-surface-100-800-token no-outline w-11/12 border-none bg-slate-100"
         autocomplete="off"
-        type="search"
         name="autocomplete-search"
         bind:value={searchValue}
         placeholder="Search..."
