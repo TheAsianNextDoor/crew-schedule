@@ -34,12 +34,14 @@
           <InfoSection header="Foreman" value={phase.foreman_name} />
           <InfoSection header="Discipline" value={phase.discipline_name} />
           <InfoSection header="Status" value={phase.status_name} />
-          <InfoSection header="Estimated Hours" value={phase.estimated_hours} />
-          <InfoSection header="Personnel Count" value={phase.personnel_count} />
           <InfoSection
             header="Estimated Mobilization"
             value={phase.estimated_mobilization_duration}
           />
+          <InfoSection header="Crew Mobilization" value={phase?.crewMobilizationHours} />
+          <InfoSection header="Estimated Hours" value={phase.estimated_hours} />
+          <InfoSection header="Crew Hours" value={phase?.crewHours} />
+          <InfoSection header="Personnel Count" value={phase.personnel_count} />
           <InfoSection header="Scheduled Start Date" value={phase.scheduled_start_date_time} />
         </div>
       </div>

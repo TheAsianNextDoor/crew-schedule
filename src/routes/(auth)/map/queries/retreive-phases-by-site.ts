@@ -7,8 +7,11 @@ export type MapPhase = Pick<Phase, 'phase_id' | 'order' | 'estimated_hours' | 'p
     PhaseAssignment,
     | 'mobilization_from_location'
     | 'estimated_mobilization_duration'
+    | 'actual_mobilization_duration'
     | 'scheduled_start_date_time'
     | 'scheduled_finished_date_time'
+    | 'actual_start_date_time'
+    | 'actual_finished_date_time'
   > & { foreman_name: string } & Pick<Discipline, 'discipline_name'>;
 
 export const retrievePhasesBySite = (siteId: string) =>
@@ -23,8 +26,11 @@ export const retrievePhasesBySite = (siteId: string) =>
         status.status_name,
         phase_assignment.mobilization_from_location,
         phase_assignment.estimated_mobilization_duration,
+        phase_assignment.actual_mobilization_duration,
         phase_assignment.scheduled_start_date_time,
         phase_assignment.scheduled_finished_date_time,
+        phase_assignment.actual_start_date_time,
+        phase_assignment.actual_finished_date_time,
         TRIM(CONCAT(person.person_first_name, ' ',  person.person_last_name)) as foreman_name
       FROM phase
       LEFT JOIN status
