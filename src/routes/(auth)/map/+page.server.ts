@@ -2,18 +2,18 @@ import { STATUS_ENUM } from '$lib/constants/status.js';
 import { retrievePhasesBySite, type MapPhase } from './queries/retreive-phases-by-site.js';
 import { retrieveMapSites, type MapSite } from './queries/retrieve-map-sites.js';
 
-export type HydratedMapSite = MapSite & {
-  currentPhase: MapPhase | null;
-  phases: MapPhase[];
-  address: string;
-};
-
 export type HydratedMapPhase = MapPhase & {
   crewHours?: number;
   crewMobilizationHours?: number;
 };
 
-const findCurrentPhase = (phase: MapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
+export type HydratedMapSite = MapSite & {
+  currentPhase: HydratedMapPhase | null;
+  phases: HydratedMapPhase[];
+  address: string;
+};
+
+const findCurrentPhase = (phase: HydratedMapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
 
 const addCrewInfo = (phase: MapPhase): HydratedMapPhase => {
   const { estimated_hours, estimated_mobilization_duration, personnel_count } = phase;
@@ -48,7 +48,7 @@ export async function load({ parent }) {
 
   const mapSitesWithPhases = await Promise.all(
     sites.map(async (site) => {
-      const phases = await retrievePhasesBySite(site.site_id);
+      const phases = (await retrievePhasesBySite(site.site_id)) as HydratedMapPhase[];
       phases.forEach(addCrewInfo);
 
       const currentPhase = phases.find(findCurrentPhase) || null;
