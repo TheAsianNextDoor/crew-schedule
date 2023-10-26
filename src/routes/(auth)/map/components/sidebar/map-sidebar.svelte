@@ -22,12 +22,14 @@
   } from '../../stores/map-mode-store';
   import { clearMapRoutes } from '../../stores/map-routes-store';
   import AutoComplete from './auto-complete.svelte';
+  import { clearMapPolylines } from '../../stores/map-polyline-store';
 
   export let sites: HydratedMapSite[];
 
   const setRoutesMode = () => {
     if (getMapMode() === 'routes') {
       clearMapRoutes();
+      clearMapPolylines();
       setMapModeBase();
     } else if (getMapMode() === 'base') {
       setMapModeRoutes();

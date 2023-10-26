@@ -3,7 +3,8 @@
   import DraggableList from './draggable-list.svelte';
   import { getMapRoutes, mapRoutesStore } from '../stores/map-routes-store';
   import type { routesData } from '$lib/routes-filter';
-  import { addRouteCalcPolyline, type Leg } from '../helpers/polyline-utils';
+  import { buildRouteCalcPolyline, type Leg } from '../helpers/polyline-utils';
+  import { addMapPolyline, clearMapPolylines } from '../stores/map-polyline-store';
 
   $: calculateButtonDisabled = $mapRoutesStore.length < 2;
 
@@ -11,7 +12,8 @@
   let showRouteCalcInfo = false;
 
   const handleRouteCalculate = async () => {
-    const routes = getMapRoutes().map(({ site }) => site.location);
+    const mapRoutes = getMapRoutes();
+    const routes = mapRoutes.map(({ site }) => site.location);
     const result = await (
       await fetch('/api/v1/auth/routes', { method: 'POST', body: JSON.stringify({ routes }) })
     ).json();
@@ -19,7 +21,12 @@
     const [data] = result.data.routes as typeof routesData;
 
     data.legs.forEach((leg, index) => {
-      addRouteCalcPolyline(leg, index);
+      const polyline = buildRouteCalcPolyline(leg, index);
+      addMapPolyline({
+        origin: mapRoutes[index],
+        destination: mapRoutes[index + 1],
+        polyline,
+      });
     });
 
     legs = data.legs;
@@ -28,6 +35,7 @@
 
   const handleCalcAnotherRoute = () => {
     legs = [];
+    clearMapPolylines();
     showRouteCalcInfo = false;
   };
 </script>

@@ -20,7 +20,7 @@ export type Leg = {
   };
 };
 
-export const addRouteCalcPolyline = (leg: Leg, index: number) => {
+export const buildRouteCalcPolyline = (leg: Leg, index: number) => {
   const { encoding, Polyline } = getGoogleMaps();
   const map = getMap();
   const infoWindow = getInfoWindow();
@@ -45,4 +45,6 @@ export const addRouteCalcPolyline = (leg: Leg, index: number) => {
     );
     infoWindow.open(map);
   });
+
+  return poly;
 };
