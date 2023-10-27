@@ -6,7 +6,6 @@ import {
   POSTGRES_PORT,
   POSTGRES_USER,
 } from '$env/static/private';
-import 'dotenv-flow/config';
 import pg from 'pg';
 
 const { Client } = pg;
