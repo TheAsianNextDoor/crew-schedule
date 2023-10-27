@@ -2,7 +2,13 @@
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
-  import { isMapFilterVisibleStore, toggleMapFilter } from '../../stores/map-filter-store';
+  import {
+    hideMapFilter,
+    isMapFilterVisible,
+    isMapFilterVisibleStore,
+    showMapFilter,
+    toggleMapFilter,
+  } from '../../stores/map-filter-store';
   import MapSearchInfo from './map-search-info.svelte';
   import MapFilter from './map-filter.svelte';
   import {
@@ -38,12 +44,11 @@
   };
 
   const handleFilterClick = () => {
-    toggleMapFilter();
-
-    if (!isMapSidebarVisible()) {
+    if (isMapFilterVisible()) {
+      hideMapFilter();
+    } else {
       showMapSidebar();
-    } else if (isMapSidebarVisible() && !getSelectedEntity()) {
-      hideMapSidebar();
+      showMapFilter();
     }
   };
 
