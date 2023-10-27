@@ -57,8 +57,8 @@
 {/if}
 
 {#if $isMapSidebarVisibleStore}
-  <div class="sidebar-width absolute" transition:fly={getFlyTransition(-408)}>
-    <div class="overflow-y-auto bg-surface-200-700-token h-screen">
+  <div class="sidebar-width absolute shadow-xl" transition:fly={getFlyTransition(-408)}>
+    <div class="overflow-y-auto bg-surface-100-800-token h-screen">
       {#if $isMapFilterVisibleStore}
         <MapFilter bind:disciplines />
       {:else if $selectedEntityStore}
@@ -72,7 +72,7 @@
 <div class="right-of-menu absolute flex mt-6">
   <button
     class="flex {$isMapFilterVisibleStore &&
-      'variant-outline-secondary'} justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
+      'variant-outline-secondary'} justify-center shadow-lg items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
     on:click={handleFilterClick}
   >
     <i class="pr-1 fa-solid fa-filter fa-sm"></i>
@@ -80,7 +80,7 @@
   </button>
   <button
     class="btn {$mapModeStore === 'routes' &&
-      'variant-outline-secondary'} flex justify-center shadow-md items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
+      'variant-outline-secondary'} flex justify-center shadow-lg items-center w-20 h-8 rounded-lg bg-surface-100-800-token ml-6"
     on:click={setRoutesMode}
   >
     <i class="pr-1 fa-solid fa-route fa-sm"></i>
@@ -90,7 +90,11 @@
 
 <!-- Close/Open Menu icon -->
 {#if $isMapSidebarVisibleStore}
-  <button class="arrow right-of-menu bg-surface-100-800-token" on:click={hideMapSidebar}>
+  <button
+    transition:fly={getFlyTransition(-408)}
+    class="arrow right-of-menu bg-surface-100-800-token"
+    on:click={hideMapSidebar}
+  >
     <i class="fa-solid fa-caret-left"></i>
   </button>
 {:else}
