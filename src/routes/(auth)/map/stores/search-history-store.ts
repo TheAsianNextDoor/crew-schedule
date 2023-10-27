@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
  * The search history for the autocomplete input
  */
 const store = writable<string[]>([]);
-const { subscribe: historyListSubscribe, update } = store;
+const { update } = store;
 
 const addToHistoryList = (item: string) => {
   update((value) => {
@@ -18,4 +18,4 @@ const addToHistoryList = (item: string) => {
   });
 };
 
-export { historyListSubscribe, addToHistoryList };
+export { addToHistoryList };

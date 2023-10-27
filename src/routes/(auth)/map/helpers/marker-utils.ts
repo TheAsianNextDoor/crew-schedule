@@ -1,5 +1,5 @@
 import { hideMapFilter } from '../stores/map-filter-store';
-import { setSelectedEntity, showMapMenu } from '../stores/map-menu-store';
+import { setSelectedEntity, showMapSidebar } from '../stores/map-sidebar-store';
 import {
   addBaseHydratedMarker,
   getBaseHydratedMarkers,
@@ -16,49 +16,40 @@ import {
   getMarkerPinElement,
   isMarkerPinOfType,
 } from './marker-pin-utils';
-import { addToMapRoutes } from '../stores/map-routes-store';
+import { addToMapRoutes, isMaxRouteItemsStore } from '../stores/map-routes-store';
+import { getGoogleMaps, type MapInstance } from '$lib/constants/google-maps';
+import { get } from 'svelte/store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
-export const markerClickEventListener = (
-  hydratedMapMarker: HydratedMapMarker,
-  PinElement: typeof google.maps.marker.PinElement,
-) => {
+export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) => {
   const { marker, site } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
-  showMapMenu();
+  showMapSidebar();
   hideMapFilter();
   selectedClickAnimation(content);
-  setSelectedEntity({ site, marker });
+  setSelectedEntity({ id: site.site_id, site, marker });
 
   if (getMapMode() === 'routes') {
     const pinElement = getMarkerPinElement(marker.content as HTMLElement);
 
-    if (!isMarkerPinOfType(pinElement, MARKER_PINS.routes.type)) {
+    if (!isMarkerPinOfType(pinElement, MARKER_PINS.routes.type) && !get(isMaxRouteItemsStore)) {
       addToMapRoutes(hydratedMapMarker);
-      changeMarkerPin(marker, PinElement, MARKER_PINS.routes);
+      changeMarkerPin(marker, getGoogleMaps().PinElement, MARKER_PINS.routes);
     }
   }
 };
 
 interface CreateMarkerArgs {
   site: HydratedMapSite;
-  map: google.maps.Map;
-  AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement;
-  PinElement: typeof google.maps.marker.PinElement;
-  LatLng: typeof google.maps.LatLng;
+  map: MapInstance;
   intersectionObserver: IntersectionObserver;
 }
 
-export const createMarker = ({
-  site,
-  map,
-  AdvancedMarkerElement,
-  PinElement,
-  LatLng,
-  intersectionObserver,
-}: CreateMarkerArgs) => {
+export const createMarker = ({ site, map, intersectionObserver }: CreateMarkerArgs) => {
+  const { AdvancedMarkerElement, PinElement, LatLng } = getGoogleMaps();
+
   const container = document.createElement('div');
   const icon = document.createElement('div');
   icon.innerHTML = MARKER_PINS.default.iconHtml;
@@ -80,7 +71,7 @@ export const createMarker = ({
   const content = marker.content as HTMLElement;
   content.classList.add('map-marker');
   dropAnimation(content, intersectionObserver);
-  content.addEventListener('click', () => markerClickEventListener(hydratedMapMarker, PinElement));
+  content.addEventListener('click', () => markerClickEventListener(hydratedMapMarker));
 
   addBaseHydratedMarker(hydratedMapMarker);
 

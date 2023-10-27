@@ -6,12 +6,12 @@
   import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
   import { PUBLIC_GOOGLE_MAP_ID } from '$env/static/public';
+  import { getGoogleMaps } from '$lib/constants/google-maps';
+  import { setInfoWindow } from '../stores/info-window-store';
 
   export let sites: HydratedMapSite[];
-  export let Map: typeof google.maps.Map;
-  export let AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement;
-  export let PinElement: typeof google.maps.marker.PinElement;
-  export let LatLng: typeof google.maps.LatLng;
+
+  const { Map, InfoWindow } = getGoogleMaps();
 
   let mapElement: HTMLDivElement;
 
@@ -26,6 +26,7 @@
 
   onMount(async () => {
     try {
+      setInfoWindow(new InfoWindow());
       const map = new Map(mapElement, {
         center: {
           lat: 51.505,
@@ -34,6 +35,9 @@
         zoom: 12,
         mapId: PUBLIC_GOOGLE_MAP_ID,
         clickableIcons: false,
+        mapTypeControlOptions: {
+          position: google.maps.ControlPosition.LEFT_BOTTOM,
+        },
       });
       setMap(map);
 
@@ -42,9 +46,6 @@
           createMarker({
             site,
             map,
-            AdvancedMarkerElement,
-            PinElement,
-            LatLng,
             intersectionObserver,
           }),
         );

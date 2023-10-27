@@ -1,10 +1,12 @@
-import { get, writable } from 'svelte/store';
+import { derived, get, writable } from 'svelte/store';
 import type { HydratedMapMarker } from './map-marker-store';
 
-const mapRoutesStore = writable<HydratedMapMarker[]>([]);
-const mapRoutesSubscribe = mapRoutesStore.subscribe;
+export const mapRoutesStore = writable<HydratedMapMarker[]>([]);
 
 const getMapRoutes = () => get(mapRoutesStore);
+const setMapRoutes = (items: HydratedMapMarker[]) => mapRoutesStore.set(items);
+const clearMapRoutes = () => mapRoutesStore.set([]);
+
 const addToMapRoutes = (items: HydratedMapMarker) => {
   mapRoutesStore.update((val) => {
     val.push(items);
@@ -12,7 +14,9 @@ const addToMapRoutes = (items: HydratedMapMarker) => {
     return val;
   });
 };
-const setMapRoutes = (items: HydratedMapMarker[]) => mapRoutesStore.set(items);
-const clearMapRoutes = () => mapRoutesStore.set([]);
 
-export { getMapRoutes, addToMapRoutes, setMapRoutes, clearMapRoutes, mapRoutesSubscribe };
+export { addToMapRoutes, getMapRoutes, setMapRoutes, clearMapRoutes };
+
+export const isMaxRouteItemsStore = derived([mapRoutesStore], ([$mapRoutesStore]) => {
+  return $mapRoutesStore.length >= 10;
+});

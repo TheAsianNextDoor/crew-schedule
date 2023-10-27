@@ -3,12 +3,32 @@ import { retrievePhasesBySite, type MapPhase } from './queries/retrieve-phases-b
 import { retrieveMapSites, type MapSite } from './queries/retrieve-map-sites.js';
 import { retrieveDisciplines } from './queries/retrieve-disciplines-by-customer.js';
 
-const findCurrentPhase = (phase: MapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
+export type HydratedMapPhase = MapPhase & {
+  crewHours?: number;
+  crewMobilizationHours?: number;
+};
 
 export type HydratedMapSite = MapSite & {
-  currentPhase: MapPhase | null;
-  phases: MapPhase[];
+  currentPhase: HydratedMapPhase | null;
+  phases: HydratedMapPhase[];
   address: string;
+};
+
+const findCurrentPhase = (phase: HydratedMapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
+
+const addCrewInfo = (phase: MapPhase): HydratedMapPhase => {
+  const { estimated_hours, estimated_mobilization_duration, personnel_count } = phase;
+  if (estimated_hours && personnel_count) {
+    // @ts-expect-error doesn't have property yet
+    phase.crewHours = (estimated_hours / personnel_count).toFixed(2);
+  }
+
+  if (estimated_mobilization_duration && personnel_count) {
+    // @ts-expect-error doesn't have property yet
+    phase.crewMobilizationHours = (estimated_mobilization_duration / personnel_count).toFixed(2);
+  }
+
+  return phase;
 };
 
 const buildAddress = (
@@ -22,7 +42,8 @@ const buildAddress = (
 const getMapSitesWithPhases = async (sites: MapSite[]) =>
   Promise.all(
     sites.map(async (site) => {
-      const phases = await retrievePhasesBySite(site.site_id);
+      const phases = (await retrievePhasesBySite(site.site_id)) as HydratedMapPhase[];
+      phases.forEach(addCrewInfo);
 
       const currentPhase = phases.find(findCurrentPhase) || null;
 

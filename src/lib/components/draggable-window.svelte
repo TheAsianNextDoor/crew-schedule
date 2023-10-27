@@ -35,6 +35,7 @@
     <slot name="header" />
   </div>
   <slot name="content" />
+  <slot name="footer" />
 </section>
 
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />

@@ -6,7 +6,7 @@ export const load: LayoutServerLoad = async ({ parent }) => {
   const { session, employee } = await parent();
 
   if (!session || !employee) {
-    throw redirect(303, '/login');
+    throw redirect(303, '/');
   }
 
   return {

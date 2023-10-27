@@ -5,7 +5,10 @@ import {
   type UserMetadata,
 } from '@supabase/supabase-js';
 
+import { type Item, type DndEvent } from 'svelte-dnd-action';
+
 import { type Database } from './DatabaseDefinitions';
+import type { HydratedMapMarker } from './routes/(auth)/map/stores/map-marker-store';
 
 export interface GithubSession extends Session {
   user: User & {
@@ -37,6 +40,15 @@ declare global {
       session: GithubSession | null;
     }
     // interface Platform {}
+  }
+}
+
+declare type DndEvent<Item = HydratedMapMarker> = DndEvent<Item>;
+declare type DndEvent<ItemType = Item> = DndEvent<ItemType>;
+declare namespace svelteHTML {
+  interface HTMLAttributes<T> {
+    'on:consider'?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
+    'on:finalize'?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
   }
 }
 
