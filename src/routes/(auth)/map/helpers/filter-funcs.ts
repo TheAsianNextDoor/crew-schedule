@@ -1,5 +1,5 @@
 import { STATUS_ENUM } from '$lib/constants/status';
-import type { MapPhase } from '../queries/retreive-phases-by-site';
+import type { MapPhase } from '../queries/retrieve-phases-by-site';
 import type { MapSite } from '../queries/retrieve-map-sites';
 import {
   addFilterConditionFunc,

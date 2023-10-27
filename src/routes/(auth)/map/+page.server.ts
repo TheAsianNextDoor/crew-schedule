@@ -1,6 +1,7 @@
 import { STATUS_ENUM } from '$lib/constants/status.js';
-import { retrievePhasesBySite, type MapPhase } from './queries/retreive-phases-by-site.js';
+import { retrievePhasesBySite, type MapPhase } from './queries/retrieve-phases-by-site.js';
 import { retrieveMapSites, type MapSite } from './queries/retrieve-map-sites.js';
+import { retrieveDisciplines } from './queries/retrieve-disciplines-by-customer.js';
 
 export type HydratedMapPhase = MapPhase & {
   crewHours?: number;
@@ -38,15 +39,8 @@ const buildAddress = (
   country: string,
 ) => `${street} ${city}, ${state}, ${zipCode}, ${country}`;
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ parent }) {
-  const {
-    employee: { customer_id: customerId },
-  } = await parent();
-
-  const sites = await retrieveMapSites(customerId);
-
-  const mapSitesWithPhases = await Promise.all(
+const getMapSitesWithPhases = async (sites: MapSite[]) =>
+  Promise.all(
     sites.map(async (site) => {
       const phases = (await retrievePhasesBySite(site.site_id)) as HydratedMapPhase[];
       phases.forEach(addCrewInfo);
@@ -62,5 +56,15 @@ export async function load({ parent }) {
     }),
   );
 
-  return { sites: mapSitesWithPhases };
+/** @type {import('./$types').PageServerLoad} */
+export async function load({ parent }) {
+  const {
+    employee: { customer_id: customerId },
+  } = await parent();
+
+  const sites = await retrieveMapSites(customerId);
+  const mapSitesWithPhases = await getMapSitesWithPhases(sites);
+  const disciplines = (await retrieveDisciplines(customerId)).map((item) => item.discipline_name);
+
+  return { sites: mapSitesWithPhases, disciplines };
 }

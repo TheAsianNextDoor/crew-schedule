@@ -7,7 +7,7 @@ import {
   type Marker,
 } from '../helpers/marker-utils';
 import type { MapSite } from '../queries/retrieve-map-sites';
-import type { MapPhase } from '../queries/retreive-phases-by-site';
+import type { MapPhase } from '../queries/retrieve-phases-by-site';
 
 export type HydratedMapMarker = {
   id: string;

@@ -26,6 +26,8 @@
   import { RangePlugin } from '@easepick/range-plugin';
   import { onMount } from 'svelte';
 
+  export let disciplines: string[];
+
   let datePickerElement: HTMLInputElement;
   let datePicker: easepick.Core;
 
@@ -96,11 +98,16 @@
 
 <div class="py-4 px-6">
   <FilterSection label="Discipline">
-    <input
-      class="input variant-form-material grow basis-0"
+    <select
       bind:value={$disciplineName}
-      on:input={() => filterByDiscipline($disciplineName)}
-    />
+      on:change={() => filterByDiscipline($disciplineName)}
+      class="select"
+    >
+      <option selected value="">any status</option>
+      {#each disciplines as discipline}
+        <option selected value={discipline}>{discipline}</option>
+      {/each}
+    </select>
   </FilterSection>
 
   <FilterSection label="Status">
