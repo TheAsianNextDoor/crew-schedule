@@ -24,6 +24,7 @@
   import AutoComplete from './auto-complete.svelte';
   import { clearMapPolylines } from '../../stores/map-polyline-store';
 
+  export let disciplines: string[];
   export let sites: HydratedMapSite[];
 
   const setRoutesMode = () => {
@@ -59,7 +60,7 @@
   <div class="sidebar-width absolute" transition:fly={getFlyTransition(-408)}>
     <div class="overflow-y-auto bg-surface-200-700-token h-screen">
       {#if $isMapFilterVisibleStore}
-        <MapFilter />
+        <MapFilter bind:disciplines />
       {:else if $selectedEntityStore}
         <MapSearchInfo />
       {/if}
