@@ -10,6 +10,8 @@
 
   let legs: Leg[];
   let showRouteCalcInfo = false;
+  let totalDistance = 0;
+  let totalDuration = 0;
 
   const handleRouteCalculate = async () => {
     const mapRoutes = getMapRoutes();
@@ -21,6 +23,9 @@
     const [data] = result.data.routes as typeof routesData;
 
     data.legs.forEach((leg, index) => {
+      totalDistance += Number(leg.localizedValues.distance.text.split(' ')[0]);
+      totalDuration += Number(leg.localizedValues.duration.text.split(' ')[0]);
+
       const polyline = buildRouteCalcPolyline(leg, index);
       addMapPolyline({
         origin: mapRoutes[index],
@@ -57,12 +62,18 @@
       {#each legs as leg, index}
         <div class="p-2">
           <h1>
-            {$mapRoutesStore[index].site.site_name} to {$mapRoutesStore[index + 1].site.site_name}
+            {$mapRoutesStore[index]?.site?.site_name} to {$mapRoutesStore[index + 1]?.site
+              ?.site_name}
           </h1>
           <div>Distance: {leg.localizedValues.distance.text}</div>
           <div>Duration: {leg.localizedValues.duration.text}</div>
         </div>
       {/each}
+      <div>
+        <h1>Total</h1>
+        <div>Total Distance: {totalDistance} mi</div>
+        <div>Total Distance: {totalDuration} mins</div>
+      </div>
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
