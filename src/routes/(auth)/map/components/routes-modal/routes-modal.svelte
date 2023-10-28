@@ -1,10 +1,10 @@
 <script lang="ts">
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import DraggableList from './draggable-list.svelte';
-  import { getMapRoutes, mapRoutesStore } from '../stores/map-routes-store';
+  import { getMapRoutes, mapRoutesStore } from '../../stores/map-routes-store';
   import type { routesData } from '$lib/routes-filter';
-  import { buildRouteCalcPolyline, type Leg } from '../helpers/polyline-utils';
-  import { addMapPolyline, clearMapPolylines } from '../stores/map-polyline-store';
+  import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
+  import { addMapPolyline, clearMapPolylines } from '../../stores/map-polyline-store';
 
   $: calculateButtonDisabled = $mapRoutesStore.length < 2;
 

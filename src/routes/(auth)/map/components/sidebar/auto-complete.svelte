@@ -37,7 +37,7 @@
   const siteOptions: AutocompleteOption[] = sites.map((site) => ({
     label: `${site.site_name} (${site.job_number})`,
     value: site.site_id,
-    keywords: [site.job_number, site.status_name, site.address, site.client_name],
+    keywords: `${site.job_number}, ${site.status_name}, ${site.address}, ${site.client_name}`,
   }));
 
   const handleCloseEntity = () => {
@@ -48,25 +48,23 @@
 </script>
 
 <div class="w-full p-4">
-  <div class="card w-full bg-slate-100">
-    <div class="flex items-center gap-1 px-4">
-      <div class="hover:cursor-pointer">
-        <i class="fa-solid fa-bars"></i>
-      </div>
-      <input
-        class="bg-surface-100-800-token no-outline w-11/12 border-none bg-slate-100"
-        autocomplete="off"
-        name="autocomplete-search"
-        bind:value={searchValue}
-        placeholder="Search..."
-        use:popup={popupSettings}
-      />
-      {#if $selectedEntityStore}
-        <button on:click={handleCloseEntity} class="hover:cursor-pointer">
-          <i class="fa-solid fa-lg fa-xmark"></i>
-        </button>
-      {/if}
+  <div class="card w-full bg-slate-100 flex items-center gap-1 px-4">
+    <div class="hover:cursor-pointer">
+      <i class="fa-solid fa-bars"></i>
     </div>
+    <input
+      class="bg-surface-100-800-token no-outline w-11/12 border-none bg-slate-100"
+      autocomplete="off"
+      name="autocomplete-search"
+      bind:value={searchValue}
+      placeholder="Search..."
+      use:popup={popupSettings}
+    />
+    {#if $selectedEntityStore}
+      <button on:click={handleCloseEntity} class="hover:cursor-pointer">
+        <i class="fa-solid fa-lg fa-xmark"></i>
+      </button>
+    {/if}
   </div>
 </div>
 

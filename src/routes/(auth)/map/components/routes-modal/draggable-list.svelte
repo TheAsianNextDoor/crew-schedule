@@ -1,9 +1,13 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
   import { dndzone, type DndEvent } from 'svelte-dnd-action';
-  import { isMaxRouteItemsStore, mapRoutesStore, setMapRoutes } from '../stores/map-routes-store';
-  import type { HydratedMapMarker } from '../stores/map-marker-store';
-  import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
+  import {
+    isMaxRouteItemsStore,
+    mapRoutesStore,
+    setMapRoutes,
+  } from '../../stores/map-routes-store';
+  import type { HydratedMapMarker } from '../../stores/map-marker-store';
+  import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import { getGoogleMaps } from '$lib/constants/google-maps';
 
   const flipDurationMs = 100;
