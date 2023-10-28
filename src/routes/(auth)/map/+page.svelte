@@ -27,6 +27,9 @@
   </div>
 </div>
 
+<!-- add profile icon here -->
+<!-- <div class="absolute right-0 z-20">Profile</div> -->
+
 <div class="w-full h-full z-10 absolute">
   <Map sites={data.sites} />
 </div>

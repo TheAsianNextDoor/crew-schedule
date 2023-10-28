@@ -38,6 +38,7 @@
         mapTypeControlOptions: {
           position: google.maps.ControlPosition.LEFT_BOTTOM,
         },
+        fullscreenControl: false,
       });
       setMap(map);
 
