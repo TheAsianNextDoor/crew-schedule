@@ -3,7 +3,7 @@ import type { Person } from '@prisma/client';
 
 export type EmployeeInfo = Person & { role_name: string };
 
-export const retrieveEmployeeInfo = (email: string) =>
+export const retrievePersonInfo = (email: string) =>
   queryDb.findFirst<EmployeeInfo>(
     `
     SELECT 
