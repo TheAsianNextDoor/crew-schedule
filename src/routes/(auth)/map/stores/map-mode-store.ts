@@ -5,23 +5,21 @@ import { getBaseHydratedMarkers } from './map-marker-store';
 export type MapMode = 'base' | 'routes' | 'matrix';
 
 export const mapModeStore = writable<MapMode>('base');
+const { set } = mapModeStore;
 
 const getMapMode = () => get(mapModeStore);
 
 const setMapModeBase = () => {
-  mapModeStore.set('base');
-
-  getBaseHydratedMarkers().forEach(({ marker }) =>
-    changeMarkerPin(marker, google.maps.marker.PinElement, MARKER_PINS.default),
-  );
+  set('base');
+  getBaseHydratedMarkers().forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
 };
 
 const setMapModeRoutes = () => {
-  mapModeStore.set('routes');
+  set('routes');
 };
 
 const setMapModeMatrix = () => {
-  mapModeStore.set('matrix');
+  set('matrix');
 };
 
 export { getMapMode, setMapModeBase, setMapModeRoutes, setMapModeMatrix };

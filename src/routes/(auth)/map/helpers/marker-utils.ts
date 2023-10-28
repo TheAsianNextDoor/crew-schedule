@@ -19,6 +19,7 @@ import {
 import { addToMapRoutes, isMaxRouteItemsStore } from '../stores/map-routes-store';
 import { getGoogleMaps, type MapInstance } from '$lib/constants/google-maps';
 import { get } from 'svelte/store';
+import { addToMapMatrices } from '../stores/map-matrix-store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -31,14 +32,28 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   selectedClickAnimation(content);
   setSelectedEntity({ id: site.site_id, site, marker });
 
-  if (getMapMode() === 'routes') {
+  const mapMode = getMapMode();
+  if (mapMode === 'routes') {
     const pinElement = getMarkerPinElement(marker.content as HTMLElement);
 
     if (!isMarkerPinOfType(pinElement, MARKER_PINS.routes.type) && !get(isMaxRouteItemsStore)) {
       addToMapRoutes(hydratedMapMarker);
-      changeMarkerPin(marker, getGoogleMaps().PinElement, MARKER_PINS.routes);
+      changeMarkerPin(marker, MARKER_PINS.routes);
+    }
+
+    return;
+  }
+
+  if (mapMode === 'matrix') {
+    const pinElement = getMarkerPinElement(marker.content as HTMLElement);
+
+    if (!isMarkerPinOfType(pinElement, MARKER_PINS.matrix.type)) {
+      addToMapMatrices(hydratedMapMarker);
+      changeMarkerPin(marker, MARKER_PINS.matrix);
     }
   }
+
+  return;
 };
 
 interface CreateMarkerArgs {

@@ -8,7 +8,6 @@
   } from '../../stores/map-routes-store';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
-  import { getGoogleMaps } from '$lib/constants/google-maps';
 
   const flipDurationMs = 100;
 
@@ -29,7 +28,7 @@
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
     setMapRoutes($mapRoutesStore.filter(({ id }) => id !== itemIdToRemove));
-    changeMarkerPin(item.marker, getGoogleMaps().PinElement, MARKER_PINS.default);
+    changeMarkerPin(item.marker, MARKER_PINS.default);
   };
 </script>
 

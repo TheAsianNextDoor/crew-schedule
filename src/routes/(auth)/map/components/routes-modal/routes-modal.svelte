@@ -4,7 +4,7 @@
   import { getMapRoutes, mapRoutesStore } from '../../stores/map-routes-store';
   import type { routesData } from '$lib/routes-filter';
   import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
-  import { addMapPolyline, clearMapPolylines } from '../../stores/map-polyline-store';
+  import { addRoutesPolyline, clearRoutesPolylines } from '../../stores/routes-polyline-store';
 
   $: calculateButtonDisabled = $mapRoutesStore.length < 2;
 
@@ -27,7 +27,7 @@
       totalDuration += Number(leg.localizedValues.duration.text.split(' ')[0]);
 
       const polyline = buildRouteCalcPolyline(leg, index);
-      addMapPolyline({
+      addRoutesPolyline({
         origin: mapRoutes[index],
         destination: mapRoutes[index + 1],
         polyline,
@@ -40,7 +40,7 @@
 
   const handleCalcAnotherRoute = () => {
     legs = [];
-    clearMapPolylines();
+    clearRoutesPolylines();
     showRouteCalcInfo = false;
   };
 </script>

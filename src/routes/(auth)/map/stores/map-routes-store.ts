@@ -1,5 +1,6 @@
 import { derived, get, writable } from 'svelte/store';
-import type { HydratedMapMarker } from './map-marker-store';
+import { getBaseHydratedMarkers, type HydratedMapMarker } from './map-marker-store';
+import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
 
 export const mapRoutesStore = writable<HydratedMapMarker[]>([]);
 
@@ -15,7 +16,19 @@ const addToMapRoutes = (items: HydratedMapMarker) => {
   });
 };
 
-export { addToMapRoutes, getMapRoutes, setMapRoutes, clearMapRoutes };
+const changePinsToRoutes = () => {
+  const mapRoutes = getMapRoutes();
+  const nonMapRoutes = getBaseHydratedMarkers().filter((mapMarker) => {
+    const index = mapRoutes.findIndex(({ id }) => mapMarker.id === id);
+
+    return index === -1 ? true : false;
+  });
+
+  nonMapRoutes.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  mapRoutes.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.routes));
+};
+
+export { addToMapRoutes, getMapRoutes, setMapRoutes, clearMapRoutes, changePinsToRoutes };
 
 export const isMaxRouteItemsStore = derived([mapRoutesStore], ([$mapRoutesStore]) => {
   return $mapRoutesStore.length >= 10;

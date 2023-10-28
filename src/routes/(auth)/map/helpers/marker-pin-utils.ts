@@ -1,8 +1,11 @@
+import { getGoogleMaps } from '$lib/constants/google-maps';
 import type { Marker } from './marker-utils';
 
 export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
 
 export type PinOptions = Omit<google.maps.marker.PinElementOptions, 'glyph'>;
+
+type MarkerPinTypes = 'default' | 'routes' | 'matrix';
 
 interface PinElementConfig {
   type: string;
@@ -10,7 +13,7 @@ interface PinElementConfig {
   pinOptions: PinOptions;
 }
 
-type MarkerPinTypes = 'default' | 'routes';
+const borderColor = '#808080';
 
 export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
   default: {
@@ -18,8 +21,8 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-solid fa-circle"></i>',
     pinOptions: {
       glyphColor: 'white',
-      background: 'rgb(95, 142, 231)',
-      borderColor: 'rgb(230, 221, 102)',
+      background: '#5F8EE7',
+      borderColor,
     },
   },
   routes: {
@@ -27,8 +30,17 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-solid fa-road fa-lg"></i>',
     pinOptions: {
       glyphColor: 'black',
-      background: 'yellow',
-      borderColor: 'black',
+      background: '#e7dc5f',
+      borderColor,
+    },
+  },
+  matrix: {
+    type: 'matrix',
+    iconHtml: '<i class="fa-brands fa-xing"></i>',
+    pinOptions: {
+      glyphColor: 'white',
+      background: '#e7985f',
+      borderColor,
     },
   },
 } as const;
@@ -44,11 +56,8 @@ export const getMarkerPinElement = (node: HTMLElement) => {
   return pinElement as HTMLElement;
 };
 
-export const changeMarkerPin = (
-  marker: Marker,
-  PinElement: typeof google.maps.marker.PinElement,
-  pinDefinition: PinElementConfig,
-) => {
+export const changeMarkerPin = (marker: Marker, pinDefinition: PinElementConfig) => {
+  const { PinElement } = getGoogleMaps();
   const icon = document.createElement('div');
   icon.innerHTML = pinDefinition.iconHtml;
   const faPin = new PinElement({

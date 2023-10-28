@@ -13,8 +13,9 @@
     setMapModeMatrix,
     setMapModeRoutes,
   } from '../stores/map-mode-store';
-  import { clearMapRoutes } from '../stores/map-routes-store';
-  import { clearMapPolylines } from '../stores/map-polyline-store';
+  import { changePinsToRoutes } from '../stores/map-routes-store';
+  import { hideRoutesPolylines, showRoutesPolylines } from '../stores/routes-polyline-store';
+  import { changePinsToMatrix } from '../stores/map-matrix-store';
 
   const handleFilterClick = () => {
     if (isMapFilterVisible()) {
@@ -26,19 +27,24 @@
   };
 
   const handleRoutesClick = () => {
+    // if already in routes mode
     if (getMapMode() === 'routes') {
-      clearMapRoutes();
-      clearMapPolylines();
+      hideRoutesPolylines();
       setMapModeBase();
     } else {
+      changePinsToRoutes();
+      showRoutesPolylines();
       setMapModeRoutes();
     }
   };
 
   const handleMatrixClick = () => {
+    // if already in matrix
     if (getMapMode() === 'matrix') {
       setMapModeBase();
     } else {
+      hideRoutesPolylines();
+      changePinsToMatrix();
       setMapModeMatrix();
     }
   };
