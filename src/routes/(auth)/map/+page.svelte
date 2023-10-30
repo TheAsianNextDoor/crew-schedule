@@ -1,11 +1,10 @@
 <script lang="ts">
   import SideBarContainer from './components/sidebar/sidebar-container.svelte';
   import Map from './components/map.svelte';
-  import { mapModeStore } from './stores/map-mode-store';
-  import RoutesModal from './components/routes-modal/routes-modal.svelte';
   import ButtonCarousel from './components/button-carousel.svelte';
   import AutoComplete from './components/sidebar/auto-complete.svelte';
   import { isMapFilterVisibleStore } from './stores/map-filter-store';
+  import Modals from './components/modals.svelte';
 
   export let data;
 
@@ -34,6 +33,4 @@
   <Map sites={data.sites} />
 </div>
 
-{#if $mapModeStore === 'routes'}
-  <RoutesModal />
-{/if}
+<Modals />
