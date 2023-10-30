@@ -1,6 +1,5 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
-  import { dndzone, type DndEvent } from 'svelte-dnd-action';
   import {
     isMaxRouteItemsStore,
     mapRoutesStore,
@@ -8,22 +7,9 @@
   } from '../../stores/map-routes-store';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
+  import DraggableList from '$lib/components/draggable-list.svelte';
 
   const flipDurationMs = 100;
-
-  const handleDndConsider = <T,>(
-    e: CustomEvent<DndEvent<HydratedMapMarker>> & { target: EventTarget & T },
-  ) => {
-    const newOrderedList = e.detail.items;
-    setMapRoutes(newOrderedList);
-  };
-
-  const handleDndFinalize = <T,>(
-    e: CustomEvent<DndEvent<HydratedMapMarker>> & { target: EventTarget & T },
-  ) => {
-    const newOrderedList = e.detail.items;
-    setMapRoutes(newOrderedList);
-  };
 
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
@@ -40,11 +26,10 @@
       </div>
     {/each}
   </div>
-  <section
-    class="flex flex-col gap-y-1"
-    use:dndzone={{ items: $mapRoutesStore, flipDurationMs }}
-    on:consider={handleDndConsider}
-    on:finalize={handleDndFinalize}
+  <DraggableList
+    items={$mapRoutesStore}
+    considerFunction={setMapRoutes}
+    finalizeFunction={setMapRoutes}
   >
     {#each $mapRoutesStore as item (item.id)}
       <div
@@ -59,7 +44,7 @@
         </button>
       </div>
     {/each}
-  </section>
+  </DraggableList>
 </div>
 
 {#if $isMaxRouteItemsStore}
