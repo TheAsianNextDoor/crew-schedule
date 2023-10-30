@@ -1,10 +1,11 @@
 <script lang="ts">
   import DraggableWindow from '$lib/components/draggable-window.svelte';
-  import DraggableList from './draggable-list.svelte';
+  import DraggableList from './routes-list.svelte';
   import { getMapRoutes, mapRoutesStore } from '../../stores/map-routes-store';
   import type { routesData } from '$lib/routes-filter';
   import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
   import { addRoutesPolyline, clearRoutesPolylines } from '../../stores/routes-polyline-store';
+  import RouteCalcInfo from './route-calc-info.svelte';
 
   $: calculateButtonDisabled = $mapRoutesStore.length < 2;
 
@@ -59,21 +60,7 @@
     {#if !showRouteCalcInfo}
       <DraggableList />
     {:else}
-      {#each legs as leg, index}
-        <div class="p-2">
-          <h1>
-            {$mapRoutesStore[index]?.site?.site_name} to {$mapRoutesStore[index + 1]?.site
-              ?.site_name}
-          </h1>
-          <div>Distance: {leg.localizedValues.distance.text}</div>
-          <div>Duration: {leg.localizedValues.duration.text}</div>
-        </div>
-      {/each}
-      <div>
-        <h1>Total</h1>
-        <div>Total Distance: {totalDistance} mi</div>
-        <div>Total Distance: {totalDuration} mins</div>
-      </div>
+      <RouteCalcInfo bind:legs bind:totalDistance bind:totalDuration />
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">

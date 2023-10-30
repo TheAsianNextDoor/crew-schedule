@@ -8,6 +8,7 @@
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import DraggableList from '$lib/components/draggable-list.svelte';
+  import { listItemContainer } from '$lib/styles';
 
   const flipDurationMs = 100;
 
@@ -32,10 +33,7 @@
     finalizeFunction={setMapRoutes}
   >
     {#each $mapRoutesStore as item (item.id)}
-      <div
-        class="card shadow-lg cursor-grab border items-center justify-between flex px-2 h-10 border-black bg-slate-300"
-        animate:flip={{ duration: flipDurationMs }}
-      >
+      <div class={`${listItemContainer} cursor-grab`} animate:flip={{ duration: flipDurationMs }}>
         <span>
           {item.site.site_name}
         </span>
