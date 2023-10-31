@@ -16,6 +16,7 @@
   import { changePinsToRoutes } from '../stores/map-routes-store';
   import { hideRoutesPolylines, showRoutesPolylines } from '../stores/routes-polyline-store';
   import { changePinsToMatrix } from '../stores/map-matrix-store';
+  import { hideMatrixPolylines, showMatrixPolylines } from '../stores/matrix-polyline.store';
 
   const handleFilterClick = () => {
     if (isMapFilterVisible()) {
@@ -33,6 +34,7 @@
       setMapModeBase();
     } else {
       changePinsToRoutes();
+      hideMatrixPolylines();
       showRoutesPolylines();
       setMapModeRoutes();
     }
@@ -42,7 +44,9 @@
     // if already in matrix
     if (getMapMode() === 'matrix') {
       setMapModeBase();
+      hideMatrixPolylines();
     } else {
+      showMatrixPolylines();
       hideRoutesPolylines();
       changePinsToMatrix();
       setMapModeMatrix();

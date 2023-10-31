@@ -15,11 +15,6 @@ export const mapMatrixStore = writable<MatrixStore>({
 const getMatrixOrigin = () => get(mapMatrixStore).origin;
 const getMatrixDestinations = () => get(mapMatrixStore).destinations;
 
-const getMapMatrices = () => {
-  const { origin, destinations } = get(mapMatrixStore);
-
-  return [...(origin ? [origin] : []), ...destinations];
-};
 const setMatrixOrigin = (item: HydratedMapMarker) =>
   mapMatrixStore.update((val) => {
     const destinations = getMatrixDestinations();
@@ -60,16 +55,20 @@ const addToMatrixDestinations = (items: HydratedMapMarker) => {
 };
 
 const changePinsToMatrix = () => {
-  const mapMatrices = getMapMatrices();
+  const { origin, destinations } = get(mapMatrixStore);
 
   const nonMapMatrixIcons = getBaseHydratedMarkers().filter((mapMarker) => {
-    const index = mapMatrices.findIndex(({ id }) => mapMarker.id === id);
+    const index = destinations.findIndex(({ id }) => mapMarker.id === id);
 
     return index === -1 ? true : false;
   });
 
   nonMapMatrixIcons.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
-  mapMatrices.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.matrixDestination));
+  destinations.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.matrixDestination));
+
+  if (origin) {
+    changeMarkerPin(origin.marker, MARKER_PINS.matrixOrigin);
+  }
 };
 
 export {

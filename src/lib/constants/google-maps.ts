@@ -10,6 +10,8 @@ export type Encoding = typeof google.maps.geometry.encoding;
 export type Polyline = typeof google.maps.Polyline;
 export type InfoWindow = typeof google.maps.InfoWindow;
 
+export type Location = [string, string];
+
 export interface GoogleMaps {
   Map: Map;
   AdvancedMarkerElement: AdvancedMarkerElement;

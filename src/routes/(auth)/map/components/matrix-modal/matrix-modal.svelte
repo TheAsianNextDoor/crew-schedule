@@ -5,6 +5,7 @@
   import {
     clearMatrixOrigin,
     getMatrixOrigin,
+    isSelectingMatrixOrigin,
     mapMatrixStore,
     setIsNotSelectingMatrixOrigin,
     setIsSelectingMatrixOrigin,
@@ -15,6 +16,10 @@
   import MatrixCalcInfo from './matrix-calc-info.svelte';
   import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
   import type { fetchResult } from '$lib/utils/fetch';
+  import { buildMatrixCalcPolyline } from '../../helpers/polyline-utils';
+  import type { Location } from '$lib/constants/google-maps';
+  import { addMatrixPolyline } from '../../stores/matrix-polyline.store';
+  import type { HydratedMapMarker } from '../../stores/map-marker-store';
 
   $: calculateButtonDisabled = $mapMatrixStore.origin && $mapMatrixStore.destinations.length < 2;
 
@@ -40,19 +45,17 @@
 
     const { data } = result as fetchResult<MatrixItem[]>;
 
-    console.log('data: ', data);
-
-    // data.legs.forEach((leg, index) => {
-    //   totalDistance += Number(leg.localizedValues.distance.text.split(' ')[0]);
-    //   totalDuration += Number(leg.localizedValues.duration.text.split(' ')[0]);
-
-    //   const polyline = buildRouteCalcPolyline(leg, index);
-    //   addRoutesPolyline({
-    //     origin: mapRoutes[index],
-    //     destination: mapRoutes[index + 1],
-    //     polyline,
-    //   });
-    // });
+    data.forEach((matrixItem, index) => {
+      const origin = $mapMatrixStore.origin as HydratedMapMarker;
+      const destination = $mapMatrixStore.destinations[matrixItem.destinationIndex];
+      const locations = [origin?.site.location, destination.site.location] as unknown as Location[];
+      const polyline = buildMatrixCalcPolyline(locations, matrixItem, index);
+      addMatrixPolyline({
+        origin,
+        destination,
+        polyline,
+      });
+    });
 
     edges = data;
     showMatrixCalcInfo = true;
@@ -86,7 +89,15 @@
           </button>
         </div>
       {:else}
-        <button on:click={setIsSelectingMatrixOrigin}>Set Origin</button>
+        <button
+          class={`!justify-center ${listItemContainer} ${
+            $isSelectingMatrixOrigin ? 'bg-green-500' : ''
+          }`}
+          on:click={setIsSelectingMatrixOrigin}
+        >
+          <i class="fa-solid fa-plus"></i>
+          <span class="px-2"> Set Origin </span>
+        </button>
       {/if}
       <h2 class="h4">Destination:</h2>
       <MatrixList />
