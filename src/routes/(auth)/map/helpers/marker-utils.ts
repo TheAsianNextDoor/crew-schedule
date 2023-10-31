@@ -22,6 +22,7 @@ import { get } from 'svelte/store';
 import {
   addToMatrixDestinations,
   getIsSelectingMatrixOrigin,
+  isMaxMatrixDestinationStore,
   setIsNotSelectingMatrixOrigin,
   setMatrixOrigin,
 } from '../stores/map-matrix-store';
@@ -56,7 +57,10 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
       setIsNotSelectingMatrixOrigin();
       changeMarkerPin(marker, MARKER_PINS.matrixOrigin);
       setMatrixOrigin(hydratedMapMarker);
-    } else if (!isMarkerPinOfType(pinElement, MARKER_PINS.matrixDestination.type)) {
+    } else if (
+      !isMarkerPinOfType(pinElement, MARKER_PINS.matrixDestination.type) &&
+      !get(isMaxMatrixDestinationStore)
+    ) {
       addToMatrixDestinations(hydratedMapMarker);
       changeMarkerPin(marker, MARKER_PINS.matrixDestination);
     }

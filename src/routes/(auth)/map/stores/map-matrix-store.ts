@@ -77,17 +77,17 @@ export {
   addToMatrixDestinations,
   clearMatrixOrigin,
   setMatrixOrigin,
-  getMapMatrices,
   setMatrixDestinations,
   clearMatrixDestinations,
   changePinsToMatrix,
 };
 
-export const isMaxMatrixDestinationStore = derived([mapMatrixStore], ([$mapRoutesStore]) => {
-  return $mapRoutesStore.destinations.length >= 10;
+export const isMaxMatrixDestinationStore = derived([mapMatrixStore], ([$mapMatrixStore]) => {
+  return $mapMatrixStore.destinations.length >= 10;
 });
 
 export const isSelectingMatrixOrigin = writable(false);
 export const getIsSelectingMatrixOrigin = () => get(isSelectingMatrixOrigin);
 export const setIsSelectingMatrixOrigin = () => isSelectingMatrixOrigin.set(true);
 export const setIsNotSelectingMatrixOrigin = () => isSelectingMatrixOrigin.set(false);
+export const toggleSelectingMatrixOrigin = () => isSelectingMatrixOrigin.update((val) => !val);

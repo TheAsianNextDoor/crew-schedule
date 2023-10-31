@@ -1,9 +1,8 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
-  import { isMaxRouteItemsStore } from '../../stores/map-routes-store';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
-  import { listItemContainer } from '$lib/styles';
+  import { listItemContainerStyle } from '$lib/styles';
   import { mapMatrixStore, setMatrixDestinations } from '../../stores/map-matrix-store';
 
   const flipDurationMs = 100;
@@ -17,7 +16,7 @@
 
 <div class="flex flex-col gap-y-1">
   {#each $mapMatrixStore.destinations as item (item.id)}
-    <div class={`${listItemContainer}`} animate:flip={{ duration: flipDurationMs }}>
+    <div class={`${listItemContainerStyle}`} animate:flip={{ duration: flipDurationMs }}>
       <span>
         {item.site.site_name}
       </span>
@@ -27,10 +26,6 @@
     </div>
   {/each}
 </div>
-
-{#if $isMaxRouteItemsStore}
-  <span class="text-warning-500">At max items of 10</span>
-{/if}
 
 <style>
   .grid-container {

@@ -1,14 +1,10 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
-  import {
-    isMaxRouteItemsStore,
-    mapRoutesStore,
-    setMapRoutes,
-  } from '../../stores/map-routes-store';
+  import { mapRoutesStore, setMapRoutes } from '../../stores/map-routes-store';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import DraggableList from '$lib/components/draggable-list.svelte';
-  import { listItemContainer } from '$lib/styles';
+  import { listItemContainerStyle } from '$lib/styles';
 
   const flipDurationMs = 100;
 
@@ -33,7 +29,10 @@
     finalizeFunction={setMapRoutes}
   >
     {#each $mapRoutesStore as item (item.id)}
-      <div class={`${listItemContainer} cursor-grab`} animate:flip={{ duration: flipDurationMs }}>
+      <div
+        class={`${listItemContainerStyle} cursor-grab`}
+        animate:flip={{ duration: flipDurationMs }}
+      >
         <span>
           {item.site.site_name}
         </span>
@@ -44,10 +43,6 @@
     {/each}
   </DraggableList>
 </div>
-
-{#if $isMaxRouteItemsStore}
-  <span class="text-warning-500">At max items of 10</span>
-{/if}
 
 <style>
   .grid-container {

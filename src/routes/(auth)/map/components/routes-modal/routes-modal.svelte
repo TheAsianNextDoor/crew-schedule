@@ -1,7 +1,11 @@
 <script lang="ts">
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import DraggableList from './routes-list.svelte';
-  import { getMapRoutes, mapRoutesStore } from '../../stores/map-routes-store';
+  import {
+    getMapRoutes,
+    isMaxRouteItemsStore,
+    mapRoutesStore,
+  } from '../../stores/map-routes-store';
   import type { routesData } from '../../../../../../mock/routes';
   import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
   import { addRoutesPolyline, clearRoutesPolylines } from '../../stores/routes-polyline-store';
@@ -64,6 +68,10 @@
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
+    {#if $isMaxRouteItemsStore}
+      <div class="text-warning-500">At max items of 10</div>
+    {/if}
+
     {#if !showRouteCalcInfo}
       <button
         disabled={calculateButtonDisabled}

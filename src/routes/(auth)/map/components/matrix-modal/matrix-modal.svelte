@@ -5,12 +5,13 @@
   import {
     clearMatrixOrigin,
     getMatrixOrigin,
+    isMaxMatrixDestinationStore,
     isSelectingMatrixOrigin,
     mapMatrixStore,
     setIsNotSelectingMatrixOrigin,
-    setIsSelectingMatrixOrigin,
+    toggleSelectingMatrixOrigin,
   } from '../../stores/map-matrix-store';
-  import { listItemContainer } from '$lib/styles';
+  import { listItemContainerStyle } from '$lib/styles';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import type { Marker } from '../../helpers/marker-utils';
   import MatrixCalcInfo from './matrix-calc-info.svelte';
@@ -82,7 +83,7 @@
     {#if !showMatrixCalcInfo}
       <h2 class="h4">Origin:</h2>
       {#if $mapMatrixStore.origin}
-        <div class={`${listItemContainer}`}>
+        <div class={`${listItemContainerStyle}`}>
           {$mapMatrixStore.origin.site.site_name}
           <button on:click={handleOriginRemove}>
             <i class="fa-regular fa-circle-xmark"></i>
@@ -90,10 +91,10 @@
         </div>
       {:else}
         <button
-          class={`!justify-center ${listItemContainer} ${
-            $isSelectingMatrixOrigin ? 'bg-green-500' : ''
+          class={`!justify-center ${listItemContainerStyle} ${
+            $isSelectingMatrixOrigin ? '!bg-green-500' : ''
           }`}
-          on:click={setIsSelectingMatrixOrigin}
+          on:click={toggleSelectingMatrixOrigin}
         >
           <i class="fa-solid fa-plus"></i>
           <span class="px-2"> Set Origin </span>
@@ -106,6 +107,10 @@
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
+    {#if $isMaxMatrixDestinationStore}
+      <div class="text-warning-500">At max items of 10</div>
+    {/if}
+
     {#if !showMatrixCalcInfo}
       <button
         disabled={calculateButtonDisabled}
