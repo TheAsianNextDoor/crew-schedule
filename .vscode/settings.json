@@ -1,4 +1,5 @@
 {
+  "tailwindCSS.classAttributes": [".*Class", ".*Style"],
   "eslint.validate": ["javascript", "javascriptreact", "svelte"],
   "editor.formatOnSave": true,
   "[svelte]": {
