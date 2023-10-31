@@ -5,7 +5,7 @@ export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
 
 export type PinOptions = Omit<google.maps.marker.PinElementOptions, 'glyph'>;
 
-type MarkerPinTypes = 'default' | 'routes' | 'matrix';
+type MarkerPinTypes = 'default' | 'routes' | 'matrixDestination' | 'matrixOrigin';
 
 interface PinElementConfig {
   type: string;
@@ -34,7 +34,16 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
       borderColor,
     },
   },
-  matrix: {
+  matrixOrigin: {
+    type: 'matrix',
+    iconHtml: '<i class="fa-brands fa-xing"></i>',
+    pinOptions: {
+      glyphColor: 'white',
+      background: '#5FE764',
+      borderColor,
+    },
+  },
+  matrixDestination: {
     type: 'matrix',
     iconHtml: '<i class="fa-brands fa-xing"></i>',
     pinOptions: {

@@ -18,13 +18,13 @@ const addToMapRoutes = (items: HydratedMapMarker) => {
 
 const changePinsToRoutes = () => {
   const mapRoutes = getMapRoutes();
-  const nonMapRoutes = getBaseHydratedMarkers().filter((mapMarker) => {
+  const nonMapRouteIcons = getBaseHydratedMarkers().filter((mapMarker) => {
     const index = mapRoutes.findIndex(({ id }) => mapMarker.id === id);
 
     return index === -1 ? true : false;
   });
 
-  nonMapRoutes.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  nonMapRouteIcons.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
   mapRoutes.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.routes));
 };
 

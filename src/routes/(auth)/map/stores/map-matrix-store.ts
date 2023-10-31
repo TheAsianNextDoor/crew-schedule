@@ -2,7 +2,7 @@ import { derived, get, writable } from 'svelte/store';
 import { getBaseHydratedMarkers, type HydratedMapMarker } from './map-marker-store';
 import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
 
-interface MatrixStore {
+export interface MatrixStore {
   origin: HydratedMapMarker | null;
   destinations: HydratedMapMarker[];
 }
@@ -60,15 +60,16 @@ const addToMatrixDestinations = (items: HydratedMapMarker) => {
 };
 
 const changePinsToMatrix = () => {
-  const mapRoutes = getMapMatrices();
-  const nonMapMatrix = getBaseHydratedMarkers().filter((mapMarker) => {
-    const index = mapRoutes.findIndex(({ id }) => mapMarker.id === id);
+  const mapMatrices = getMapMatrices();
+
+  const nonMapMatrixIcons = getBaseHydratedMarkers().filter((mapMarker) => {
+    const index = mapMatrices.findIndex(({ id }) => mapMarker.id === id);
 
     return index === -1 ? true : false;
   });
 
-  nonMapMatrix.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
-  mapRoutes.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.matrix));
+  nonMapMatrixIcons.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  mapMatrices.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.matrixDestination));
 };
 
 export {

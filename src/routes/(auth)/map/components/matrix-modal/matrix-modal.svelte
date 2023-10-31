@@ -1,9 +1,6 @@
 <script lang="ts">
   import DraggableWindow from '$lib/components/draggable-window.svelte';
-  import { getMapRoutes, mapRoutesStore } from '../../stores/map-routes-store';
-  import type { routesData } from '$lib/routes-filter';
-  import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
-  import { addRoutesPolyline, clearRoutesPolylines } from '../../stores/routes-polyline-store';
+  import { clearRoutesPolylines } from '../../stores/routes-polyline-store';
   import MatrixList from './matrix-list.svelte';
   import {
     clearMatrixOrigin,
@@ -16,13 +13,13 @@
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import type { Marker } from '../../helpers/marker-utils';
   import MatrixCalcInfo from './matrix-calc-info.svelte';
+  import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
+  import type { fetchResult } from '$lib/utils/fetch';
 
-  $: calculateButtonDisabled = $mapRoutesStore.length < 2;
+  $: calculateButtonDisabled = $mapMatrixStore.origin && $mapMatrixStore.destinations.length < 2;
 
-  let legs: Leg[];
-  let showRouteCalcInfo = false;
-  let totalDistance = 0;
-  let totalDuration = 0;
+  let edges: MatrixItem[] = [];
+  let showMatrixCalcInfo = false;
 
   const handleOriginRemove = () => {
     setIsNotSelectingMatrixOrigin();
@@ -31,34 +28,40 @@
   };
 
   const handleRouteCalculate = async () => {
-    const mapRoutes = getMapRoutes();
-    const routes = mapRoutes.map(({ site }) => site.location);
+    const { origin, destinations } = $mapMatrixStore;
+    const originLocations = [origin?.site.location];
+    const destinationLocations = destinations.map(({ site }) => site.location);
     const result = await (
-      await fetch('/api/v1/auth/routes', { method: 'POST', body: JSON.stringify({ routes }) })
+      await fetch('/api/v1/auth/matrix', {
+        method: 'POST',
+        body: JSON.stringify({ originLocations, destinationLocations }),
+      })
     ).json();
 
-    const [data] = result.data.routes as typeof routesData;
+    const { data } = result as fetchResult<MatrixItem[]>;
 
-    data.legs.forEach((leg, index) => {
-      totalDistance += Number(leg.localizedValues.distance.text.split(' ')[0]);
-      totalDuration += Number(leg.localizedValues.duration.text.split(' ')[0]);
+    console.log('data: ', data);
 
-      const polyline = buildRouteCalcPolyline(leg, index);
-      addRoutesPolyline({
-        origin: mapRoutes[index],
-        destination: mapRoutes[index + 1],
-        polyline,
-      });
-    });
+    // data.legs.forEach((leg, index) => {
+    //   totalDistance += Number(leg.localizedValues.distance.text.split(' ')[0]);
+    //   totalDuration += Number(leg.localizedValues.duration.text.split(' ')[0]);
 
-    legs = data.legs;
-    showRouteCalcInfo = true;
+    //   const polyline = buildRouteCalcPolyline(leg, index);
+    //   addRoutesPolyline({
+    //     origin: mapRoutes[index],
+    //     destination: mapRoutes[index + 1],
+    //     polyline,
+    //   });
+    // });
+
+    edges = data;
+    showMatrixCalcInfo = true;
   };
 
   const handleCalcAnotherRoute = () => {
-    legs = [];
+    edges = [];
     clearRoutesPolylines();
-    showRouteCalcInfo = false;
+    showMatrixCalcInfo = false;
   };
 </script>
 
@@ -73,7 +76,7 @@
     class="bg-surface-100-800-token p-4 overflow-auto box-border flex flex-1 flex-col"
     slot="content"
   >
-    {#if !showRouteCalcInfo}
+    {#if !showMatrixCalcInfo}
       <h2 class="h4">Origin:</h2>
       {#if $mapMatrixStore.origin}
         <div class={`${listItemContainer}`}>
@@ -88,11 +91,11 @@
       <h2 class="h4">Destination:</h2>
       <MatrixList />
     {:else}
-      <MatrixCalcInfo />
+      <MatrixCalcInfo matrices={$mapMatrixStore} bind:edges />
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
-    {#if !showRouteCalcInfo}
+    {#if !showMatrixCalcInfo}
       <button
         disabled={calculateButtonDisabled}
         on:click={handleRouteCalculate}

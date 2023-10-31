@@ -1,4 +1,4 @@
-import { routesData } from '$lib/routes-filter';
+import { routesData } from '../../../../../../mock/routes';
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { getGoogleRoutes } from './get-google-routes';
 

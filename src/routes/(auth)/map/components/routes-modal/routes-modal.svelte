@@ -2,7 +2,7 @@
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import DraggableList from './routes-list.svelte';
   import { getMapRoutes, mapRoutesStore } from '../../stores/map-routes-store';
-  import type { routesData } from '$lib/routes-filter';
+  import type { routesData } from '../../../../../../mock/routes';
   import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
   import { addRoutesPolyline, clearRoutesPolylines } from '../../stores/routes-polyline-store';
   import RouteCalcInfo from './route-calc-info.svelte';
@@ -25,7 +25,7 @@
 
     data.legs.forEach((leg, index) => {
       totalDistance += Number(leg.localizedValues.distance.text.split(' ')[0]);
-      totalDuration += Number(leg.localizedValues.duration.text.split(' ')[0]);
+      totalDuration += Number(leg.localizedValues.staticDuration.text.split(' ')[0]);
 
       const polyline = buildRouteCalcPolyline(leg, index);
       addRoutesPolyline({

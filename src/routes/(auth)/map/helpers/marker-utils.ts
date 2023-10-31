@@ -54,11 +54,11 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
 
     if (getIsSelectingMatrixOrigin()) {
       setIsNotSelectingMatrixOrigin();
-      changeMarkerPin(marker, MARKER_PINS.matrix);
+      changeMarkerPin(marker, MARKER_PINS.matrixOrigin);
       setMatrixOrigin(hydratedMapMarker);
-    } else if (!isMarkerPinOfType(pinElement, MARKER_PINS.matrix.type)) {
+    } else if (!isMarkerPinOfType(pinElement, MARKER_PINS.matrixDestination.type)) {
       addToMatrixDestinations(hydratedMapMarker);
-      changeMarkerPin(marker, MARKER_PINS.matrix);
+      changeMarkerPin(marker, MARKER_PINS.matrixDestination);
     }
   }
 
