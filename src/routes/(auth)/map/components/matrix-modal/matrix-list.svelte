@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { flip } from 'svelte/animate';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import { listItemContainerStyle } from '$lib/styles';
   import { mapMatrixStore, setMatrixDestinations } from '../../stores/map-matrix-store';
-
-  const flipDurationMs = 100;
 
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
@@ -14,9 +11,10 @@
   };
 </script>
 
+<h2 class="h4">Destination:</h2>
 <div class="flex flex-col gap-y-1">
   {#each $mapMatrixStore.destinations as item (item.id)}
-    <div class={`${listItemContainerStyle}`} animate:flip={{ duration: flipDurationMs }}>
+    <div class={`${listItemContainerStyle}`}>
       <span>
         {item.site.site_name}
       </span>

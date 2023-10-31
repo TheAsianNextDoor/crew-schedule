@@ -2,18 +2,7 @@
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import { clearRoutesPolylines } from '../../stores/routes-polyline-store';
   import MatrixList from './matrix-list.svelte';
-  import {
-    clearMatrixOrigin,
-    getMatrixOrigin,
-    isMaxMatrixDestinationStore,
-    isSelectingMatrixOrigin,
-    mapMatrixStore,
-    setIsNotSelectingMatrixOrigin,
-    toggleSelectingMatrixOrigin,
-  } from '../../stores/map-matrix-store';
-  import { listItemContainerStyle } from '$lib/styles';
-  import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
-  import type { Marker } from '../../helpers/marker-utils';
+  import { isMaxMatrixDestinationStore, mapMatrixStore } from '../../stores/map-matrix-store';
   import MatrixCalcInfo from './matrix-calc-info.svelte';
   import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
   import type { fetchResult } from '$lib/utils/fetch';
@@ -21,17 +10,12 @@
   import type { Location } from '$lib/constants/google-maps';
   import { addMatrixPolyline } from '../../stores/matrix-polyline.store';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
+  import MatrixOrigin from './matrix-origin.svelte';
 
   $: calculateButtonDisabled = $mapMatrixStore.origin && $mapMatrixStore.destinations.length < 2;
 
   let edges: MatrixItem[] = [];
   let showMatrixCalcInfo = false;
-
-  const handleOriginRemove = () => {
-    setIsNotSelectingMatrixOrigin();
-    changeMarkerPin(getMatrixOrigin()?.marker as Marker, MARKER_PINS.default);
-    clearMatrixOrigin();
-  };
 
   const handleRouteCalculate = async () => {
     const { origin, destinations } = $mapMatrixStore;
@@ -81,26 +65,7 @@
     slot="content"
   >
     {#if !showMatrixCalcInfo}
-      <h2 class="h4">Origin:</h2>
-      {#if $mapMatrixStore.origin}
-        <div class={`${listItemContainerStyle}`}>
-          {$mapMatrixStore.origin.site.site_name}
-          <button on:click={handleOriginRemove}>
-            <i class="fa-regular fa-circle-xmark"></i>
-          </button>
-        </div>
-      {:else}
-        <button
-          class={`!justify-center ${listItemContainerStyle} ${
-            $isSelectingMatrixOrigin ? '!bg-green-500' : ''
-          }`}
-          on:click={toggleSelectingMatrixOrigin}
-        >
-          <i class="fa-solid fa-plus"></i>
-          <span class="px-2"> Set Origin </span>
-        </button>
-      {/if}
-      <h2 class="h4">Destination:</h2>
+      <MatrixOrigin />
       <MatrixList />
     {:else}
       <MatrixCalcInfo matrices={$mapMatrixStore} bind:edges />
