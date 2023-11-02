@@ -1,24 +1,28 @@
 <script lang="ts">
   import DraggableWindow from '$lib/components/draggable-window.svelte';
-  import { clearRoutesPolylines } from '../../stores/routes-polyline-store';
+  import { clearRoutePolylines } from '../../stores/route-polyline-store';
   import MatrixList from './matrix-list.svelte';
-  import { isMaxMatrixDestinationStore, mapMatrixStore } from '../../stores/map-matrix-store';
+  import {
+    getMatrixSites,
+    isMaxMatrixDestinationStore,
+    matrixSitesStore,
+  } from '../../stores/matrix-sites-store';
   import MatrixCalcInfo from './matrix-calc-info.svelte';
   import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
   import type { fetchResult } from '$lib/utils/fetch';
   import { buildMatrixCalcPolyline } from '../../helpers/polyline-utils';
   import type { Location } from '$lib/constants/google-maps';
   import { addMatrixPolyline } from '../../stores/matrix-polyline.store';
-  import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import MatrixOrigin from './matrix-origin.svelte';
 
-  $: calculateButtonDisabled = $mapMatrixStore.origin && $mapMatrixStore.destinations.length < 2;
+  $: calculateButtonDisabled =
+    $matrixSitesStore.origin && $matrixSitesStore.destinations.length < 2;
 
   let edges: MatrixItem[] = [];
-  let showMatrixCalcInfo = false;
+  let showCalcInfo = false;
 
   const handleRouteCalculate = async () => {
-    const { origin, destinations } = $mapMatrixStore;
+    const { origin, destinations } = getMatrixSites();
     const originLocations = [origin?.site.location];
     const destinationLocations = destinations.map(({ site }) => site.location);
     const result = await (
@@ -30,12 +34,13 @@
 
     const { data } = result as fetchResult<MatrixItem[]>;
 
+    // populate the polylines
     data.forEach((matrixItem, index) => {
-      const origin = $mapMatrixStore.origin as HydratedMapMarker;
-      const destination = $mapMatrixStore.destinations[matrixItem.destinationIndex];
+      const destination = $matrixSitesStore.destinations[matrixItem.destinationIndex];
       const locations = [origin?.site.location, destination.site.location] as unknown as Location[];
       const polyline = buildMatrixCalcPolyline(locations, matrixItem, index);
       addMatrixPolyline({
+        // @ts-expect-error origin is not null
         origin,
         destination,
         polyline,
@@ -43,13 +48,13 @@
     });
 
     edges = data;
-    showMatrixCalcInfo = true;
+    showCalcInfo = true;
   };
 
   const handleCalcAnotherRoute = () => {
     edges = [];
-    clearRoutesPolylines();
-    showMatrixCalcInfo = false;
+    clearRoutePolylines();
+    showCalcInfo = false;
   };
 </script>
 
@@ -64,11 +69,11 @@
     class="bg-surface-100-800-token p-4 overflow-auto box-border flex flex-1 flex-col"
     slot="content"
   >
-    {#if !showMatrixCalcInfo}
+    {#if !showCalcInfo}
       <MatrixOrigin />
       <MatrixList />
     {:else}
-      <MatrixCalcInfo matrices={$mapMatrixStore} bind:edges />
+      <MatrixCalcInfo matrices={$matrixSitesStore} bind:edges />
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
@@ -76,7 +81,7 @@
       <div class="text-warning-500">At max items of 10</div>
     {/if}
 
-    {#if !showMatrixCalcInfo}
+    {#if !showCalcInfo}
       <button
         disabled={calculateButtonDisabled}
         on:click={handleRouteCalculate}

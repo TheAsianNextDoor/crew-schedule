@@ -2,22 +2,22 @@ import { derived, get, writable } from 'svelte/store';
 import { getBaseHydratedMarkers, type HydratedMapMarker } from './map-marker-store';
 import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
 
-export const mapRoutesStore = writable<HydratedMapMarker[]>([]);
+export const routeSitesStore = writable<HydratedMapMarker[]>([]);
 
-const getMapRoutes = () => get(mapRoutesStore);
-const setMapRoutes = (items: HydratedMapMarker[]) => mapRoutesStore.set(items);
-const clearMapRoutes = () => mapRoutesStore.set([]);
+export const getRouteSites = () => get(routeSitesStore);
+export const setRouteSites = (items: HydratedMapMarker[]) => routeSitesStore.set(items);
+export const clearRouteSites = () => routeSitesStore.set([]);
 
-const addToMapRoutes = (items: HydratedMapMarker) => {
-  mapRoutesStore.update((val) => {
+export const addToRouteSites = (items: HydratedMapMarker) => {
+  routeSitesStore.update((val) => {
     val.push(items);
 
     return val;
   });
 };
 
-const changePinsToRoutes = () => {
-  const mapRoutes = getMapRoutes();
+export const changePinsToRoutes = () => {
+  const mapRoutes = getRouteSites();
   const nonMapRouteIcons = getBaseHydratedMarkers().filter((mapMarker) => {
     const index = mapRoutes.findIndex(({ id }) => mapMarker.id === id);
 
@@ -28,8 +28,9 @@ const changePinsToRoutes = () => {
   mapRoutes.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.routes));
 };
 
-export { addToMapRoutes, getMapRoutes, setMapRoutes, clearMapRoutes, changePinsToRoutes };
-
-export const isMaxRouteItemsStore = derived([mapRoutesStore], ([$mapRoutesStore]) => {
+/**
+ * Derived value for max items
+ */
+export const isMaxRouteItemsStore = derived([routeSitesStore], ([$mapRoutesStore]) => {
   return $mapRoutesStore.length >= 10;
 });

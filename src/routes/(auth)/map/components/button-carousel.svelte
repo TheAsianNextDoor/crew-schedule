@@ -14,9 +14,9 @@
     setMapModeOptimal,
     setMapModeRoutes,
   } from '../stores/map-mode-store';
-  import { changePinsToRoutes } from '../stores/map-routes-store';
-  import { hideRoutesPolylines, showRoutesPolylines } from '../stores/routes-polyline-store';
-  import { changePinsToMatrix } from '../stores/map-matrix-store';
+  import { changePinsToRoutes } from '../stores/route-sites-store';
+  import { hideRoutePolylines, showRoutePolylines } from '../stores/route-polyline-store';
+  import { changePinsToMatrix } from '../stores/matrix-sites-store';
   import { hideMatrixPolylines, showMatrixPolylines } from '../stores/matrix-polyline.store';
   import { changePinsToOptimal } from '../stores/optimal-sites-store';
   import { hideOptimalPolyline, showOptimalPolyline } from '../stores/optimal-polyline-store';
@@ -33,12 +33,12 @@
   const handleRoutesClick = () => {
     // if already in routes mode
     if (getMapMode() === 'routes') {
-      hideRoutesPolylines();
+      hideRoutePolylines();
       setMapModeBase();
     } else {
       changePinsToRoutes();
       hideMatrixPolylines();
-      showRoutesPolylines();
+      showRoutePolylines();
       setMapModeRoutes();
     }
   };
@@ -50,7 +50,7 @@
       hideMatrixPolylines();
     } else {
       showMatrixPolylines();
-      hideRoutesPolylines();
+      hideRoutePolylines();
       changePinsToMatrix();
       setMapModeMatrix();
     }
@@ -63,7 +63,7 @@
       hideOptimalPolyline();
     } else {
       showOptimalPolyline();
-      hideRoutesPolylines();
+      hideRoutePolylines();
       hideMatrixPolylines();
       changePinsToOptimal();
       setMapModeOptimal();

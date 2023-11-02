@@ -2,18 +2,17 @@
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import { listItemContainerStyle } from '$lib/styles';
-  import { mapMatrixStore, setMatrixDestinations } from '../../stores/map-matrix-store';
-
+  import { matrixSitesStore, setMatrixDestinations } from '../../stores/matrix-sites-store';
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
-    setMatrixDestinations($mapMatrixStore.destinations.filter(({ id }) => id !== itemIdToRemove));
+    setMatrixDestinations($matrixSitesStore.destinations.filter(({ id }) => id !== itemIdToRemove));
     changeMarkerPin(item.marker, MARKER_PINS.default);
   };
 </script>
 
 <h2 class="h4">Destination:</h2>
 <div class="flex flex-col gap-y-1">
-  {#each $mapMatrixStore.destinations as item (item.id)}
+  {#each $matrixSitesStore.destinations as item (item.id)}
     <div class={`${listItemContainerStyle}`}>
       <span>
         {item.site.site_name}

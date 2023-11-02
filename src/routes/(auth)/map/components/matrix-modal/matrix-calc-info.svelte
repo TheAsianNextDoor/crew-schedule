@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
-  import type { MatrixStore } from '../../stores/map-matrix-store';
+  import type { MatrixStore } from '../../stores/matrix-sites-store';
 
   export let matrices: MatrixStore;
   export let edges: MatrixItem[];

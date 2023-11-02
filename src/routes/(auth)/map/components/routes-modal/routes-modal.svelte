@@ -2,24 +2,24 @@
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import DraggableList from './routes-list.svelte';
   import {
-    getMapRoutes,
+    getRouteSites,
     isMaxRouteItemsStore,
-    mapRoutesStore,
-  } from '../../stores/map-routes-store';
+    routeSitesStore,
+  } from '../../stores/route-sites-store';
   import type { routesData } from '../../../../../../mock/routes';
   import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
-  import { addRoutesPolyline, clearRoutesPolylines } from '../../stores/routes-polyline-store';
+  import { addRoutePolyline, clearRoutePolylines } from '../../stores/route-polyline-store';
   import RouteCalcInfo from './route-calc-info.svelte';
 
-  $: calculateButtonDisabled = $mapRoutesStore.length < 2;
+  $: calculateButtonDisabled = $routeSitesStore.length < 2;
 
   let legs: Leg[];
-  let showRouteCalcInfo = false;
+  let showCalcInfo = false;
   let totalDistance = 0;
   let totalDuration = 0;
 
   const handleRouteCalculate = async (isOptimal: boolean) => {
-    const mapRoutes = getMapRoutes();
+    const mapRoutes = getRouteSites();
     const routes = mapRoutes.map(({ site }) => site.location);
     const result = await (
       await fetch('/api/v1/auth/routes', {
@@ -35,7 +35,7 @@
       totalDuration += Number(leg.localizedValues.staticDuration.text.split(' ')[0]);
 
       const polyline = buildRouteCalcPolyline(leg, index);
-      addRoutesPolyline({
+      addRoutePolyline({
         origin: mapRoutes[index],
         destination: mapRoutes[index + 1],
         polyline,
@@ -43,13 +43,13 @@
     });
 
     legs = data.legs;
-    showRouteCalcInfo = true;
+    showCalcInfo = true;
   };
 
   const handleCalcAnotherRoute = () => {
     legs = [];
-    clearRoutesPolylines();
-    showRouteCalcInfo = false;
+    clearRoutePolylines();
+    showCalcInfo = false;
   };
 </script>
 
@@ -64,7 +64,7 @@
     class="bg-surface-100-800-token p-4 overflow-auto box-border flex flex-1 flex-col"
     slot="content"
   >
-    {#if !showRouteCalcInfo}
+    {#if !showCalcInfo}
       <DraggableList />
     {:else}
       <RouteCalcInfo bind:legs bind:totalDistance bind:totalDuration />
@@ -75,7 +75,7 @@
       <div class="text-warning-500">At max items of 10</div>
     {/if}
 
-    {#if !showRouteCalcInfo}
+    {#if !showCalcInfo}
       <button
         disabled={calculateButtonDisabled}
         on:click={() => handleRouteCalculate(false)}

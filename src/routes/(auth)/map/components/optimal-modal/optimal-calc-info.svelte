@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Leg } from '../../helpers/polyline-utils';
-  import { mapRoutesStore } from '../../stores/map-routes-store';
+  import { routeSitesStore } from '../../stores/route-sites-store';
 
   export let legs: Leg[];
   export let totalDistance: number;
@@ -10,7 +10,7 @@
 {#each legs as leg, index}
   <div class="p-2">
     <h1>
-      {$mapRoutesStore[index]?.site?.site_name} to {$mapRoutesStore[index + 1]?.site?.site_name}
+      {$routeSitesStore[index]?.site?.site_name} to {$routeSitesStore[index + 1]?.site?.site_name}
     </h1>
     <div>Distance: {leg.localizedValues.distance.text}</div>
     <div>Duration: {leg.localizedValues.duration.text}</div>

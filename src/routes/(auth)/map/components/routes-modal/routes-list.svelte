@@ -1,6 +1,6 @@
 <script lang="ts">
   import { flip } from 'svelte/animate';
-  import { mapRoutesStore, setMapRoutes } from '../../stores/map-routes-store';
+  import { getRouteSites, routeSitesStore, setRouteSites } from '../../stores/route-sites-store';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
   import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
   import DraggableList from '$lib/components/draggable-list.svelte';
@@ -10,25 +10,25 @@
 
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
-    setMapRoutes($mapRoutesStore.filter(({ id }) => id !== itemIdToRemove));
+    setRouteSites(getRouteSites().filter(({ id }) => id !== itemIdToRemove));
     changeMarkerPin(item.marker, MARKER_PINS.default);
   };
 </script>
 
 <div class="grid-container">
   <div class="flex flex-col gap-y-1">
-    {#each $mapRoutesStore as _, i}
+    {#each $routeSitesStore as _, i}
       <div class="flex items-center h-10">
         <span>{i + 1}:</span>
       </div>
     {/each}
   </div>
   <DraggableList
-    items={$mapRoutesStore}
-    considerFunction={setMapRoutes}
-    finalizeFunction={setMapRoutes}
+    items={$routeSitesStore}
+    considerFunction={setRouteSites}
+    finalizeFunction={setRouteSites}
   >
-    {#each $mapRoutesStore as item (item.id)}
+    {#each $routeSitesStore as item (item.id)}
       <div
         class={`${listItemContainerStyle} cursor-grab`}
         animate:flip={{ duration: flipDurationMs }}

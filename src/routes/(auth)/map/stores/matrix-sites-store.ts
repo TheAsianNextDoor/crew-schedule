@@ -7,16 +7,17 @@ export interface MatrixStore {
   destinations: HydratedMapMarker[];
 }
 
-export const mapMatrixStore = writable<MatrixStore>({
+export const matrixSitesStore = writable<MatrixStore>({
   origin: null,
   destinations: [],
 });
 
-const getMatrixOrigin = () => get(mapMatrixStore).origin;
-const getMatrixDestinations = () => get(mapMatrixStore).destinations;
+export const getMatrixSites = () => get(matrixSitesStore);
+export const getMatrixOrigin = () => get(matrixSitesStore).origin;
+export const getMatrixDestinations = () => get(matrixSitesStore).destinations;
 
-const setMatrixOrigin = (item: HydratedMapMarker) =>
-  mapMatrixStore.update((val) => {
+export const setMatrixOrigin = (item: HydratedMapMarker) =>
+  matrixSitesStore.update((val) => {
     const destinations = getMatrixDestinations();
     const index = destinations.findIndex((val) => item.id === val.id);
     if (index !== -1) {
@@ -27,35 +28,35 @@ const setMatrixOrigin = (item: HydratedMapMarker) =>
 
     return val;
   });
-const clearMatrixOrigin = () =>
-  mapMatrixStore.update((val) => {
+export const clearMatrixOrigin = () =>
+  matrixSitesStore.update((val) => {
     val.origin = null;
 
     return val;
   });
-const setMatrixDestinations = (items: HydratedMapMarker[]) =>
-  mapMatrixStore.update((val) => {
+export const setMatrixDestinations = (items: HydratedMapMarker[]) =>
+  matrixSitesStore.update((val) => {
     val.destinations = items;
 
     return val;
   });
-const clearMatrixDestinations = () =>
-  mapMatrixStore.update((val) => {
+export const clearMatrixDestinations = () =>
+  matrixSitesStore.update((val) => {
     val.destinations = [];
 
     return val;
   });
 
-const addToMatrixDestinations = (items: HydratedMapMarker) => {
-  mapMatrixStore.update((val) => {
+export const addToMatrixDestinations = (items: HydratedMapMarker) => {
+  matrixSitesStore.update((val) => {
     val.destinations.push(items);
 
     return val;
   });
 };
 
-const changePinsToMatrix = () => {
-  const { origin, destinations } = get(mapMatrixStore);
+export const changePinsToMatrix = () => {
+  const { origin, destinations } = get(matrixSitesStore);
 
   const nonMapMatrixIcons = getBaseHydratedMarkers().filter((mapMarker) => {
     const index = destinations.findIndex(({ id }) => mapMarker.id === id);
@@ -71,21 +72,16 @@ const changePinsToMatrix = () => {
   }
 };
 
-export {
-  getMatrixOrigin,
-  getMatrixDestinations,
-  addToMatrixDestinations,
-  clearMatrixOrigin,
-  setMatrixOrigin,
-  setMatrixDestinations,
-  clearMatrixDestinations,
-  changePinsToMatrix,
-};
-
-export const isMaxMatrixDestinationStore = derived([mapMatrixStore], ([$mapMatrixStore]) => {
+/**
+ * Derived Value for max destination
+ */
+export const isMaxMatrixDestinationStore = derived([matrixSitesStore], ([$mapMatrixStore]) => {
   return $mapMatrixStore.destinations.length >= 10;
 });
 
+/**
+ * For selecting origin node
+ */
 export const isSelectingMatrixOrigin = writable(false);
 export const getIsSelectingMatrixOrigin = () => get(isSelectingMatrixOrigin);
 export const setIsSelectingMatrixOrigin = () => isSelectingMatrixOrigin.set(true);

@@ -1,5 +1,5 @@
 import { get, writable } from 'svelte/store';
-import type { HydratedPolyline } from './routes-polyline-store';
+import type { HydratedPolyline } from './route-polyline-store';
 
 export const matrixPolylineStore = writable<HydratedPolyline[]>([]);
 const { set: setMatrixPolylines } = matrixPolylineStore;

@@ -6,10 +6,10 @@
     clearMatrixOrigin,
     getMatrixOrigin,
     isSelectingMatrixOrigin,
-    mapMatrixStore,
+    matrixSitesStore,
     setIsNotSelectingMatrixOrigin,
     toggleSelectingMatrixOrigin,
-  } from '../../stores/map-matrix-store';
+  } from '../../stores/matrix-sites-store';
 
   const handleOriginRemove = () => {
     setIsNotSelectingMatrixOrigin();
@@ -19,9 +19,9 @@
 </script>
 
 <h2 class="h4">Origin:</h2>
-{#if $mapMatrixStore.origin}
+{#if $matrixSitesStore.origin}
   <div class={`${listItemContainerStyle}`}>
-    {$mapMatrixStore.origin.site.site_name}
+    {$matrixSitesStore.origin.site.site_name}
     <button on:click={handleOriginRemove}>
       <i class="fa-regular fa-circle-xmark"></i>
     </button>
