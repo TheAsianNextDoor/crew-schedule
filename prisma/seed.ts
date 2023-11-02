@@ -310,9 +310,20 @@ const main = async () => {
   const person6 = '71b45d89-301e-4b5f-ba0e-1ed5fd3e678b';
   const person7 = '51b45d89-301e-4b5f-ba0e-1ed5fd3e678a';
   const person8 = '91b45d89-301e-4b5f-ba0e-1ed5fd3e678c';
+  const person9 = '91b45d89-301e-4b5f-ba0e-1ed5fd3e678d';
 
   await prisma.person.createMany({
     data: [
+      {
+        person_id: person9,
+        customer_id: customer1,
+        role_id: standard,
+        person_first_name: 'imran',
+        person_last_name: 'reeds',
+        phone_number: '1234567890',
+        email: 'imran.artwell@gmail.com',
+        is_foreman: true,
+      },
       {
         person_id: person1,
         customer_id: customer1,
