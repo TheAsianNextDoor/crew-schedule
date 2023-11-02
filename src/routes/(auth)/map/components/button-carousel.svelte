@@ -4,8 +4,8 @@
     isMapFilterVisible,
     isMapFilterVisibleStore,
     showMapFilter,
-  } from '../stores/map-filter-store';
-  import { showMapSidebar } from '../stores/map-sidebar-store';
+  } from '../stores/filter-store';
+  import { showMapSidebar } from '../stores/sidebar-store';
   import {
     getMapMode,
     mapModeStore,

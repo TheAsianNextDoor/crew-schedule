@@ -12,7 +12,7 @@
     selectedEntityStore,
     setSelectedEntity,
     showMapSidebar,
-  } from '../../stores/map-sidebar-store';
+  } from '../../stores/sidebar-store';
   import { getBaseHydratedMarkers } from '../../stores/map-marker-store';
 
   export let sites: HydratedMapSite[];

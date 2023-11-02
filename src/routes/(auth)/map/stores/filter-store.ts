@@ -7,20 +7,18 @@ import { EQUALITY_ENUM } from '../helpers/equality-utils';
 export const isMapFilterVisibleStore = writable(false);
 const { set } = isMapFilterVisibleStore;
 
-const isMapFilterVisible = () => get(isMapFilterVisibleStore);
+export const isMapFilterVisible = () => get(isMapFilterVisibleStore);
 
-const hideMapFilter = () => {
+export const hideMapFilter = () => {
   set(false);
 };
-const showMapFilter = () => {
+export const showMapFilter = () => {
   set(true);
 };
 
-const toggleMapFilter = () => {
+export const toggleMapFilter = () => {
   isMapFilterVisibleStore.update((value) => !value);
 };
-
-export { isMapFilterVisible, hideMapFilter, showMapFilter, toggleMapFilter };
 
 /**
  * Form Values

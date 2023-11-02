@@ -7,23 +7,21 @@ export type MapMode = 'base' | 'routes' | 'matrix' | 'optimal';
 export const mapModeStore = writable<MapMode>('base');
 const { set } = mapModeStore;
 
-const getMapMode = () => get(mapModeStore);
+export const getMapMode = () => get(mapModeStore);
 
-const setMapModeBase = () => {
+export const setMapModeBase = () => {
   set('base');
   getBaseHydratedMarkers().forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
 };
 
-const setMapModeRoutes = () => {
+export const setMapModeRoutes = () => {
   set('routes');
 };
 
-const setMapModeMatrix = () => {
+export const setMapModeMatrix = () => {
   set('matrix');
 };
 
-const setMapModeOptimal = () => {
+export const setMapModeOptimal = () => {
   set('optimal');
 };
-
-export { getMapMode, setMapModeBase, setMapModeRoutes, setMapModeMatrix, setMapModeOptimal };

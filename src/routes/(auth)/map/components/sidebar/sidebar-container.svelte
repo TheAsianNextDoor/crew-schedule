@@ -2,7 +2,7 @@
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
-  import { isMapFilterVisibleStore } from '../../stores/map-filter-store';
+  import { isMapFilterVisibleStore } from '../../stores/filter-store';
   import SidebarSiteInfo from './sidebar-site-info.svelte';
   import SidebarFilter from './sidebar-filter.svelte';
   import {
@@ -10,7 +10,7 @@
     showMapSidebar,
     selectedEntityStore,
     isMapSidebarVisibleStore,
-  } from '../../stores/map-sidebar-store';
+  } from '../../stores/sidebar-store';
 
   export let disciplines: string[];
   export let sidebarWidth: number;

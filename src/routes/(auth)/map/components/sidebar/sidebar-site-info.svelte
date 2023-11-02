@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { selectedEntitySubscribe } from '../../stores/map-sidebar-store';
+  import { selectedEntitySubscribe } from '../../stores/sidebar-store';
   import type { HydratedMapSite } from '../../proxy+page.server';
   import InfoSection from './info-section.svelte';
 

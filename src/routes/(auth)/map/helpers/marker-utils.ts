@@ -1,5 +1,5 @@
-import { hideMapFilter } from '../stores/map-filter-store';
-import { setSelectedEntity, showMapSidebar } from '../stores/map-sidebar-store';
+import { hideMapFilter } from '../stores/filter-store';
+import { setSelectedEntity, showMapSidebar } from '../stores/sidebar-store';
 import {
   addBaseHydratedMarker,
   getBaseHydratedMarkers,

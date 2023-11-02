@@ -3,7 +3,7 @@
   import Map from './components/map.svelte';
   import ButtonCarousel from './components/button-carousel.svelte';
   import AutoComplete from './components/sidebar/auto-complete.svelte';
-  import { isMapFilterVisibleStore } from './stores/map-filter-store';
+  import { isMapFilterVisibleStore } from './stores/filter-store';
   import Modals from './components/modals.svelte';
 
   export let data;

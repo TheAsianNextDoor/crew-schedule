@@ -20,16 +20,14 @@ export type HydratedMapMarker = {
  */
 const baseHydratedMarkerStore = writable<HydratedMapMarker[]>([]);
 
-const addBaseHydratedMarker = (hydratedMarker: HydratedMapMarker) => {
+export const addBaseHydratedMarker = (hydratedMarker: HydratedMapMarker) => {
   baseHydratedMarkerStore.update((mapMarkers) => {
     mapMarkers.push(hydratedMarker);
     return mapMarkers;
   });
 };
 
-const getBaseHydratedMarkers = () => get(baseHydratedMarkerStore);
-
-export { addBaseHydratedMarker, getBaseHydratedMarkers };
+export const getBaseHydratedMarkers = () => get(baseHydratedMarkerStore);
 
 /**
  * Functions to filter the map
@@ -48,7 +46,7 @@ const getFilterConditionKeys = () => Object.keys(get(filterConditionStore));
 
 const getFilterConditionFuncs = () => Object.values(get(filterConditionStore));
 
-const addFilterConditionFunc = (
+export const addFilterConditionFunc = (
   filterName: string,
   filterConditionFunc: FilterSiteConditionFunc | FilterPhaseConditionFunc,
   filterType: FilterType,
@@ -72,7 +70,7 @@ const addFilterConditionFunc = (
   });
 };
 
-const removeFilterConditionFunc = (filterName: string) => {
+export const removeFilterConditionFunc = (filterName: string) => {
   if (!getFilterConditionKeys().includes(filterName)) {
     return;
   }
@@ -84,23 +82,21 @@ const removeFilterConditionFunc = (filterName: string) => {
   });
 };
 
-const clearFilterConditionFuncs = () => {
+export const clearFilterConditionFuncs = () => {
   filterConditionStore.set({});
 };
-
-export { addFilterConditionFunc, removeFilterConditionFunc, clearFilterConditionFuncs };
 
 /**
  * Filtered Hydrated Map Markers
  */
 const filteredHydratedMarkerStore = writable<HydratedMapMarker[]>([]);
 
-const clearFilteredHydratedMarkers = () => {
+export const clearFilteredHydratedMarkers = () => {
   showAllMarkers();
   filteredHydratedMarkerStore.set(getBaseHydratedMarkers());
 };
 
-const setFilteredHydratedMarkers = (sites: HydratedMapMarker[]) => {
+export const setFilteredHydratedMarkers = (sites: HydratedMapMarker[]) => {
   filteredHydratedMarkerStore.set(sites);
 };
 
@@ -121,7 +117,7 @@ const shouldShowMarker = (hydratedMarker: HydratedMapMarker) => {
   return passesSiteConditions && passesPhaseConditions;
 };
 
-const filterMapMarkers = () => {
+export const filterMapMarkers = () => {
   if (getFilterConditionFuncs().length === 0) {
     filteredHydratedMarkerStore.set(getBaseHydratedMarkers());
     showAllMarkers();
@@ -141,5 +137,3 @@ const filterMapMarkers = () => {
     return false;
   });
 };
-
-export { clearFilteredHydratedMarkers, setFilteredHydratedMarkers, filterMapMarkers };

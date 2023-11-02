@@ -7,7 +7,7 @@
     foremanName,
     hideMapFilter,
     phaseStatus,
-  } from '../../stores/map-filter-store';
+  } from '../../stores/filter-store';
   import {
     clearFilteredHydratedMarkers,
     clearFilterConditionFuncs,

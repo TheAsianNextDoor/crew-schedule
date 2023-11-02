@@ -1,4 +1,4 @@
-import { getSelectedEntity } from '../stores/map-sidebar-store';
+import { getSelectedEntity } from '../stores/sidebar-store';
 
 let timeoutId: NodeJS.Timeout;
 
