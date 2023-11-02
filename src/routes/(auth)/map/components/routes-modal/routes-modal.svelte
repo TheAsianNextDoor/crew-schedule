@@ -18,11 +18,14 @@
   let totalDistance = 0;
   let totalDuration = 0;
 
-  const handleRouteCalculate = async () => {
+  const handleRouteCalculate = async (isOptimal: boolean) => {
     const mapRoutes = getMapRoutes();
     const routes = mapRoutes.map(({ site }) => site.location);
     const result = await (
-      await fetch('/api/v1/auth/routes', { method: 'POST', body: JSON.stringify({ routes }) })
+      await fetch('/api/v1/auth/routes', {
+        method: 'POST',
+        body: JSON.stringify({ routes, isOptimal }),
+      })
     ).json();
 
     const [data] = result.data.routes as typeof routesData;
@@ -75,8 +78,13 @@
     {#if !showRouteCalcInfo}
       <button
         disabled={calculateButtonDisabled}
-        on:click={handleRouteCalculate}
-        class="btn btn-md variant-filled">Calculate</button
+        on:click={() => handleRouteCalculate(false)}
+        class="btn btn-md variant-filled">As Stated</button
+      >
+      <button
+        disabled={calculateButtonDisabled}
+        on:click={() => handleRouteCalculate(true)}
+        class="btn btn-md variant-filled">Optimal</button
       >
     {:else}
       <button on:click={handleCalcAnotherRoute} class="btn btn-md variant-filled"

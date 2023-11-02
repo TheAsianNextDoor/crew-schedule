@@ -5,12 +5,14 @@ export const getGoogleRoutes = async (
   origin: [string, string],
   destination: [string, string],
   intermediates: [string, string][],
+  isOptimal: boolean,
 ) => {
   const body = JSON.stringify({
     routingPreference: 'TRAFFIC_AWARE',
     travelMode: 'DRIVE',
     languageCode: 'en-US',
     units: 'IMPERIAL',
+    optimizeWaypointOrder: isOptimal,
     origin: {
       location: {
         latLng: {
@@ -42,13 +44,14 @@ export const getGoogleRoutes = async (
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': PUBLIC_GOOGLE_MAPS_API_KEY,
-      'X-Goog-FieldMask':
-        'routes.localizedValues,routes.polyline,routes.warnings,routes.routeToken,routes.legs.localizedValues,routes.legs.polyline',
+      'X-Goog-FieldMask': `routes.localizedValues,routes.polyline,routes.warnings,routes.routeToken,routes.legs.localizedValues,routes.legs.polyline,${
+        isOptimal ? 'routes.optimized_intermediate_waypoint_index' : ''
+      }`,
     },
     body,
   });
   const result = await data.json();
-  console.log('getGoogleRoutes: ', result);
+  console.log('getGoogleRoutes: ', JSON.stringify(result));
 
   return result;
 };
