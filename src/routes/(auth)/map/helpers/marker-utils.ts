@@ -26,6 +26,7 @@ import {
   setIsNotSelectingMatrixOrigin,
   setMatrixOrigin,
 } from '../stores/map-matrix-store';
+import { addToOptimalSites, isMaxOptimalSitesStore } from '../stores/optimal-sites-store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -64,6 +65,17 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
       addToMatrixDestinations(hydratedMapMarker);
       changeMarkerPin(marker, MARKER_PINS.matrixDestination);
     }
+  }
+
+  if (mapMode === 'optimal') {
+    const pinElement = getMarkerPinElement(marker.content as HTMLElement);
+
+    if (!isMarkerPinOfType(pinElement, MARKER_PINS.optimal.type) && !get(isMaxOptimalSitesStore)) {
+      addToOptimalSites(hydratedMapMarker);
+      changeMarkerPin(marker, MARKER_PINS.optimal);
+    }
+
+    return;
   }
 
   return;

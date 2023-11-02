@@ -5,7 +5,7 @@ export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
 
 export type PinOptions = Omit<google.maps.marker.PinElementOptions, 'glyph'>;
 
-type MarkerPinTypes = 'default' | 'routes' | 'matrixDestination' | 'matrixOrigin';
+type MarkerPinTypes = 'default' | 'routes' | 'matrixDestination' | 'matrixOrigin' | 'optimal';
 
 interface PinElementConfig {
   type: string;
@@ -21,7 +21,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-solid fa-circle"></i>',
     pinOptions: {
       glyphColor: 'white',
-      background: '#5F8EE7',
+      background: '#5F8EE7', // blue
       borderColor,
     },
   },
@@ -30,7 +30,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-solid fa-road fa-lg"></i>',
     pinOptions: {
       glyphColor: 'black',
-      background: '#e7dc5f',
+      background: '#e7dc5f', // yellow
       borderColor,
     },
   },
@@ -39,7 +39,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-brands fa-xing"></i>',
     pinOptions: {
       glyphColor: 'white',
-      background: '#5FE764',
+      background: '#5FE764', // orange
       borderColor,
     },
   },
@@ -48,7 +48,16 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-brands fa-xing"></i>',
     pinOptions: {
       glyphColor: 'white',
-      background: '#e7985f',
+      background: '#e7985f', // green
+      borderColor,
+    },
+  },
+  optimal: {
+    type: 'optimal',
+    iconHtml: '<i class="fa-solid fa-wand-magic-sparkles"></i>',
+    pinOptions: {
+      glyphColor: 'white',
+      background: '#E75F5F',
       borderColor,
     },
   },

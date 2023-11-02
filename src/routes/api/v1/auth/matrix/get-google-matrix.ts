@@ -4,7 +4,7 @@ export interface MatrixItem {
   originIndex: number;
   destinationIndex: number;
   status: Record<string, unknown>;
-  distanceMeters: number;
+  distanceMeters?: number;
   duration: string;
   staticDuration: string;
   condition: string;
@@ -25,7 +25,7 @@ export const getGoogleMatrix = async (
   fetch: Function,
   originLocations: [string, string][],
   destinationLocations: [string, string][],
-): Promise<MatrixItem[]> => {
+) => {
   const body = JSON.stringify({
     routingPreference: 'TRAFFIC_AWARE',
     travelMode: 'DRIVE',
@@ -62,7 +62,7 @@ export const getGoogleMatrix = async (
     },
     body,
   });
-  const result = await data.json();
+  const result = (await data.json()) as MatrixItem[];
   console.log('getGoogleMatrix: ', JSON.stringify(result));
 
   return result;

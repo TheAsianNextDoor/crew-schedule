@@ -2,7 +2,7 @@ import { get, writable } from 'svelte/store';
 import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
 import { getBaseHydratedMarkers } from './map-marker-store';
 
-export type MapMode = 'base' | 'routes' | 'matrix';
+export type MapMode = 'base' | 'routes' | 'matrix' | 'optimal';
 
 export const mapModeStore = writable<MapMode>('base');
 const { set } = mapModeStore;
@@ -22,4 +22,8 @@ const setMapModeMatrix = () => {
   set('matrix');
 };
 
-export { getMapMode, setMapModeBase, setMapModeRoutes, setMapModeMatrix };
+const setMapModeOptimal = () => {
+  set('optimal');
+};
+
+export { getMapMode, setMapModeBase, setMapModeRoutes, setMapModeMatrix, setMapModeOptimal };

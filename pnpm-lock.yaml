@@ -44,6 +44,12 @@ dependencies:
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
+  edmonds-blossom:
+    specifier: ^1.0.0
+    version: 1.0.0
+  graphlib:
+    specifier: ^2.1.8
+    version: 2.1.8
   pg:
     specifier: ^8.11.3
     version: 8.11.3
@@ -88,9 +94,15 @@ devDependencies:
   '@types/cookie':
     specifier: ^0.5.3
     version: 0.5.3
+  '@types/edmonds-blossom':
+    specifier: ^1.0.3
+    version: 1.0.3
   '@types/google.maps':
     specifier: ^3.54.5
     version: 3.54.5
+  '@types/graphlib':
+    specifier: ^2.1.10
+    version: 2.1.10
   '@types/node':
     specifier: ^20.8.9
     version: 20.8.9
@@ -1152,11 +1164,19 @@ packages:
   /@types/cookie@0.5.3:
     resolution: {integrity: sha512-SLg07AS9z1Ab2LU+QxzU8RCmzsja80ywjf/t5oqw+4NSH20gIGlhLOrBDm1L3PBWzPa4+wkgFQVZAjE6Ioj2ug==}
 
+  /@types/edmonds-blossom@1.0.3:
+    resolution: {integrity: sha512-IxOKpQnRolkUJKUzfFpyR17LPGNb/5ypHvr+oTLnSQdosaofMOCz0pocFbr9jh0+gyriAb7R7wHiceXdC04gnA==}
+    dev: true
+
   /@types/estree@1.0.3:
     resolution: {integrity: sha512-CS2rOaoQ/eAgAfcTfq6amKG7bsN+EMcgGY4FAFQdvSj2y1ixvOZTUA9mOtCai7E1SYu283XNw7urKK30nP3wkQ==}
 
   /@types/google.maps@3.54.5:
     resolution: {integrity: sha512-QmoQMK/iV6UxHlgS9y8BaknO3Ph/iFriWBhkknh/ZIm//9/HyzKMzP+tirDeCgWJfpTlLH4wAI58ObkB6O4GfQ==}
+    dev: true
+
+  /@types/graphlib@2.1.10:
+    resolution: {integrity: sha512-HXh0AZNqS/nL0Of6YPzzOINWp/wVOroegkKDekCdOAlMuHsc59K0gHUp+gJt+SIChKQ8OgnrZxPPf/LSdYBubA==}
     dev: true
 
   /@types/http-cache-semantics@4.0.3:
@@ -2315,6 +2335,10 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
+  /edmonds-blossom@1.0.0:
+    resolution: {integrity: sha512-wz18RgLg21nW4afc80d080fZuAjiaePfSoHje56aOiH8mO6O5Mc/VAv7s8bCBJkxsks37e0cYTS0dNirsQ4/rg==}
+    dev: false
+
   /electron-to-chromium@1.4.568:
     resolution: {integrity: sha512-3TCOv8+BY6Ltpt1/CmGBMups2IdKOyfEmz4J8yIS4xLSeMm0Rf+psSaxLuswG9qMKt+XbNbmADybtXGpTFlbDg==}
     dev: true
@@ -3223,6 +3247,12 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
+  /graphlib@2.1.8:
+    resolution: {integrity: sha512-jcLLfkpoVGmH7/InMC/1hIvOPSUh38oJtGhvrOFGzioE1DZ+0YW16RgmOJhHiuWTvGiJQ9Z1Ik43JvkRPRvE+A==}
+    dependencies:
+      lodash: 4.17.21
+    dev: false
+
   /hard-rejection@2.1.0:
     resolution: {integrity: sha512-VIZB+ibDhx7ObhAe7OVtoEbuP4h/MuOTHJ+J8h/eBXotJYl0fBgR72xDFCKgIh22OJZIOVNxBMWuhAr10r8HdA==}
     engines: {node: '>=6'}
@@ -3833,7 +3863,6 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
