@@ -1,25 +1,27 @@
 <script lang="ts">
   import DraggableWindow from '$lib/components/draggable-window.svelte';
-  import { clearRoutePolylines } from '../../stores/route-polyline-store';
   import MatrixList from './matrix-list.svelte';
   import {
+    clearMatrixEdges,
     getMatrixSites,
+    hideMatrixCalcInfo,
+    isMatrixCalcInfoVisible,
     isMaxMatrixDestinationStore,
+    matrixEdges,
     matrixSitesStore,
+    setMatrixEdges,
+    showMatrixCalcInfo,
   } from '../../stores/matrix-sites-store';
   import MatrixCalcInfo from './matrix-calc-info.svelte';
   import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
   import type { fetchResult } from '$lib/utils/fetch';
   import { buildMatrixCalcPolyline } from '../../helpers/polyline-utils';
   import type { Location } from '$lib/constants/google-maps';
-  import { addMatrixPolyline } from '../../stores/matrix-polyline.store';
+  import { addMatrixPolyline, clearMatrixPolylines } from '../../stores/matrix-polyline.store';
   import MatrixOrigin from './matrix-origin.svelte';
 
   $: calculateButtonDisabled =
     $matrixSitesStore.origin && $matrixSitesStore.destinations.length < 2;
-
-  let edges: MatrixItem[] = [];
-  let showCalcInfo = false;
 
   const handleRouteCalculate = async () => {
     const { origin, destinations } = getMatrixSites();
@@ -47,14 +49,14 @@
       });
     });
 
-    edges = data;
-    showCalcInfo = true;
+    setMatrixEdges(data);
+    showMatrixCalcInfo();
   };
 
   const handleCalcAnotherRoute = () => {
-    edges = [];
-    clearRoutePolylines();
-    showCalcInfo = false;
+    clearMatrixEdges();
+    clearMatrixPolylines();
+    hideMatrixCalcInfo();
   };
 </script>
 
@@ -69,11 +71,11 @@
     class="bg-surface-100-800-token p-4 overflow-auto box-border flex flex-1 flex-col"
     slot="content"
   >
-    {#if !showCalcInfo}
+    {#if $isMatrixCalcInfoVisible}
+      <MatrixCalcInfo matrices={$matrixSitesStore} edges={$matrixEdges} />
+    {:else}
       <MatrixOrigin />
       <MatrixList />
-    {:else}
-      <MatrixCalcInfo matrices={$matrixSitesStore} bind:edges />
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
@@ -81,15 +83,15 @@
       <div class="text-warning-500">At max items of 10</div>
     {/if}
 
-    {#if !showCalcInfo}
+    {#if $isMatrixCalcInfoVisible}
+      <button on:click={handleCalcAnotherRoute} class="btn btn-md variant-filled"
+        >Calculate Another Route</button
+      >
+    {:else}
       <button
         disabled={calculateButtonDisabled}
         on:click={handleRouteCalculate}
         class="btn btn-md variant-filled">Calculate</button
-      >
-    {:else}
-      <button on:click={handleCalcAnotherRoute} class="btn btn-md variant-filled"
-        >Calculate Another Route</button
       >
     {/if}
   </div>

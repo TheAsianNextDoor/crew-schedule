@@ -1,6 +1,7 @@
 import { derived, get, writable } from 'svelte/store';
 import { getBaseHydratedMarkers, type HydratedMapMarker } from './map-marker-store';
 import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
+import type { Leg } from '../helpers/polyline-utils';
 
 export const routeSitesStore = writable<HydratedMapMarker[]>([]);
 
@@ -34,3 +35,31 @@ export const changePinsToRoutes = () => {
 export const isMaxRouteItemsStore = derived([routeSitesStore], ([$mapRoutesStore]) => {
   return $mapRoutesStore.length >= 10;
 });
+
+/**
+ * Route Legs
+ */
+export const routeLegs = writable<Leg[]>([]);
+export const setRouteLegs = (legs: Leg[]) => routeLegs.set(legs);
+export const clearRouteLegs = () => routeLegs.set([]);
+
+/**
+ * Show calc info
+ */
+export const isRouteCalcInfoVisible = writable(false);
+export const showRouteCalcInfo = () => isRouteCalcInfoVisible.set(true);
+export const hideRouteCalcInfo = () => isRouteCalcInfoVisible.set(false);
+
+/**
+ * Total Route Distance Info
+ */
+export const totalLegDistance = writable(0);
+export const addToTotalLegDistance = (distance: number) =>
+  totalLegDistance.update((val) => (val += distance));
+
+/**
+ * Total Route Duration Info
+ */
+export const totalLegDuration = writable(0);
+export const addToTotalLegDuration = (duration: number) =>
+  totalLegDuration.update((val) => (val += duration));

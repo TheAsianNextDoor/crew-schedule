@@ -1,6 +1,7 @@
 import { derived, get, writable } from 'svelte/store';
 import { getBaseHydratedMarkers, type HydratedMapMarker } from './map-marker-store';
 import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
+import type { MatrixItem } from '../../../api/v1/auth/matrix/get-google-matrix';
 
 export interface MatrixStore {
   origin: HydratedMapMarker | null;
@@ -87,3 +88,17 @@ export const getIsSelectingMatrixOrigin = () => get(isSelectingMatrixOrigin);
 export const setIsSelectingMatrixOrigin = () => isSelectingMatrixOrigin.set(true);
 export const setIsNotSelectingMatrixOrigin = () => isSelectingMatrixOrigin.set(false);
 export const toggleSelectingMatrixOrigin = () => isSelectingMatrixOrigin.update((val) => !val);
+
+/**
+ * For showing calc info
+ */
+export const isMatrixCalcInfoVisible = writable(false);
+export const showMatrixCalcInfo = () => isMatrixCalcInfoVisible.set(true);
+export const hideMatrixCalcInfo = () => isMatrixCalcInfoVisible.set(false);
+
+/**
+ * Edge info
+ */
+export const matrixEdges = writable<MatrixItem[]>([]);
+export const setMatrixEdges = (edges: MatrixItem[]) => matrixEdges.set(edges);
+export const clearMatrixEdges = () => matrixEdges.set([]);

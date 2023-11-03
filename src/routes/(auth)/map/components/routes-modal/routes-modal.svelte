@@ -2,9 +2,19 @@
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import DraggableList from './routes-list.svelte';
   import {
+    addToTotalLegDistance,
+    addToTotalLegDuration,
+    clearRouteLegs,
     getRouteSites,
+    hideRouteCalcInfo,
     isMaxRouteItemsStore,
+    isRouteCalcInfoVisible,
+    routeLegs,
     routeSitesStore,
+    setRouteLegs,
+    showRouteCalcInfo,
+    totalLegDistance,
+    totalLegDuration,
   } from '../../stores/route-sites-store';
   import type { routesData } from '../../../../../../mock/routes';
   import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
@@ -12,11 +22,6 @@
   import RouteCalcInfo from './route-calc-info.svelte';
 
   $: calculateButtonDisabled = $routeSitesStore.length < 2;
-
-  let legs: Leg[];
-  let showCalcInfo = false;
-  let totalDistance = 0;
-  let totalDuration = 0;
 
   const handleRouteCalculate = async (isOptimal: boolean) => {
     const mapRoutes = getRouteSites();
@@ -28,11 +33,11 @@
       })
     ).json();
 
-    const [data] = result.data.routes as typeof routesData;
+    const [{ legs }] = result.data.routes as typeof routesData;
 
-    data.legs.forEach((leg, index) => {
-      totalDistance += Number(leg.localizedValues.distance.text.split(' ')[0]);
-      totalDuration += Number(leg.localizedValues.staticDuration.text.split(' ')[0]);
+    legs.forEach((leg, index) => {
+      addToTotalLegDistance(Number(leg.localizedValues.distance.text.split(' ')[0]));
+      addToTotalLegDuration(Number(leg.localizedValues.staticDuration.text.split(' ')[0]));
 
       const polyline = buildRouteCalcPolyline(leg, index);
       addRoutePolyline({
@@ -42,14 +47,14 @@
       });
     });
 
-    legs = data.legs;
-    showCalcInfo = true;
+    setRouteLegs(legs);
+    showRouteCalcInfo();
   };
 
   const handleCalcAnotherRoute = () => {
-    legs = [];
+    clearRouteLegs();
     clearRoutePolylines();
-    showCalcInfo = false;
+    hideRouteCalcInfo();
   };
 </script>
 
@@ -64,10 +69,14 @@
     class="bg-surface-100-800-token p-4 overflow-auto box-border flex flex-1 flex-col"
     slot="content"
   >
-    {#if !showCalcInfo}
-      <DraggableList />
+    {#if $isRouteCalcInfoVisible}
+      <RouteCalcInfo
+        legs={$routeLegs}
+        totalDistance={$totalLegDistance}
+        totalDuration={$totalLegDuration}
+      />
     {:else}
-      <RouteCalcInfo bind:legs bind:totalDistance bind:totalDuration />
+      <DraggableList />
     {/if}
   </div>
   <div class="text-center p-4 bg-surface-100-800-token" slot="footer">
@@ -75,7 +84,11 @@
       <div class="text-warning-500">At max items of 10</div>
     {/if}
 
-    {#if !showCalcInfo}
+    {#if $isRouteCalcInfoVisible}
+      <button on:click={handleCalcAnotherRoute} class="btn btn-md variant-filled"
+        >Calculate Another Route</button
+      >
+    {:else}
       <button
         disabled={calculateButtonDisabled}
         on:click={() => handleRouteCalculate(false)}
@@ -85,10 +98,6 @@
         disabled={calculateButtonDisabled}
         on:click={() => handleRouteCalculate(true)}
         class="btn btn-md variant-filled">Optimal</button
-      >
-    {:else}
-      <button on:click={handleCalcAnotherRoute} class="btn btn-md variant-filled"
-        >Calculate Another Route</button
       >
     {/if}
   </div>
