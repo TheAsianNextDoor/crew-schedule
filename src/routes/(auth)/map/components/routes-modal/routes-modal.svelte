@@ -5,6 +5,7 @@
     addToTotalLegDistance,
     addToTotalLegDuration,
     clearRouteLegs,
+    clearRouteSites,
     getRouteSites,
     hideRouteCalcInfo,
     isMaxRouteItemsStore,
@@ -17,9 +18,10 @@
     totalLegDuration,
   } from '../../stores/route-sites-store';
   import type { routesData } from '../../../../../../mock/routes';
-  import { buildRouteCalcPolyline, type Leg } from '../../helpers/polyline-utils';
+  import { buildRouteCalcPolyline } from '../../helpers/polyline-utils';
   import { addRoutePolyline, clearRoutePolylines } from '../../stores/route-polyline-store';
   import RouteCalcInfo from './route-calc-info.svelte';
+  import { setAllPinsToDefault } from '../../helpers/marker-pin-utils';
 
   $: calculateButtonDisabled = $routeSitesStore.length < 2;
 
@@ -56,6 +58,11 @@
     clearRoutePolylines();
     hideRouteCalcInfo();
   };
+
+  const handleClear = () => {
+    clearRouteSites();
+    setAllPinsToDefault();
+  };
 </script>
 
 <DraggableWindow
@@ -90,14 +97,19 @@
       >
     {:else}
       <button
+        disabled={$routeSitesStore.length < 1}
+        on:click={handleClear}
+        class="btn btn-sm variant-filled">Clear</button
+      >
+      <button
         disabled={calculateButtonDisabled}
         on:click={() => handleRouteCalculate(false)}
-        class="btn btn-md variant-filled">As Stated</button
+        class="btn btn-sm variant-filled">As Stated</button
       >
       <button
         disabled={calculateButtonDisabled}
         on:click={() => handleRouteCalculate(true)}
-        class="btn btn-md variant-filled">Optimal</button
+        class="btn btn-sm variant-filled">Optimal</button
       >
     {/if}
   </div>

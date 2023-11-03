@@ -2,7 +2,9 @@
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import MatrixList from './matrix-list.svelte';
   import {
+    clearMatrixDestinations,
     clearMatrixEdges,
+    clearMatrixOrigin,
     getMatrixSites,
     hideMatrixCalcInfo,
     isMatrixCalcInfoVisible,
@@ -19,6 +21,7 @@
   import type { Location } from '$lib/constants/google-maps';
   import { addMatrixPolyline, clearMatrixPolylines } from '../../stores/matrix-polyline.store';
   import MatrixOrigin from './matrix-origin.svelte';
+  import { setAllPinsToDefault } from '../../helpers/marker-pin-utils';
 
   $: calculateButtonDisabled =
     $matrixSitesStore.origin && $matrixSitesStore.destinations.length < 2;
@@ -58,6 +61,12 @@
     clearMatrixPolylines();
     hideMatrixCalcInfo();
   };
+
+  const handleClear = () => {
+    clearMatrixOrigin();
+    clearMatrixDestinations();
+    setAllPinsToDefault();
+  };
 </script>
 
 <DraggableWindow
@@ -88,6 +97,11 @@
         >Calculate Another Route</button
       >
     {:else}
+      <button
+        disabled={$matrixSitesStore.destinations.length < 1 && !$matrixSitesStore.origin}
+        on:click={handleClear}
+        class="btn btn-md variant-filled">Clear</button
+      >
       <button
         disabled={calculateButtonDisabled}
         on:click={handleRouteCalculate}

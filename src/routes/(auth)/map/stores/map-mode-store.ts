@@ -1,6 +1,5 @@
 import { get, writable } from 'svelte/store';
-import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
-import { getBaseHydratedMarkers } from './map-marker-store';
+import { setAllPinsToDefault } from '../helpers/marker-pin-utils';
 
 export type MapMode = 'base' | 'routes' | 'matrix' | 'optimal';
 
@@ -11,7 +10,7 @@ export const getMapMode = () => get(mapModeStore);
 
 export const setMapModeBase = () => {
   set('base');
-  getBaseHydratedMarkers().forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  setAllPinsToDefault();
 };
 
 export const setMapModeRoutes = () => {

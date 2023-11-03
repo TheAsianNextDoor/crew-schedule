@@ -1,4 +1,5 @@
 import { getGoogleMaps } from '$lib/constants/google-maps';
+import { getBaseHydratedMarkers } from '../stores/map-marker-store';
 import type { Marker } from './marker-utils';
 
 export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
@@ -91,3 +92,7 @@ export const changeMarkerPin = (marker: Marker, pinDefinition: PinElementConfig)
 
 export const isMarkerPinOfType = (pinElement: HTMLElement | undefined, type: string) =>
   pinElement?.dataset?.pin_type === type;
+
+export const setAllPinsToDefault = () => {
+  getBaseHydratedMarkers().forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+};
