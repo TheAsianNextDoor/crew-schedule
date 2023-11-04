@@ -18,18 +18,18 @@
   import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
   import type { fetchResult } from '$lib/utils/fetch';
   import { buildMatrixCalcPolyline } from '../../helpers/polyline-utils';
-  import type { Location } from '$lib/constants/google-maps';
   import { addMatrixPolyline, clearMatrixPolylines } from '../../stores/matrix-polyline.store';
   import MatrixOrigin from './matrix-origin.svelte';
   import { setAllPinsToDefault } from '../../helpers/marker-pin-utils';
+  import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
 
   $: calculateButtonDisabled =
     $matrixSitesStore.origin && $matrixSitesStore.destinations.length < 2;
 
   const handleRouteCalculate = async () => {
     const { origin, destinations } = getMatrixSites();
-    const originLocations = [origin?.site.location];
-    const destinationLocations = destinations.map(({ site }) => site.location);
+    const originLocations = { lat: origin?.location.lat, lng: origin?.location.lng };
+    const destinationLocations = destinations.map(({ location: { lat, lng } }) => ({ lat, lng }));
     const result = await (
       await fetch('/api/v1/auth/matrix', {
         method: 'POST',
@@ -42,7 +42,16 @@
     // populate the polylines
     data.forEach((matrixItem, index) => {
       const destination = $matrixSitesStore.destinations[matrixItem.destinationIndex];
-      const locations = [origin?.site.location, destination.site.location] as unknown as Location[];
+      const locations = [
+        {
+          lat: origin?.location.lat,
+          lng: origin?.location.lng,
+        },
+        {
+          lat: destination?.location.lat,
+          lng: destination?.location.lng,
+        },
+      ] as LatitudeLongitude[];
       const polyline = buildMatrixCalcPolyline(locations, matrixItem, index);
       addMatrixPolyline({
         // @ts-expect-error origin is not null

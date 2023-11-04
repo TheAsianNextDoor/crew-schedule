@@ -1,4 +1,5 @@
-import { getGoogleMaps, type Location } from '$lib/constants/google-maps';
+import { getGoogleMaps } from '$lib/constants/google-maps';
+import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
 import { getRouteColor } from '$lib/utils/colors';
 import type { MatrixItem } from '../../../api/v1/auth/matrix/get-google-matrix';
 import { getInfoWindow } from '../stores/info-window-store';
@@ -50,7 +51,11 @@ export const buildRouteCalcPolyline = (leg: Leg, index: number) => {
   return poly;
 };
 
-export const buildMatrixCalcPolyline = (locations: Location[], edge: MatrixItem, index: number) => {
+export const buildMatrixCalcPolyline = (
+  locations: LatitudeLongitude[],
+  edge: MatrixItem,
+  index: number,
+) => {
   const { Polyline, LatLng } = getGoogleMaps();
   const map = getMap();
   const infoWindow = getInfoWindow();
@@ -58,7 +63,7 @@ export const buildMatrixCalcPolyline = (locations: Location[], edge: MatrixItem,
 
   const poly = new Polyline({
     map,
-    path: locations.map(([lat, lng]) => new LatLng(Number(lat), Number(lng))),
+    path: locations.map(({ lat, lng }) => new LatLng(Number(lat), Number(lng))),
     geodesic: true,
     strokeColor,
     strokeOpacity: 1.0,

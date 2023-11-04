@@ -27,7 +27,7 @@
 
   const handleRouteCalculate = async (isOptimal: boolean) => {
     const mapRoutes = getRouteSites();
-    const routes = mapRoutes.map(({ site }) => site.location);
+    const routes = mapRoutes.map(({ location: { lat, lng } }) => ({ lat, lng }));
     const result = await (
       await fetch('/api/v1/auth/routes', {
         method: 'POST',

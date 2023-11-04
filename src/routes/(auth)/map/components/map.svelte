@@ -2,14 +2,14 @@
   import { onMount } from 'svelte';
 
   import { createMarker } from '../helpers/marker-utils';
-  import type { HydratedMapSite } from '../proxy+page.server';
+  import type { SiteLocation } from '../proxy+page.server';
   import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
   import { PUBLIC_GOOGLE_MAP_ID } from '$env/static/public';
   import { getGoogleMaps } from '$lib/constants/google-maps';
   import { setInfoWindow } from '../stores/info-window-store';
 
-  export let sites: HydratedMapSite[];
+  export let locations: SiteLocation[];
 
   const { Map, InfoWindow } = getGoogleMaps();
 
@@ -43,9 +43,9 @@
       setMap(map);
 
       setTimeout(() => {
-        sites.map((site) =>
+        locations.map((location) =>
           createMarker({
-            site,
+            location,
             map,
             intersectionObserver,
           }),

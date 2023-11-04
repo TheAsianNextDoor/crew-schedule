@@ -1,5 +1,15 @@
 import { queryDb } from '$lib/db/query';
-import type { Address, City, Client, Country, Site, State, Status, ZipCode } from '@prisma/client';
+import type {
+  Address,
+  City,
+  Client,
+  Country,
+  Site,
+  State,
+  Status,
+  ZipCode,
+  Location,
+} from '@prisma/client';
 
 export type MapSite = Pick<
   Site,
@@ -7,12 +17,12 @@ export type MapSite = Pick<
   | 'job_number'
   | 'site_name'
   | 'estimated_hours'
-  | 'location'
   | 'scheduled_start_date_time'
   | 'scheduled_finished_date_time'
   | 'actual_start_date_time'
   | 'actual_finished_date_time'
 > &
+  Pick<Location, 'location_id' | 'lat' | 'lng'> &
   Pick<Status, 'status_name'> &
   Pick<Client, 'client_name'> &
   Pick<Address, 'street'> &
@@ -29,11 +39,12 @@ export const retrieveMapSites = async (customerId: string) =>
         site.job_number, 
         site.site_name,
         site.estimated_hours,
-        site.location,
         site.scheduled_start_date_time,
         site.scheduled_finished_date_time,
         site.actual_start_date_time,
         site.actual_finished_date_time,
+        location.lat,
+        location.lng,
         status.status_name,
         client.client_name,
         address.street,
@@ -44,10 +55,12 @@ export const retrieveMapSites = async (customerId: string) =>
       FROM site
       LEFT JOIN client
         ON site.client_id = client.client_id
+      LEFT JOIN location
+        on site.location_id = location.location_id
       LEFT JOIN status
         ON site.status_id = status.status_id
       LEFT JOIN address
-        ON site.address_id = address.address_id
+        ON location.address_id = address.address_id
       LEFT JOIN city
         ON address.city_id = city.city_id
       LEFT JOIN state

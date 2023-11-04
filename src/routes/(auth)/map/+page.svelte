@@ -13,7 +13,7 @@
 
 <div class="absolute z-30" style="width:{sidebarWidth}px">
   {#if !$isMapFilterVisibleStore}
-    <AutoComplete sites={data.sites} />
+    <AutoComplete locations={data.locations} />
   {/if}
 </div>
 
@@ -30,7 +30,7 @@
 <!-- <div class="absolute right-0 z-20">Profile</div> -->
 
 <div class="w-full h-full z-10 absolute">
-  <Map sites={data.sites} />
+  <Map locations={data.locations} />
 </div>
 
 <Modals />

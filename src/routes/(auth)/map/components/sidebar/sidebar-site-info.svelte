@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import { selectedEntitySubscribe } from '../../stores/sidebar-store';
-  import type { HydratedMapSite } from '../../proxy+page.server';
+  import type { SiteLocation } from '../../proxy+page.server';
   import InfoSection from './info-section.svelte';
 
-  let selectedSite: HydratedMapSite | undefined;
+  let location: SiteLocation | undefined;
 
   const unsubSelectedSite = selectedEntitySubscribe((value) => {
-    selectedSite = value?.site;
+    location = value?.location;
   });
   onDestroy(unsubSelectedSite);
 
@@ -31,20 +31,23 @@
   };
 </script>
 
-{#if selectedSite}
+{#if location}
   <div class="h-screen pt-32">
     <div class="px-4">
       <h3 class="h3">Site Info</h3>
       <div class="px-6">
-        <InfoSection header="Job Number" value={selectedSite.job_number} />
-        <InfoSection header="Site" value={selectedSite.site_name} />
-        <InfoSection header="Client" value={selectedSite.client_name} />
-        <InfoSection header="Estimated Hours" value={`${selectedSite.estimated_hours ?? 0} hrs`} />
-        <InfoSection header="Status" value={selectedSite.status_name} />
-        <InfoSection header="Address" value={selectedSite.address} />
+        <InfoSection header="Job Number" value={location.content.job_number} />
+        <InfoSection header="Site" value={location.content.site_name} />
+        <InfoSection header="Client" value={location.content.client_name} />
+        <InfoSection
+          header="Estimated Hours"
+          value={`${location.content.estimated_hours ?? 0} hrs`}
+        />
+        <InfoSection header="Status" value={location.content.status_name} />
+        <InfoSection header="Address" value={location.address} />
         <InfoSection
           header="Scheduled Start Date"
-          value={getFormattedDate(selectedSite.scheduled_start_date_time)}
+          value={getFormattedDate(location.content.scheduled_start_date_time)}
         />
       </div>
     </div>
@@ -53,7 +56,7 @@
     </div>
     <div class="px-4">
       <h3 class="h3">Phases</h3>
-      {#each selectedSite.phases as phase}
+      {#each location.content.phases as phase}
         <div class="p-4">
           <div class="card shadow-md bg-surface-200-700-token border p-4">
             <InfoSection header="Foreman" value={phase.foreman_name} />

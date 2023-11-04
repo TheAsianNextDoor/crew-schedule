@@ -21,7 +21,7 @@
 <h2 class="h4">Origin:</h2>
 {#if $matrixSitesStore.origin}
   <div class={`${listItemContainerStyle}`}>
-    {$matrixSitesStore.origin.site.site_name}
+    {$matrixSitesStore.origin.location.content.site_name}
     <button on:click={handleOriginRemove}>
       <i class="fa-regular fa-circle-xmark"></i>
     </button>

@@ -1,6 +1,5 @@
 import { STATUS_ENUM } from '$lib/constants/status';
 import type { MapPhase } from '../queries/retrieve-phases-by-site';
-import type { MapSite } from '../queries/retrieve-map-sites';
 import {
   addFilterConditionFunc,
   filterMapMarkers,
@@ -8,11 +7,12 @@ import {
   type FilterType,
 } from '../stores/map-marker-store';
 import type { EQUALITY_ENUM } from './equality-utils';
+import type { HydratedMapSite } from '../+page.server';
 
 const maybeFilterByValue = (
   filterName: string,
   shouldFilter: boolean,
-  filterConditionFunc: ((phase: MapPhase) => boolean) | ((site: MapSite) => boolean),
+  filterConditionFunc: ((phase: MapPhase) => boolean) | ((site: HydratedMapSite) => boolean),
   filterType: FilterType,
 ) => {
   if (shouldFilter) {

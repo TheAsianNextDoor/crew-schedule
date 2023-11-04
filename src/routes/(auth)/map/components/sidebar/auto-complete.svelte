@@ -6,7 +6,6 @@
     popup,
   } from '@skeletonlabs/skeleton';
 
-  import type { HydratedMapSite } from '../../+page.server';
   import {
     hideMapSidebar,
     selectedEntityStore,
@@ -14,8 +13,9 @@
     showMapSidebar,
   } from '../../stores/sidebar-store';
   import { getBaseHydratedMarkers } from '../../stores/map-marker-store';
+  import type { SiteLocation } from '../../proxy+page.server';
 
-  export let sites: HydratedMapSite[];
+  export let locations: SiteLocation[];
 
   let searchValue = '';
   let popupSettings: PopupSettings = {
@@ -28,16 +28,16 @@
     searchValue = event.detail.label;
     setSelectedEntity(
       getBaseHydratedMarkers().find(
-        (item) => item.site.site_name === searchValue.split('(')[0].trim(),
+        (item) => item.location.content.site_name === searchValue.split('(')[0].trim(),
       ) || null,
     );
     showMapSidebar();
   };
 
-  const siteOptions: AutocompleteOption[] = sites.map((site) => ({
-    label: `${site.site_name} (${site.job_number})`,
-    value: site.site_id,
-    keywords: `${site.job_number}, ${site.status_name}, ${site.address}, ${site.client_name}`,
+  const siteOptions: AutocompleteOption[] = locations.map((location) => ({
+    label: `${location.content.site_name} (${location.content.job_number})`,
+    value: location.content.site_id,
+    keywords: `${location.content.job_number}, ${location.content.status_name}, ${location.address}, ${location.content.client_name}`,
   }));
 
   const handleCloseEntity = () => {

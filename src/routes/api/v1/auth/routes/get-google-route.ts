@@ -1,10 +1,11 @@
 import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
+import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
 
 export const getGoogleRoutes = async (
   fetch: Function,
-  origin: [string, string],
-  destination: [string, string],
-  intermediates: [string, string][],
+  origin: LatitudeLongitude,
+  destination: LatitudeLongitude,
+  intermediates: LatitudeLongitude[],
   isOptimal: boolean,
 ) => {
   const body = JSON.stringify({
@@ -16,24 +17,24 @@ export const getGoogleRoutes = async (
     origin: {
       location: {
         latLng: {
-          latitude: origin[0],
-          longitude: origin[1],
+          latitude: origin.lat,
+          longitude: origin.lng,
         },
       },
     },
     destination: {
       location: {
         latLng: {
-          latitude: destination[0],
-          longitude: destination[1],
+          latitude: destination.lat,
+          longitude: destination.lng,
         },
       },
     },
-    intermediates: intermediates?.map(([latitude, longitude]) => ({
+    intermediates: intermediates?.map(({ lat, lng }) => ({
       location: {
         latLng: {
-          latitude,
-          longitude,
+          latitude: lat,
+          longitude: lng,
         },
       },
     })),

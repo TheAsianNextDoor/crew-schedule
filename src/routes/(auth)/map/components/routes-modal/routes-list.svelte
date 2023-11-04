@@ -34,7 +34,7 @@
         animate:flip={{ duration: flipDurationMs }}
       >
         <span>
-          {item.site.site_name}
+          {item.location.content.site_name}
         </span>
         <button on:click={() => deleteItem(item)}>
           <i class="fa-regular fa-circle-xmark"></i>

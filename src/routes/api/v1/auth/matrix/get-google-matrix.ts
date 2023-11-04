@@ -1,4 +1,5 @@
 import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
+import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
 
 export interface MatrixItem {
   originIndex: number;
@@ -23,8 +24,8 @@ export interface MatrixItem {
 
 export const getGoogleMatrix = async (
   fetch: Function,
-  originLocations: [string, string][],
-  destinationLocations: [string, string][],
+  originLocations: LatitudeLongitude[],
+  destinationLocations: LatitudeLongitude[],
 ) => {
   const body = JSON.stringify({
     routingPreference: 'TRAFFIC_AWARE',
@@ -35,8 +36,8 @@ export const getGoogleMatrix = async (
       waypoint: {
         location: {
           latLng: {
-            latitude: location[0],
-            longitude: location[1],
+            latitude: location.lat,
+            longitude: location.lng,
           },
         },
       },
@@ -45,8 +46,8 @@ export const getGoogleMatrix = async (
       waypoint: {
         location: {
           latLng: {
-            latitude: location[0],
-            longitude: location[1],
+            latitude: location.lat,
+            longitude: location.lng,
           },
         },
       },

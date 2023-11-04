@@ -58,7 +58,7 @@ model Address {
   street      String
   Customer    Customer[]
   Client      Client[]
-  Site        Site[]
+  Location    Location[]
 
   @@map("address")
 }
@@ -77,9 +77,10 @@ model Customer {
   crew            Crew[]
   status          Status[]
   phase           Phase[]
-  site            Site[]
   Client          Client[]
   Crew_assignment CrewAssignment[]
+  Location        Location[]
+  Site            Site[]
 
   @@map("customer")
 }
@@ -198,19 +199,31 @@ model CrewAssignment {
   @@map("crew_assignment")
 }
 
+model Location {
+  location_id String   @id @db.Uuid
+  customer    Customer @relation(references: [customer_id], fields: [customer_id])
+  customer_id String   @db.Uuid
+  address     Address  @relation(references: [address_id], fields: [address_id])
+  address_id  String   @db.Uuid
+  lat         Float
+  lng         Float
+  Site        Site[]
+
+  @@map("location")
+}
+
 model Site {
   site_id                      String       @id @db.Uuid
+  location                     Location     @relation(references: [location_id], fields: [location_id])
+  location_id                  String       @db.Uuid
   customer                     Customer     @relation(references: [customer_id], fields: [customer_id])
   customer_id                  String       @db.Uuid
   client                       Client       @relation(references: [client_id], fields: [client_id])
   client_id                    String       @db.Uuid
   status                       Status       @relation(references: [status_id], fields: [status_id])
-  address_id                   String       @db.Uuid
   status_id                    String       @db.Uuid
-  address                      Address      @relation(references: [address_id], fields: [address_id])
   job_number                   String       @unique
   site_name                    String
-  location                     Float[]
   cluster_id                   String?
   estimated_hours              Float?
   notes                        String?

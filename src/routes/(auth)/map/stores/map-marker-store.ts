@@ -1,17 +1,16 @@
 import { get, writable } from 'svelte/store';
-import type { HydratedMapSite } from '../+page.server';
+import type { HydratedMapSite, SiteLocation } from '../+page.server';
 import {
   addMarkerToMap,
   removeMarkerFromMap,
   showAllMarkers,
   type Marker,
 } from '../helpers/marker-utils';
-import type { MapSite } from '../queries/retrieve-map-sites';
 import type { MapPhase } from '../queries/retrieve-phases-by-site';
 
 export type HydratedMapMarker = {
   id: string;
-  site: HydratedMapSite;
+  location: SiteLocation;
   marker: Marker;
 };
 
@@ -32,7 +31,7 @@ export const getBaseHydratedMarkers = () => get(baseHydratedMarkerStore);
 /**
  * Functions to filter the map
  */
-export type FilterSiteConditionFunc = (site: MapSite) => boolean;
+export type FilterSiteConditionFunc = (site: HydratedMapSite) => boolean;
 export type FilterPhaseConditionFunc = (phases: MapPhase) => boolean;
 export type FilterType = 'site' | 'phase';
 export type FilterConfig = {
@@ -107,10 +106,10 @@ const shouldShowMarker = (hydratedMarker: HydratedMapMarker) => {
   const phaseConfigs = conditionConfigs.filter(({ type }) => type === 'phase');
 
   const passesSiteConditions = siteConfigs.every(
-    ({ siteConditionFunc }) => siteConditionFunc?.(hydratedMarker.site),
+    ({ siteConditionFunc }) => siteConditionFunc?.(hydratedMarker.location.content),
   );
 
-  const passesPhaseConditions = hydratedMarker.site.phases.some((phase) =>
+  const passesPhaseConditions = hydratedMarker.location.content.phases.some((phase) =>
     phaseConfigs.every(({ phaseConditionFunc }) => phaseConditionFunc?.(phase)),
   );
 

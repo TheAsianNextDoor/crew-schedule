@@ -5,7 +5,6 @@ import {
   getBaseHydratedMarkers,
   type HydratedMapMarker,
 } from '../stores/map-marker-store';
-import type { HydratedMapSite } from '../+page.server';
 import { getMap } from '../stores/map-store';
 import { getMapMode } from '../stores/map-mode-store';
 import { dropAnimation, selectedClickAnimation } from './animation-helpers';
@@ -27,17 +26,18 @@ import {
   setMatrixOrigin,
 } from '../stores/matrix-sites-store';
 import { addToOptimalSites, isMaxOptimalSitesStore } from '../stores/optimal-sites-store';
+import type { SiteLocation } from '../proxy+page.server';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
 export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) => {
-  const { marker, site } = hydratedMapMarker;
+  const { marker, location } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
   showMapSidebar();
   hideMapFilter();
   selectedClickAnimation(content);
-  setSelectedEntity({ id: site.site_id, site, marker });
+  setSelectedEntity({ id: location.content.site_id, location, marker });
 
   const mapMode = getMapMode();
   if (mapMode === 'routes') {
@@ -82,12 +82,12 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
 };
 
 interface CreateMarkerArgs {
-  site: HydratedMapSite;
+  location: SiteLocation;
   map: MapInstance;
   intersectionObserver: IntersectionObserver;
 }
 
-export const createMarker = ({ site, map, intersectionObserver }: CreateMarkerArgs) => {
+export const createMarker = ({ location, map, intersectionObserver }: CreateMarkerArgs) => {
   const { AdvancedMarkerElement, PinElement, LatLng } = getGoogleMaps();
 
   const container = document.createElement('div');
@@ -102,11 +102,11 @@ export const createMarker = ({ site, map, intersectionObserver }: CreateMarkerAr
 
   const marker = new AdvancedMarkerElement({
     map,
-    position: new LatLng(site.location[0], site.location[1]),
-    title: site.site_name,
+    position: new LatLng(location.lat, location.lng),
+    title: location.content.site_name,
     content: container,
   });
-  const hydratedMapMarker: HydratedMapMarker = { id: site.site_id, marker, site };
+  const hydratedMapMarker: HydratedMapMarker = { id: location.content.site_id, marker, location };
 
   const content = marker.content as HTMLElement;
   content.classList.add('map-marker');

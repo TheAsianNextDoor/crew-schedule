@@ -2,16 +2,34 @@ import { STATUS_ENUM } from '$lib/constants/status.js';
 import { retrievePhasesBySite, type MapPhase } from './queries/retrieve-phases-by-site.js';
 import { retrieveMapSites, type MapSite } from './queries/retrieve-map-sites.js';
 import { retrieveDisciplines } from './queries/retrieve-disciplines-by-customer.js';
+import type { LOCATION_TYPES_ENUM } from '$lib/constants/location-types.js';
+
+export type LatLng = {
+  lat: number;
+  lng: number;
+};
 
 export type HydratedMapPhase = MapPhase & {
   crewHours?: number;
   crewMobilizationHours?: number;
 };
 
-export type HydratedMapSite = MapSite & {
+export type UnHydratedMapSite = MapSite & {
   currentPhase: HydratedMapPhase | null;
   phases: HydratedMapPhase[];
+};
+export type HydratedMapSite = Omit<MapSite, 'lat' | 'lng' | 'location_id'> & {
+  currentPhase: HydratedMapPhase | null;
+  phases: HydratedMapPhase[];
+};
+
+export type SiteLocation = {
+  location_id: string;
+  lat: number;
+  lng: number;
+  type: keyof typeof LOCATION_TYPES_ENUM;
   address: string;
+  content: HydratedMapSite;
 };
 
 const findCurrentPhase = (phase: HydratedMapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
@@ -49,12 +67,30 @@ const getMapSitesWithPhases = async (sites: MapSite[]) =>
 
       return {
         ...site,
-        address: buildAddress(site.street, site.city, site.state, site.zip_code, site.country),
         currentPhase,
         phases,
       };
     }),
   );
+
+const createLocationMapSite = (mapSite: UnHydratedMapSite): SiteLocation => {
+  const { location_id, lat, lng, ...content } = mapSite;
+
+  return {
+    location_id,
+    lat,
+    lng,
+    type: 'site',
+    address: buildAddress(
+      mapSite.street,
+      mapSite.city,
+      mapSite.state,
+      mapSite.zip_code,
+      mapSite.country,
+    ),
+    content,
+  };
+};
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ parent }) {
@@ -64,7 +100,9 @@ export async function load({ parent }) {
 
   const sites = await retrieveMapSites(customerId);
   const mapSitesWithPhases = await getMapSitesWithPhases(sites);
+  const siteLocations = mapSitesWithPhases.map(createLocationMapSite);
+
   const disciplines = (await retrieveDisciplines(customerId)).map((item) => item.discipline_name);
 
-  return { sites: mapSitesWithPhases, disciplines };
+  return { locations: siteLocations, disciplines };
 }
