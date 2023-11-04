@@ -39,6 +39,8 @@ export const addresses = async (prisma: PrismaClient) => {
   const address8 = '38f3c520-6d2f-4e61-bc40-12baf92df1d9';
   const address9 = 'ab4a6c84-eb07-4947-b142-643229bc8db0';
   const address10 = 'd82b8a3e-413d-4dfb-b6ea-214a98e4a41c';
+  const address11 = 'a82b8a3e-413d-4dfb-b6ea-214a98e4a41c';
+  const address12 = 'c82b8a3e-413d-4dfb-b6ea-214a98e4a41c';
 
   await prisma.address.createMany({
     data: [
@@ -122,6 +124,22 @@ export const addresses = async (prisma: PrismaClient) => {
         country_id: US.country_id,
         street: '345 Aspen Lane',
       },
+      {
+        address_id: address11,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '901 Purple Boulevard',
+      },
+      {
+        address_id: address12,
+        city_id: fargo.city_id,
+        state_id: ND.state_id,
+        zip_code_id: zip.zip_code_id,
+        country_id: US.country_id,
+        street: '345 Oak Lane',
+      },
     ],
   });
 
@@ -136,5 +154,7 @@ export const addresses = async (prisma: PrismaClient) => {
     address8,
     address9,
     address10,
+    address11,
+    address12,
   };
 };

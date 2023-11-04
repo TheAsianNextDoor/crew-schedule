@@ -86,14 +86,13 @@ model Customer {
 }
 
 model Status {
-  status_id        String            @id @db.Uuid
-  customer         Customer          @relation(references: [customer_id], fields: [customer_id])
-  customer_id      String            @db.Uuid
-  status_name      String            @unique
-  created_at       DateTime          @default(now())
-  phase            Phase[]
-  phase_assignment PhaseAssignment[]
-  site             Site[]
+  status_id   String   @id @db.Uuid
+  customer    Customer @relation(references: [customer_id], fields: [customer_id])
+  customer_id String   @db.Uuid
+  status_name String   @unique
+  created_at  DateTime @default(now())
+  phase       Phase[]
+  site        Site[]
 
   @@map("status")
 }
@@ -273,8 +272,6 @@ model PhaseAssignment {
   phase_id                        String    @db.Uuid
   crew                            Crew      @relation(references: [crew_id], fields: [crew_id])
   crew_id                         String    @db.Uuid
-  status                          Status    @relation(references: [status_id], fields: [status_id])
-  status_id                       String    @db.Uuid
   foreman_id                      String    @db.Uuid
   foreman                         Person    @relation(references: [person_id], fields: [foreman_id])
   estimated_hours                 Float?
