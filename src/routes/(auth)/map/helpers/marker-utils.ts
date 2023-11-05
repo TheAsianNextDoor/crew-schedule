@@ -19,7 +19,6 @@ import { addToRouteSites, isMaxRouteItemsStore } from '../stores/route-sites-sto
 import {
   getGoogleMaps,
   type MapInstance,
-  type PinElement,
   type PinElementInstance,
 } from '$lib/constants/google-maps';
 import { get } from 'svelte/store';
@@ -30,7 +29,6 @@ import {
   setIsNotSelectingMatrixOrigin,
   setMatrixOrigin,
 } from '../stores/matrix-sites-store';
-import { addToOptimalSites, isMaxOptimalSitesStore } from '../stores/optimal-sites-store';
 import type { HydratedLocation } from '../proxy+page.server';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
 
@@ -71,17 +69,6 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
       addToMatrixDestinations(hydratedMapMarker);
       changeMarkerPin(marker, MARKER_PINS.matrixDestination);
     }
-  }
-
-  if (mapMode === 'optimal') {
-    const pinElement = getMarkerPinElement(marker.content as HTMLElement);
-
-    if (!isMarkerPinOfType(pinElement, MARKER_PINS.optimal.type) && !get(isMaxOptimalSitesStore)) {
-      addToOptimalSites(hydratedMapMarker);
-      changeMarkerPin(marker, MARKER_PINS.optimal);
-    }
-
-    return;
   }
 
   return;

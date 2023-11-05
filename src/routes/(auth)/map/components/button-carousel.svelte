@@ -11,13 +11,10 @@
     mapModeStore,
     setMapModeBase,
     setMapModeMatrix,
-    setMapModeOptimal,
     setMapModeRoutes,
   } from '../stores/map-mode-store';
   import { hideRoutePolylines } from '../stores/route-polyline-store';
   import { hideMatrixPolylines } from '../stores/matrix-polyline.store';
-  import { changePinsToOptimal } from '../stores/optimal-sites-store';
-  import { hideOptimalPolyline, showOptimalPolyline } from '../stores/optimal-polyline-store';
 
   const handleFilterClick = () => {
     if (isMapFilterVisible()) {
@@ -49,20 +46,6 @@
       hideRoutePolylines();
     }
   };
-
-  const handleOptimalClick = () => {
-    // if already in optimal mode
-    if (getMapMode() === 'optimal') {
-      setMapModeBase();
-      hideOptimalPolyline();
-    } else {
-      showOptimalPolyline();
-      hideRoutePolylines();
-      hideMatrixPolylines();
-      changePinsToOptimal();
-      setMapModeOptimal();
-    }
-  };
 </script>
 
 <div class="flex mt-6">
@@ -92,14 +75,4 @@
     <i class="pr-1 fa-solid fa-bezier-curve fa-sm"></i>
     Matrix
   </button>
-
-  <!-- not used anymore, save for when needing another modal
-   <button
-    class="btn {$mapModeStore === 'optimal' &&
-      'variant-outline-secondary'} flex justify-center shadow-lg items-center px-2 h-8 rounded-lg bg-surface-100-800-token ml-6"
-    on:click={handleOptimalClick}
-  >
-    <i class="fa-solid fa-wand-magic-sparkles"></i>
-    Optimal
-  </button> -->
 </div>

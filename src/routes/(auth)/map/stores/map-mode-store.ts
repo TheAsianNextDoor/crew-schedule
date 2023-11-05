@@ -5,7 +5,7 @@ import { changePinsToMatrix } from './matrix-sites-store';
 import { showMatrixPolylines } from './matrix-polyline.store';
 import { showRoutePolylines } from './route-polyline-store';
 
-export type MapMode = 'base' | 'routes' | 'matrix' | 'optimal';
+export type MapMode = 'base' | 'routes' | 'matrix';
 
 export const mapModeStore = writable<MapMode>('base');
 const { set } = mapModeStore;
@@ -27,8 +27,4 @@ export const setMapModeMatrix = () => {
   changePinsToMatrix();
   showMatrixPolylines();
   set('matrix');
-};
-
-export const setMapModeOptimal = () => {
-  set('optimal');
 };

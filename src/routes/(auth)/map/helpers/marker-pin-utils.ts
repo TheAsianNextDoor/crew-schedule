@@ -7,13 +7,7 @@ export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
 
 export type PinOptions = Omit<google.maps.marker.PinElementOptions, 'glyph'>;
 
-type MarkerPinTypes =
-  | 'site'
-  | 'mobilizationHub'
-  | 'routes'
-  | 'matrixDestination'
-  | 'matrixOrigin'
-  | 'optimal';
+type MarkerPinTypes = 'site' | 'mobilizationHub' | 'routes' | 'matrixDestination' | 'matrixOrigin';
 
 interface PinElementConfig {
   type: MarkerPinTypes;
@@ -66,15 +60,6 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     pinOptions: {
       glyphColor: 'white',
       background: '#e7985f', // green
-      borderColor,
-    },
-  },
-  optimal: {
-    type: 'optimal',
-    iconHtml: '<i class="fa-solid fa-wand-magic-sparkles"></i>',
-    pinOptions: {
-      glyphColor: 'white',
-      background: '#E75F5F',
       borderColor,
     },
   },
