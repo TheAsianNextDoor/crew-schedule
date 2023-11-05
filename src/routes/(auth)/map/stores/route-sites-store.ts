@@ -1,6 +1,6 @@
 import { derived, get, writable } from 'svelte/store';
 import { getBaseHydratedMarkers, type HydratedMapMarker } from './map-marker-store';
-import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
+import { MARKER_PINS, changeMarkerPin, setPinToDefault } from '../helpers/marker-pin-utils';
 import type { Leg } from '../helpers/polyline-utils';
 
 export const routeSitesStore = writable<HydratedMapMarker[]>([]);
@@ -25,7 +25,7 @@ export const changePinsToRoutes = () => {
     return index === -1 ? true : false;
   });
 
-  nonMapRouteIcons.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  nonMapRouteIcons.forEach(setPinToDefault);
   mapRoutes.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.routes));
 };
 

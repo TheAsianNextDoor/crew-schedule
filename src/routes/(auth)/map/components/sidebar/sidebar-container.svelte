@@ -3,7 +3,7 @@
   import { fly } from 'svelte/transition';
 
   import { isMapFilterVisibleStore } from '../../stores/filter-store';
-  import SidebarSiteInfo from './sidebar-site-info.svelte';
+  import SidebarContent from './sidebar-content.svelte';
   import SidebarFilter from './sidebar-filter.svelte';
   import {
     hideMapSidebar,
@@ -26,7 +26,7 @@
     {#if $isMapFilterVisibleStore}
       <SidebarFilter bind:disciplines />
     {:else if $selectedEntityStore}
-      <SidebarSiteInfo />
+      <SidebarContent />
     {/if}
   </div>
 {/if}

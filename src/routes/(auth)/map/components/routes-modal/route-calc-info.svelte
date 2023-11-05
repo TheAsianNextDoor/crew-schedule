@@ -10,8 +10,8 @@
 {#each legs as leg, index}
   <div class="p-2">
     <h1>
-      {$routeSitesStore[index]?.location.content.site_name} to {$routeSitesStore[index + 1]
-        ?.location.content.site_name}
+      {$routeSitesStore[index]?.location.content.name} to {$routeSitesStore[index + 1]?.location
+        .content.name}
     </h1>
     <div>Distance: {leg.localizedValues.distance.text}</div>
     <div>Duration: {leg.localizedValues.duration.text}</div>

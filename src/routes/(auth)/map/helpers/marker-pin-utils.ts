@@ -1,15 +1,22 @@
 import { getGoogleMaps } from '$lib/constants/google-maps';
-import { getBaseHydratedMarkers } from '../stores/map-marker-store';
+import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
+import { getBaseHydratedMarkers, type HydratedMapMarker } from '../stores/map-marker-store';
 import type { Marker } from './marker-utils';
 
 export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
 
 export type PinOptions = Omit<google.maps.marker.PinElementOptions, 'glyph'>;
 
-type MarkerPinTypes = 'default' | 'routes' | 'matrixDestination' | 'matrixOrigin' | 'optimal';
+type MarkerPinTypes =
+  | 'site'
+  | 'mobilizationHub'
+  | 'routes'
+  | 'matrixDestination'
+  | 'matrixOrigin'
+  | 'optimal';
 
 interface PinElementConfig {
-  type: string;
+  type: MarkerPinTypes;
   iconHtml: string;
   pinOptions: PinOptions;
 }
@@ -17,12 +24,21 @@ interface PinElementConfig {
 const borderColor = '#808080';
 
 export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
-  default: {
-    type: 'default',
+  site: {
+    type: 'site',
     iconHtml: '<i class="fa-solid fa-circle"></i>',
     pinOptions: {
       glyphColor: 'white',
       background: '#5F8EE7', // blue
+      borderColor,
+    },
+  },
+  mobilizationHub: {
+    type: 'mobilizationHub',
+    iconHtml: '<i class="fa-solid fa-house"></i>',
+    pinOptions: {
+      glyphColor: 'white',
+      background: '#E75F5F', // red
       borderColor,
     },
   },
@@ -36,7 +52,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     },
   },
   matrixOrigin: {
-    type: 'matrix',
+    type: 'matrixOrigin',
     iconHtml: '<i class="fa-brands fa-xing"></i>',
     pinOptions: {
       glyphColor: 'white',
@@ -45,7 +61,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     },
   },
   matrixDestination: {
-    type: 'matrix',
+    type: 'matrixDestination',
     iconHtml: '<i class="fa-brands fa-xing"></i>',
     pinOptions: {
       glyphColor: 'white',
@@ -93,6 +109,12 @@ export const changeMarkerPin = (marker: Marker, pinDefinition: PinElementConfig)
 export const isMarkerPinOfType = (pinElement: HTMLElement | undefined, type: string) =>
   pinElement?.dataset?.pin_type === type;
 
+export const setPinToDefault = ({ marker, location: { type } }: HydratedMapMarker) => {
+  if (type === LOCATION_TYPES_ENUM.site) changeMarkerPin(marker, MARKER_PINS.site);
+  if (type === LOCATION_TYPES_ENUM.mobilizationHub)
+    changeMarkerPin(marker, MARKER_PINS.mobilizationHub);
+};
+
 export const setAllPinsToDefault = () => {
-  getBaseHydratedMarkers().forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  getBaseHydratedMarkers().forEach(setPinToDefault);
 };

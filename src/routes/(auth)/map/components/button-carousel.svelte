@@ -37,9 +37,9 @@
       setMapModeBase();
     } else {
       changePinsToRoutes();
+      setMapModeRoutes();
       hideMatrixPolylines();
       showRoutePolylines();
-      setMapModeRoutes();
     }
   };
 

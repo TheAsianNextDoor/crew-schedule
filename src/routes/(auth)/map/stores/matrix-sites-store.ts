@@ -1,6 +1,6 @@
 import { derived, get, writable } from 'svelte/store';
 import { getBaseHydratedMarkers, type HydratedMapMarker } from './map-marker-store';
-import { MARKER_PINS, changeMarkerPin } from '../helpers/marker-pin-utils';
+import { MARKER_PINS, changeMarkerPin, setPinToDefault } from '../helpers/marker-pin-utils';
 import type { MatrixItem } from '../../../api/v1/auth/matrix/get-google-matrix';
 
 export interface MatrixStore {
@@ -65,7 +65,7 @@ export const changePinsToMatrix = () => {
     return index === -1 ? true : false;
   });
 
-  nonMapMatrixIcons.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  nonMapMatrixIcons.forEach(setPinToDefault);
   destinations.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.matrixDestination));
 
   if (origin) {

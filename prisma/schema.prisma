@@ -64,13 +64,13 @@ model Address {
 }
 
 model Customer {
-  customer_id     String           @id @db.Uuid
-  address         Address          @relation(references: [address_id], fields: [address_id])
-  address_id      String           @db.Uuid
+  customer_id     String            @id @db.Uuid
+  address         Address           @relation(references: [address_id], fields: [address_id])
+  address_id      String            @db.Uuid
   customer_name   String
   phone_number    String
-  email           String           @unique
-  created_at      DateTime         @default(now())
+  email           String            @unique
+  created_at      DateTime          @default(now())
   discipline      Discipline[]
   role            Role[]
   person          Person[]
@@ -81,6 +81,7 @@ model Customer {
   Crew_assignment CrewAssignment[]
   Location        Location[]
   Site            Site[]
+  MobilizationHub MobilizationHub[]
 
   @@map("customer")
 }
@@ -199,16 +200,30 @@ model CrewAssignment {
 }
 
 model Location {
-  location_id String   @id @db.Uuid
-  customer    Customer @relation(references: [customer_id], fields: [customer_id])
-  customer_id String   @db.Uuid
-  address     Address  @relation(references: [address_id], fields: [address_id])
-  address_id  String   @db.Uuid
-  lat         Float
-  lng         Float
-  Site        Site[]
+  location_id     String            @id @db.Uuid
+  customer        Customer          @relation(references: [customer_id], fields: [customer_id])
+  customer_id     String            @db.Uuid
+  address         Address           @relation(references: [address_id], fields: [address_id])
+  address_id      String            @db.Uuid
+  lat             Float
+  lng             Float
+  Site            Site[]
+  MobilizationHub MobilizationHub[]
 
   @@map("location")
+}
+
+model MobilizationHub {
+  mobilization_hub_id String   @id @db.Uuid
+  customer            Customer @relation(references: [customer_id], fields: [customer_id])
+  customer_id         String   @db.Uuid
+  location            Location @relation(references: [location_id], fields: [location_id])
+  location_id         String   @db.Uuid
+  hub_name            String
+  hub_phone_number    String?  @default("")
+  hub_notes           String?  @default("")
+
+  @@map("mobilization_hub")
 }
 
 model Site {

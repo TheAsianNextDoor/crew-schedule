@@ -24,7 +24,7 @@ const changePinsToOptimal = () => {
     return index === -1 ? true : false;
   });
 
-  nonMapOptimalPathIcons.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.default));
+  nonMapOptimalPathIcons.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.site));
   mapOptimalPath.forEach(({ marker }) => changeMarkerPin(marker, MARKER_PINS.optimal));
 };
 

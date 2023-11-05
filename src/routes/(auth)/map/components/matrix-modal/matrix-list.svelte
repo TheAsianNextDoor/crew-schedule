@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
-  import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
+  import { setPinToDefault } from '../../helpers/marker-pin-utils';
   import { listItemContainerStyle } from '$lib/styles';
   import { matrixSitesStore, setMatrixDestinations } from '../../stores/matrix-sites-store';
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
     setMatrixDestinations($matrixSitesStore.destinations.filter(({ id }) => id !== itemIdToRemove));
-    changeMarkerPin(item.marker, MARKER_PINS.default);
+    setPinToDefault(item);
   };
 </script>
 
@@ -15,7 +15,7 @@
   {#each $matrixSitesStore.destinations as item (item.id)}
     <div class={`${listItemContainerStyle}`}>
       <span>
-        {item.location.content.site_name}
+        {item.location.content.name}
       </span>
       <button on:click={() => deleteItem(item)}>
         <i class="fa-regular fa-circle-xmark"></i>

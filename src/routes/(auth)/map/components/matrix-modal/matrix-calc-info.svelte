@@ -9,8 +9,8 @@
 {#each edges as edge}
   <div class="p-2">
     <h1>
-      {matrices.origin?.location.content.site_name} to {matrices.destinations[edge.destinationIndex]
-        ?.location.content.site_name}
+      {matrices.origin?.location.content.name} to {matrices.destinations[edge.destinationIndex]
+        ?.location.content.name}
     </h1>
     <div>Distance: {edge.distanceMeters}</div>
     <div>Duration: {edge.staticDuration}</div>

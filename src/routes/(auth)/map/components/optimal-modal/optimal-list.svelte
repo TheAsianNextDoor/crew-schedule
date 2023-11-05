@@ -7,7 +7,7 @@
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
     setOptimalSites($optimalSitesStore.filter(({ id }) => id !== itemIdToRemove));
-    changeMarkerPin(item.marker, MARKER_PINS.default);
+    changeMarkerPin(item.marker, MARKER_PINS.site);
   };
 </script>
 

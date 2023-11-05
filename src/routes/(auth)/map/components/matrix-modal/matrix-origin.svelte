@@ -1,6 +1,6 @@
 <script lang="ts">
   import { listItemContainerStyle } from '$lib/styles';
-  import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
+  import { MARKER_PINS, changeMarkerPin, setPinToDefault } from '../../helpers/marker-pin-utils';
   import type { Marker } from '../../helpers/marker-utils';
   import {
     clearMatrixOrigin,
@@ -12,8 +12,12 @@
   } from '../../stores/matrix-sites-store';
 
   const handleOriginRemove = () => {
+    const origin = getMatrixOrigin();
+
     setIsNotSelectingMatrixOrigin();
-    changeMarkerPin(getMatrixOrigin()?.marker as Marker, MARKER_PINS.default);
+    if (origin) {
+      setPinToDefault(origin);
+    }
     clearMatrixOrigin();
   };
 </script>
@@ -21,7 +25,7 @@
 <h2 class="h4">Origin:</h2>
 {#if $matrixSitesStore.origin}
   <div class={`${listItemContainerStyle}`}>
-    {$matrixSitesStore.origin.location.content.site_name}
+    {$matrixSitesStore.origin.location.content.name}
     <button on:click={handleOriginRemove}>
       <i class="fa-regular fa-circle-xmark"></i>
     </button>

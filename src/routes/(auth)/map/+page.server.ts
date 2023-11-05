@@ -2,12 +2,11 @@ import { STATUS_ENUM } from '$lib/constants/status.js';
 import { retrievePhasesBySite, type MapPhase } from './queries/retrieve-phases-by-site.js';
 import { retrieveMapSites, type MapSite } from './queries/retrieve-map-sites.js';
 import { retrieveDisciplines } from './queries/retrieve-disciplines-by-customer.js';
-import type { LOCATION_TYPES_ENUM } from '$lib/constants/location-types.js';
-
-export type LatLng = {
-  lat: number;
-  lng: number;
-};
+import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types.js';
+import {
+  retrieveMobilizationHubs,
+  type UnHydratedMobilizationHubs,
+} from './queries/retrieve-mobilization-hubs.js';
 
 export type HydratedMapPhase = MapPhase & {
   crewHours?: number;
@@ -23,14 +22,23 @@ export type HydratedMapSite = Omit<MapSite, 'lat' | 'lng' | 'location_id'> & {
   phases: HydratedMapPhase[];
 };
 
-export type SiteLocation = {
+export type HydratedMobilizationHub = Omit<
+  UnHydratedMobilizationHubs,
+  'lat' | 'lng' | 'location_id'
+>;
+
+export type GenericHydratedLocation<T> = {
   location_id: string;
   lat: number;
   lng: number;
   type: keyof typeof LOCATION_TYPES_ENUM;
   address: string;
-  content: HydratedMapSite;
+  content: T;
 };
+
+export type HydratedLocation = GenericHydratedLocation<HydratedMapSite | HydratedMobilizationHub>;
+export type HydratedSiteLocation = GenericHydratedLocation<HydratedMapSite>;
+export type HydratedMobilizationHubLocation = GenericHydratedLocation<HydratedMobilizationHub>;
 
 const findCurrentPhase = (phase: HydratedMapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
 
@@ -60,7 +68,7 @@ const buildAddress = (
 const getMapSitesWithPhases = async (sites: MapSite[]) =>
   Promise.all(
     sites.map(async (site) => {
-      const phases = (await retrievePhasesBySite(site.site_id)) as HydratedMapPhase[];
+      const phases = (await retrievePhasesBySite(site.id)) as HydratedMapPhase[];
       phases.forEach(addCrewInfo);
 
       const currentPhase = phases.find(findCurrentPhase) || null;
@@ -73,21 +81,18 @@ const getMapSitesWithPhases = async (sites: MapSite[]) =>
     }),
   );
 
-const createLocationMapSite = (mapSite: UnHydratedMapSite): SiteLocation => {
-  const { location_id, lat, lng, ...content } = mapSite;
+const createMapLocation = (
+  item: UnHydratedMapSite | UnHydratedMobilizationHubs,
+  type: keyof typeof LOCATION_TYPES_ENUM,
+): HydratedLocation => {
+  const { location_id, lat, lng, ...content } = item;
 
   return {
     location_id,
     lat,
     lng,
-    type: 'site',
-    address: buildAddress(
-      mapSite.street,
-      mapSite.city,
-      mapSite.state,
-      mapSite.zip_code,
-      mapSite.country,
-    ),
+    type,
+    address: buildAddress(item.street, item.city, item.state, item.zip_code, item.country),
     content,
   };
 };
@@ -100,9 +105,15 @@ export async function load({ parent }) {
 
   const sites = await retrieveMapSites(customerId);
   const mapSitesWithPhases = await getMapSitesWithPhases(sites);
-  const siteLocations = mapSitesWithPhases.map(createLocationMapSite);
+  const siteLocations = mapSitesWithPhases.map((site) =>
+    createMapLocation(site, LOCATION_TYPES_ENUM.site),
+  );
 
   const disciplines = (await retrieveDisciplines(customerId)).map((item) => item.discipline_name);
 
-  return { locations: siteLocations, disciplines };
+  const mobilizationHubs = (await retrieveMobilizationHubs(customerId)).map((hub) =>
+    createMapLocation(hub, LOCATION_TYPES_ENUM.mobilizationHub),
+  );
+
+  return { locations: [...siteLocations, ...mobilizationHubs], disciplines };
 }

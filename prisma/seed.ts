@@ -13,6 +13,7 @@ import { locations } from './seed-helpers/locations';
 import { sites } from './seed-helpers/sites';
 import { phases } from './seed-helpers/phases';
 import { phaseAssignments } from './seed-helpers/phase-assignments';
+import { mobilizationHubs } from './seed-helpers/mobilization-hubs';
 
 const prisma = new PrismaClient();
 
@@ -30,6 +31,8 @@ const main = async () => {
     address10,
     address11,
     address12,
+    address13,
+    address14,
   } = await addresses(prisma);
 
   const { customer1 } = await customers(prisma, {
@@ -94,6 +97,8 @@ const main = async () => {
     location10,
     location11,
     location12,
+    location13,
+    location14,
   } = await locations(prisma, {
     customer1,
     address1,
@@ -108,6 +113,14 @@ const main = async () => {
     address10,
     address11,
     address12,
+    address13,
+    address14,
+  });
+
+  const { mobilizationHub1, mobilizationHub2 } = await mobilizationHubs(prisma, {
+    customer1,
+    location13,
+    location14,
   });
 
   const { site1, site2, site3, site4, site5, site6, site7, site8, site9, site10, site11, site12 } =

@@ -2,7 +2,7 @@
   import { flip } from 'svelte/animate';
   import { getRouteSites, routeSitesStore, setRouteSites } from '../../stores/route-sites-store';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
-  import { MARKER_PINS, changeMarkerPin } from '../../helpers/marker-pin-utils';
+  import { setPinToDefault } from '../../helpers/marker-pin-utils';
   import DraggableList from '$lib/components/draggable-list.svelte';
   import { listItemContainerStyle } from '$lib/styles';
 
@@ -11,7 +11,7 @@
   const deleteItem = (item: HydratedMapMarker) => {
     const itemIdToRemove = item.id;
     setRouteSites(getRouteSites().filter(({ id }) => id !== itemIdToRemove));
-    changeMarkerPin(item.marker, MARKER_PINS.default);
+    setPinToDefault(item);
   };
 </script>
 
@@ -34,7 +34,7 @@
         animate:flip={{ duration: flipDurationMs }}
       >
         <span>
-          {item.location.content.site_name}
+          {item.location.content.name}
         </span>
         <button on:click={() => deleteItem(item)}>
           <i class="fa-regular fa-circle-xmark"></i>

@@ -13,16 +13,13 @@ import type {
 
 export type MapSite = Pick<
   Site,
-  | 'site_id'
   | 'job_number'
-  | 'site_name'
   | 'estimated_hours'
   | 'scheduled_start_date_time'
   | 'scheduled_finished_date_time'
   | 'actual_start_date_time'
   | 'actual_finished_date_time'
-> &
-  Pick<Location, 'location_id' | 'lat' | 'lng'> &
+> & { id: string; name: string } & Pick<Location, 'location_id' | 'lat' | 'lng'> &
   Pick<Status, 'status_name'> &
   Pick<Client, 'client_name'> &
   Pick<Address, 'street'> &
@@ -35,9 +32,9 @@ export const retrieveMapSites = async (customerId: string) =>
   queryDb.findMany<MapSite>(
     `
       SELECT 
-        site.site_id, 
+        site.site_id as id, 
         site.job_number, 
-        site.site_name,
+        site.site_name as name,
         site.estimated_hours,
         site.scheduled_start_date_time,
         site.scheduled_finished_date_time,

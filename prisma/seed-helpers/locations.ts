@@ -16,6 +16,8 @@ export const locations = async (
     address10,
     address11,
     address12,
+    address13,
+    address14,
   }: {
     customer1: string;
     address1: string;
@@ -30,6 +32,8 @@ export const locations = async (
     address10: string;
     address11: string;
     address12: string;
+    address13: string;
+    address14: string;
   },
 ) => {
   const location1 = 'd31f7a07-7df3-4d0b-9bfb-02b5d1e0136f';
@@ -44,6 +48,8 @@ export const locations = async (
   const location10 = '1fd73f6a-936f-41a5-9a03-27e08f8e8e8c';
   const location11 = '2fd73f6a-936f-41a5-9a03-27e08f8e8e8c';
   const location12 = '3fd73f6a-936f-41a5-9a03-27e08f8e8e8c';
+  const location13 = '4fd73f6a-936f-41a5-9a03-27e08f8e8e8d';
+  const location14 = '1fd73f6a-936f-41a5-9a03-27e08f8e8e8e';
   await prisma.location.createMany({
     data: [
       {
@@ -130,6 +136,20 @@ export const locations = async (
         lat: 51.515,
         lng: -0.08,
       },
+      {
+        location_id: location13,
+        customer_id: customer1,
+        address_id: address13,
+        lat: 51.535,
+        lng: -0.14,
+      },
+      {
+        location_id: location14,
+        customer_id: customer1,
+        address_id: address14,
+        lat: 51.49,
+        lng: -0.077,
+      },
     ],
   });
 
@@ -146,5 +166,7 @@ export const locations = async (
     location10,
     location11,
     location12,
+    location13,
+    location14,
   };
 };

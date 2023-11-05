@@ -16,7 +16,12 @@ import {
   isMarkerPinOfType,
 } from './marker-pin-utils';
 import { addToRouteSites, isMaxRouteItemsStore } from '../stores/route-sites-store';
-import { getGoogleMaps, type MapInstance } from '$lib/constants/google-maps';
+import {
+  getGoogleMaps,
+  type MapInstance,
+  type PinElement,
+  type PinElementInstance,
+} from '$lib/constants/google-maps';
 import { get } from 'svelte/store';
 import {
   addToMatrixDestinations,
@@ -26,7 +31,8 @@ import {
   setMatrixOrigin,
 } from '../stores/matrix-sites-store';
 import { addToOptimalSites, isMaxOptimalSitesStore } from '../stores/optimal-sites-store';
-import type { SiteLocation } from '../proxy+page.server';
+import type { HydratedLocation } from '../proxy+page.server';
+import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -37,7 +43,7 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   showMapSidebar();
   hideMapFilter();
   selectedClickAnimation(content);
-  setSelectedEntity({ id: location.content.site_id, location, marker });
+  setSelectedEntity({ id: location.content.id, location, marker });
 
   const mapMode = getMapMode();
   if (mapMode === 'routes') {
@@ -82,7 +88,7 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
 };
 
 interface CreateMarkerArgs {
-  location: SiteLocation;
+  location: HydratedLocation;
   map: MapInstance;
   intersectionObserver: IntersectionObserver;
 }
@@ -92,21 +98,39 @@ export const createMarker = ({ location, map, intersectionObserver }: CreateMark
 
   const container = document.createElement('div');
   const icon = document.createElement('div');
-  icon.innerHTML = MARKER_PINS.default.iconHtml;
-  const faPin = new PinElement({
-    glyph: icon,
-    ...MARKER_PINS.default.pinOptions,
-  });
+  let faPin: PinElementInstance;
+
+  if (location.type === LOCATION_TYPES_ENUM.site) {
+    icon.innerHTML = MARKER_PINS.site.iconHtml;
+    faPin = new PinElement({
+      glyph: icon,
+      ...MARKER_PINS.site.pinOptions,
+    });
+  } else if (location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
+    icon.innerHTML = MARKER_PINS.mobilizationHub.iconHtml;
+    faPin = new PinElement({
+      glyph: icon,
+      ...MARKER_PINS.mobilizationHub.pinOptions,
+    });
+  } else {
+    console.error('unknown location type');
+    icon.innerHTML = MARKER_PINS.site.iconHtml;
+    faPin = new PinElement({
+      glyph: icon,
+      ...MARKER_PINS.site.pinOptions,
+    });
+  }
+
   faPin.element.classList.add(MAP_MARKER_PIN_CLASS);
   container.appendChild(faPin.element);
 
   const marker = new AdvancedMarkerElement({
     map,
     position: new LatLng(location.lat, location.lng),
-    title: location.content.site_name,
+    title: location.content.name,
     content: container,
   });
-  const hydratedMapMarker: HydratedMapMarker = { id: location.content.site_id, marker, location };
+  const hydratedMapMarker: HydratedMapMarker = { id: location.content.id, marker, location };
 
   const content = marker.content as HTMLElement;
   content.classList.add('map-marker');

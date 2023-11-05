@@ -13,9 +13,10 @@
     showMapSidebar,
   } from '../../stores/sidebar-store';
   import { getBaseHydratedMarkers } from '../../stores/map-marker-store';
-  import type { SiteLocation } from '../../proxy+page.server';
+  import type { HydratedLocation } from '../../proxy+page.server';
+  import { isMobilizationHubLocation, isSiteLocation } from '../../helpers/location-type-utils';
 
-  export let locations: SiteLocation[];
+  export let locations: HydratedLocation[];
 
   let searchValue = '';
   let popupSettings: PopupSettings = {
@@ -28,17 +29,36 @@
     searchValue = event.detail.label;
     setSelectedEntity(
       getBaseHydratedMarkers().find(
-        (item) => item.location.content.site_name === searchValue.split('(')[0].trim(),
+        (item) => item.location.content.name === searchValue.split('(')[0].trim(),
       ) || null,
     );
     showMapSidebar();
   };
 
-  const siteOptions: AutocompleteOption[] = locations.map((location) => ({
-    label: `${location.content.site_name} (${location.content.job_number})`,
-    value: location.content.site_id,
-    keywords: `${location.content.job_number}, ${location.content.status_name}, ${location.address}, ${location.content.client_name}`,
-  }));
+  const siteOptions: AutocompleteOption[] = locations.map((location) => {
+    if (isSiteLocation(location)) {
+      const { content } = location;
+
+      return {
+        label: `${content.name} (${content.job_number})`,
+        value: content.id,
+        keywords: `${content.job_number}, ${content.status_name}, ${location.address}, ${content.client_name}`,
+      };
+    } else if (isMobilizationHubLocation(location)) {
+      const { content } = location;
+
+      return {
+        label: `${content.name}`,
+        value: content.id,
+      };
+    }
+    console.error('unknown location type');
+
+    return {
+      label: `unknown type`,
+      value: location.location_id,
+    };
+  });
 
   const handleCloseEntity = () => {
     searchValue = '';
