@@ -15,6 +15,7 @@
   import { getBaseHydratedMarkers } from '../../stores/map-marker-store';
   import type { HydratedLocation } from '../../proxy+page.server';
   import { isMobilizationHubLocation, isSiteLocation } from '../../helpers/location-type-utils';
+  import { selectedClickAnimation } from '../../helpers/animation-helpers';
 
   export let locations: HydratedLocation[];
 
@@ -27,12 +28,16 @@
 
   const handlePopupSelect = (event: CustomEvent<AutocompleteOption>) => {
     searchValue = event.detail.label;
-    setSelectedEntity(
+    const hydratedMarker =
       getBaseHydratedMarkers().find(
         (item) => item.location.content.name === searchValue.split('(')[0].trim(),
-      ) || null,
-    );
-    showMapSidebar();
+      ) || null;
+
+    if (hydratedMarker) {
+      selectedClickAnimation(hydratedMarker.marker.content as HTMLElement);
+      setSelectedEntity(hydratedMarker);
+      showMapSidebar();
+    }
   };
 
   const siteOptions: AutocompleteOption[] = locations.map((location) => {
