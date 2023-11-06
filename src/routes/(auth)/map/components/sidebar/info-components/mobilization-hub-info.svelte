@@ -12,9 +12,7 @@
     <InfoSection header="Phone Number" value={location.content.hub_phone_number} />
     <InfoSection header="Address" value={location.address} />
     <InfoSection header="Notes">
-      <textarea class="textarea">
-        {location.content.hub_notes ?? ''}
-      </textarea>
+      <textarea class="textarea" value={location?.content?.hub_notes} />
     </InfoSection>
   </div>
 </div>
