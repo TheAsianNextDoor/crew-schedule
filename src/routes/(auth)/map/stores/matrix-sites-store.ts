@@ -60,7 +60,7 @@ export const changePinsToMatrix = () => {
   const { origin, destinations } = get(matrixSitesStore);
 
   const nonMapMatrixIcons = getBaseHydratedMarkers().filter(
-    (mapMarker) => !destinations.findIndex(({ id }) => mapMarker.id === id),
+    (mapMarker) => !destinations.some(({ id }) => mapMarker.id === id),
   );
 
   nonMapMatrixIcons.forEach(setPinToDefault);
