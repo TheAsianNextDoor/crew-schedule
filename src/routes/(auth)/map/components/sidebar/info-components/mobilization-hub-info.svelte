@@ -11,6 +11,8 @@
     <InfoSection header="Hub Name" value={location.content.name} />
     <InfoSection header="Phone Number" value={location.content.hub_phone_number} />
     <InfoSection header="Address" value={location.address} />
-    <InfoSection header="Notes" value={location.content.hub_notes} />
+    <InfoSection header="Notes">
+      <textarea class="textarea" value={location?.content?.hub_notes} />
+    </InfoSection>
   </div>
 </div>

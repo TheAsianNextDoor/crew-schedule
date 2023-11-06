@@ -1,6 +1,6 @@
 <script lang="ts">
   export let header: string;
-  export let value: Date | string | number | null | undefined;
+  export let value: Date | string | number | null | undefined = '';
 </script>
 
 <div class="flex gap-4 items-center">
@@ -9,5 +9,7 @@
     <span title={value.toString()} class="text-ellipsis whitespace-nowrap overflow-hidden"
       >{value}</span
     >
+  {:else}
+    <slot />
   {/if}
 </div>
