@@ -1,18 +1,17 @@
 <script lang="ts">
-  import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
-  import type { MatrixStore } from '../../stores/matrix-sites-store';
+  import type { Leg } from '../../helpers/polyline-utils';
+  import { matrixSitesStore } from '../../stores/matrix-sites-store';
 
-  export let matrices: MatrixStore;
-  export let edges: MatrixItem[];
+  export let legs: Leg[];
 </script>
 
-{#each edges as edge}
+{#each legs as leg, index}
   <div class="p-2">
     <h1>
-      {matrices.origin?.location.content.name} to {matrices.destinations[edge.destinationIndex]
-        ?.location.content.name}
+      {$matrixSitesStore.origin?.location.content.name} to {$matrixSitesStore.destinations[index]
+        .location.content.name}
     </h1>
-    <div>Distance: {edge.distanceMeters}</div>
-    <div>Duration: {edge.staticDuration}</div>
+    <div>Distance: {leg.localizedValues.distance.text}</div>
+    <div>Duration: {leg.localizedValues.duration.text}</div>
   </div>
 {/each}

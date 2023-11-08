@@ -1,6 +1,41 @@
 import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
 import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
 
+export type RoutesResponse = {
+  legs: {
+    polyline: {
+      encodedPolyline: string;
+    };
+    localizedValues: {
+      distance: {
+        text: string;
+      };
+      duration: {
+        text: string;
+      };
+      staticDuration: {
+        text: string;
+      };
+    };
+  }[];
+  polyline: {
+    encodedPolyline: string;
+  };
+  warnings: string[];
+  localizedValues: {
+    distance: {
+      text: string;
+    };
+    duration: {
+      text: string;
+    };
+    staticDuration: {
+      text: string;
+    };
+  };
+  routeToken: string;
+}[];
+
 export const getGoogleRoutes = async (
   fetch: Function,
   origin: LatitudeLongitude,
@@ -51,7 +86,7 @@ export const getGoogleRoutes = async (
     },
     body,
   });
-  const result = await data.json();
+  const result = (await data.json()) as RoutesResponse;
   console.log('getGoogleRoutes: ', JSON.stringify(result));
 
   return result;

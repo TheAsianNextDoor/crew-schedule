@@ -2,6 +2,7 @@
   import DraggableWindow from '$lib/components/draggable-window.svelte';
   import MatrixList from './matrix-list.svelte';
   import {
+    addMatrixLeg,
     clearMatrixDestinations,
     clearMatrixEdges,
     clearMatrixOrigin,
@@ -9,59 +10,54 @@
     hideMatrixCalcInfo,
     isMatrixCalcInfoVisible,
     isMaxMatrixDestinationStore,
-    matrixEdges,
+    matrixLegs,
     matrixSitesStore,
-    setMatrixEdges,
     showMatrixCalcInfo,
   } from '../../stores/matrix-sites-store';
   import MatrixCalcInfo from './matrix-calc-info.svelte';
-  import type { MatrixItem } from '../../../../api/v1/auth/matrix/get-google-matrix';
-  import type { fetchResult } from '$lib/utils/fetch';
-  import { buildMatrixCalcPolyline } from '../../helpers/polyline-utils';
+
+  import { buildRouteCalcPolyline } from '../../helpers/polyline-utils';
   import { addMatrixPolyline, clearMatrixPolylines } from '../../stores/matrix-polyline.store';
   import MatrixOrigin from './matrix-origin.svelte';
   import { setAllPinsToDefault } from '../../helpers/marker-pin-utils';
-  import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
+  import type { HydratedMapMarker } from '../../stores/map-marker-store';
+  import type { RoutesResponse } from '../../../../api/v1/auth/routes/get-google-route';
 
   $: calculateButtonDisabled =
     $matrixSitesStore.origin && $matrixSitesStore.destinations.length < 2;
 
   const handleRouteCalculate = async () => {
-    const { origin, destinations } = getMatrixSites();
-    const originLocations = { lat: origin?.location.lat, lng: origin?.location.lng };
+    const matrixStore = getMatrixSites();
+    const origin = matrixStore.origin as HydratedMapMarker;
+    const { destinations } = matrixStore;
+    const originLocation = { lat: origin?.location.lat, lng: origin?.location.lng };
     const destinationLocations = destinations.map(({ location: { lat, lng } }) => ({ lat, lng }));
     const result = await (
-      await fetch('/api/v1/auth/matrix', {
+      await fetch('/api/v1/auth/routes-matrix', {
         method: 'POST',
-        body: JSON.stringify({ originLocations, destinationLocations }),
+        body: JSON.stringify({ originLocation, destinationLocations }),
       })
     ).json();
 
-    const { data } = result as fetchResult<MatrixItem[]>;
+    const [{ legs }] = result.data.routes as RoutesResponse;
 
-    // populate the polylines
-    data.forEach((matrixItem, index) => {
-      const destination = $matrixSitesStore.destinations[matrixItem.destinationIndex];
-      const locations = [
-        {
-          lat: origin?.location.lat,
-          lng: origin?.location.lng,
-        },
-        {
-          lat: destination?.location.lat,
-          lng: destination?.location.lng,
-        },
-      ] as LatitudeLongitude[];
-      const polyline = buildMatrixCalcPolyline(locations, matrixItem, index);
+    let colorIndex = 0;
+    legs.forEach((leg, index) => {
+      if (index % 2 === 1) {
+        return;
+      }
+
+      const polyline = buildRouteCalcPolyline(leg, colorIndex);
       addMatrixPolyline({
-        // @ts-expect-error origin is not null
         origin,
-        destination,
+        destination: destinations[index],
         polyline,
       });
+
+      colorIndex += 1;
+      addMatrixLeg(leg);
     });
 
-    setMatrixEdges(data);
     showMatrixCalcInfo();
   };
 
@@ -90,7 +86,7 @@
     slot="content"
   >
     {#if $isMatrixCalcInfoVisible}
-      <MatrixCalcInfo matrices={$matrixSitesStore} edges={$matrixEdges} />
+      <MatrixCalcInfo legs={$matrixLegs} />
     {:else}
       <MatrixOrigin />
       <MatrixList />

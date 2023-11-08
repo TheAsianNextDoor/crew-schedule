@@ -17,11 +17,11 @@
     totalLegDistance,
     totalLegDuration,
   } from '../../stores/route-sites-store';
-  import type { routesData } from '../../../../../../mock/routes';
   import { buildRouteCalcPolyline } from '../../helpers/polyline-utils';
   import { addRoutePolyline, clearRoutePolylines } from '../../stores/route-polyline-store';
   import RouteCalcInfo from './route-calc-info.svelte';
   import { setAllPinsToDefault } from '../../helpers/marker-pin-utils';
+  import type { RoutesResponse } from '../../../../api/v1/auth/routes/get-google-route';
 
   $: calculateButtonDisabled = $routeSitesStore.length < 2;
 
@@ -35,7 +35,7 @@
       })
     ).json();
 
-    const [{ legs }] = result.data.routes as typeof routesData;
+    const [{ legs }] = result.data.routes as RoutesResponse;
 
     legs.forEach((leg, index) => {
       addToTotalLegDistance(Number(leg.localizedValues.distance.text.split(' ')[0]));
