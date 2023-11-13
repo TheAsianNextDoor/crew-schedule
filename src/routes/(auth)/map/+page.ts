@@ -32,21 +32,21 @@ export const load = async ({ data }) => {
     InfoWindow,
   });
 
-  // const selectedEntity = getSelectedEntity();
-  // if (selectedEntity) {
-  //   const selectedLocation = data.locations.find(
-  //     (location) => location.location_id === selectedEntity.location.location_id,
-  //   );
+  const selectedEntity = getSelectedEntity();
+  if (selectedEntity) {
+    const selectedLocation = data.locations.find(
+      (location) => location.location_id === selectedEntity.location.location_id,
+    );
 
-  //   if (selectedLocation) {
-  //     updateSelectedLocation(selectedLocation);
-  //   }
-  // }
+    if (selectedLocation) {
+      updateSelectedLocation(selectedLocation);
+    }
+  }
 
-  // const baseHydratedMarkers = getBaseHydratedMarkers();
-  // if (baseHydratedMarkers) {
-  //   updateBaseHydratedLocations(data.locations);
-  // }
+  const baseHydratedMarkers = getBaseHydratedMarkers();
+  if (baseHydratedMarkers) {
+    updateBaseHydratedLocations(data.locations);
+  }
 
   return data;
 };

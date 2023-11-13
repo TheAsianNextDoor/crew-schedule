@@ -53,7 +53,7 @@
       }
 
       phases = newPhases;
-      // await invalidateAll();
+      await invalidate('map:data');
 
       if (e.detail.info.source === SOURCES.POINTER) {
         dragDisabled = true;

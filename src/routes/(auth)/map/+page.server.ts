@@ -99,7 +99,9 @@ const createMapLocation = (
 };
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ parent }) {
+export async function load({ parent, depends }) {
+  depends('map:data');
+
   const {
     employee: { customer_id: customerId },
   } = await parent();
