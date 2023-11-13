@@ -5,29 +5,42 @@
   type T = $$Generic<Item>;
   export let items: T[] = [];
   export let flipDurationMs = 100;
-  export let considerFunction = (_items: typeof items) => {};
-  export let finalizeFunction = (_items: typeof items) => {};
+  export let containerStyles = '';
+  export let considerFunction = (
+    _items: typeof items,
+    _e: CustomEvent<DndEvent<(typeof items)[number]>> & { target: EventTarget & T },
+  ) => {};
+  export let finalizeFunction = (
+    _items: typeof items,
+    _e: CustomEvent<DndEvent<(typeof items)[number]>> & { target: EventTarget & T },
+  ) => {};
+  export let dragDisabled = false;
 
   const handleDndConsider = <T,>(
     e: CustomEvent<DndEvent<(typeof items)[number]>> & { target: EventTarget & T },
   ) => {
     const newOrderedList = e.detail.items;
-    considerFunction(newOrderedList);
+    considerFunction(newOrderedList, e);
   };
 
   const handleDndFinalize = <T,>(
     e: CustomEvent<DndEvent<(typeof items)[number]>> & { target: EventTarget & T },
   ) => {
     const newOrderedList = e.detail.items;
-    finalizeFunction(newOrderedList);
+    finalizeFunction(newOrderedList, e);
   };
 </script>
 
 <section
   on:consider={handleDndConsider}
   on:finalize={handleDndFinalize}
-  class="flex flex-col gap-y-1"
-  use:dndzone={{ items, flipDurationMs }}
+  class={containerStyles}
+  use:dndzone={{
+    items,
+    flipDurationMs,
+    dragDisabled,
+  }}
+  style="overflow-scroll"
 >
   <slot />
 </section>

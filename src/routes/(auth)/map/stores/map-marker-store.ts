@@ -28,6 +28,15 @@ export const addBaseHydratedMarker = (hydratedMarker: HydratedMapMarker) => {
 };
 
 export const getBaseHydratedMarkers = () => get(baseHydratedMarkerStore);
+export const updateBaseHydratedLocations = (hydratedLocations: HydratedLocation[]) => {
+  baseHydratedMarkerStore.update((val) => {
+    val.forEach((hydratedMarker, idx) => {
+      hydratedMarker.location = hydratedLocations[idx];
+    });
+
+    return val;
+  });
+};
 
 /**
  * Functions to filter the map

@@ -41,7 +41,8 @@ export const retrievePhasesBySite = (siteId: string) =>
         ON phase.phase_id = phase_assignment.phase_id
       LEFT JOIN person
         ON phase_assignment.foreman_id = person.person_id
-      where phase.site_id = $1;
+      WHERE phase.site_id = $1
+      ORDER BY phase.order;
     `,
     [siteId],
   );

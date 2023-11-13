@@ -77,7 +77,7 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
 interface CreateMarkerArgs {
   location: HydratedLocation;
   map: MapInstance;
-  intersectionObserver: IntersectionObserver;
+  intersectionObserver?: IntersectionObserver;
 }
 
 export const createMarker = ({ location, map, intersectionObserver }: CreateMarkerArgs) => {
@@ -121,8 +121,11 @@ export const createMarker = ({ location, map, intersectionObserver }: CreateMark
 
   const content = marker.content as HTMLElement;
   content.classList.add('map-marker');
-  dropAnimation(content, intersectionObserver);
   content.addEventListener('click', () => markerClickEventListener(hydratedMapMarker));
+
+  if (intersectionObserver) {
+    dropAnimation(content, intersectionObserver);
+  }
 
   addBaseHydratedMarker(hydratedMapMarker);
 

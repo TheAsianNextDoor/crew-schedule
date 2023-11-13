@@ -27,6 +27,7 @@
     items={$routeSitesStore}
     considerFunction={setRouteSites}
     finalizeFunction={setRouteSites}
+    containerStyles="flex flex-col gap-y-1"
   >
     {#each $routeSitesStore as item (item.id)}
       <div

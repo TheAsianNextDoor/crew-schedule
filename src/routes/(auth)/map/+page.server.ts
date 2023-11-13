@@ -9,6 +9,7 @@ import {
 } from './queries/retrieve-mobilization-hubs.js';
 
 export type HydratedMapPhase = MapPhase & {
+  id: string;
   crewHours?: number;
   crewMobilizationHours?: number;
 };
@@ -42,7 +43,7 @@ export type HydratedMobilizationHubLocation = GenericHydratedLocation<HydratedMo
 
 const findCurrentPhase = (phase: HydratedMapPhase) => phase.status_name === STATUS_ENUM.IN_PROGRESS;
 
-const addCrewInfo = (phase: MapPhase): HydratedMapPhase => {
+const addCrewInfo = (phase: MapPhase) => {
   const { estimated_hours, estimated_mobilization_duration, personnel_count } = phase;
   if (estimated_hours && personnel_count) {
     // @ts-expect-error doesn't have property yet
@@ -70,7 +71,7 @@ const getMapSitesWithPhases = async (sites: MapSite[]) =>
     sites.map(async (site) => {
       const phases = (await retrievePhasesBySite(site.id)) as HydratedMapPhase[];
       phases.forEach(addCrewInfo);
-
+      phases.forEach((phase) => (phase.id = phase.phase_id));
       const currentPhase = phases.find(findCurrentPhase) || null;
 
       return {
@@ -104,7 +105,7 @@ export async function load({ parent }) {
   } = await parent();
 
   const sites = await retrieveMapSites(customerId);
-  const mapSitesWithPhases = await getMapSitesWithPhases(sites);
+  const mapSitesWithPhases: UnHydratedMapSite[] = await getMapSitesWithPhases(sites);
   const siteLocations = mapSitesWithPhases.map((site) =>
     createMapLocation(site, LOCATION_TYPES_ENUM.site),
   );

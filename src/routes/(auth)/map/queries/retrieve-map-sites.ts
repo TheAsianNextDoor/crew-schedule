@@ -40,6 +40,7 @@ export const retrieveMapSites = async (customerId: string) =>
         site.scheduled_finished_date_time,
         site.actual_start_date_time,
         site.actual_finished_date_time,
+        location.location_id,
         location.lat,
         location.lng,
         status.status_name,

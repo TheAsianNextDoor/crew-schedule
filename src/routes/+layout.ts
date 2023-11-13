@@ -2,6 +2,8 @@ import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/publi
 import { createSupabaseLoadClient } from '@supabase/auth-helpers-sveltekit';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { QueryClient } from '@tanstack/svelte-query';
+import { browser } from '$app/environment';
 
 export const load = async ({ fetch, data, depends }) => {
   depends('supabase:auth');
@@ -13,11 +15,19 @@ export const load = async ({ fetch, data, depends }) => {
     serverSession: data.session,
   });
 
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        enabled: browser,
+      },
+    },
+  });
+
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
   console.log('sesh: ', session);
 
-  return { supabase, session };
+  return { supabase, session, queryClient };
 };
