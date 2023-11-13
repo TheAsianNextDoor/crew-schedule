@@ -82,9 +82,6 @@ devDependencies:
   '@tailwindcss/forms':
     specifier: ^0.5.6
     version: 0.5.6(tailwindcss@3.3.5)
-  '@tanstack/svelte-query':
-    specifier: ^5.3.0
-    version: 5.3.0(svelte@4.2.2)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.2.1
     version: 4.2.1(prettier@3.0.3)
@@ -1092,19 +1089,6 @@ packages:
     dependencies:
       mini-svg-data-uri: 1.4.4
       tailwindcss: 3.3.5
-    dev: true
-
-  /@tanstack/query-core@5.0.5:
-    resolution: {integrity: sha512-MThCETMkHDHTnFZHp71L+SqTtD5d6XHftFCVR1xRJdWM3qGrlQ2VCXaj0SKVcyJej2e1Opa2c7iknu1llxCDNQ==}
-    dev: true
-
-  /@tanstack/svelte-query@5.3.0(svelte@4.2.2):
-    resolution: {integrity: sha512-gGC2jh7VV2F2rZygLVbvGxYbwFIW7d3rrY8iuozDOHvBft/y8/rU9aNzm/vrOdsPt2TMF3IgS3diDlp+21z6Lw==}
-    peerDependencies:
-      svelte: '>=3 <5'
-    dependencies:
-      '@tanstack/query-core': 5.0.5
-      svelte: 4.2.2
     dev: true
 
   /@tootallnate/once@2.0.0:
