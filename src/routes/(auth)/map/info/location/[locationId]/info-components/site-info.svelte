@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { getFormattedDate } from '../../../helpers/date-utils';
+  import { getFormattedDate } from '../../../../helpers/date-utils';
   import InfoSection from '../info-section.svelte';
-  import type { HydratedSiteLocation } from '../../../+page.server';
   import { flip } from 'svelte/animate';
   import DraggableList from '$lib/components/draggable-list.svelte';
-  import type { HydratedMapPhase } from '../../../proxy+page.server';
-  import { invalidate, invalidateAll } from '$app/navigation';
-  import { dndzone, SOURCES, TRIGGERS, type DndEvent } from 'svelte-dnd-action';
+  import { invalidate } from '$app/navigation';
+  import { SOURCES, TRIGGERS, type DndEvent } from 'svelte-dnd-action';
+  import type { HydratedMapPhase, HydratedSiteLocation } from '../../../../+layout.server';
 
   export let location: HydratedSiteLocation;
   $: phases = location.content.phases;
@@ -75,7 +74,7 @@
     <InfoSection header="Status" value={location.content.status_name} />
     <InfoSection header="Address" value={location.address} />
     <InfoSection
-      header="Scheduled Start Date"
+      header="Scheduled Start"
       value={getFormattedDate(location.content.scheduled_start_date_time)}
     />
   </div>

@@ -3,7 +3,7 @@ import type {
   HydratedLocation,
   HydratedMobilizationHubLocation,
   HydratedSiteLocation,
-} from '../+page.server';
+} from '../+layout.server';
 
 export const isSiteLocation = (location: HydratedLocation): location is HydratedSiteLocation =>
   location.type === LOCATION_TYPES_ENUM.site;

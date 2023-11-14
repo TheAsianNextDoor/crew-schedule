@@ -1,5 +1,3 @@
-import { hideMapFilter } from '../stores/filter-store';
-import { setSelectedEntity, showMapSidebar } from '../stores/sidebar-store';
 import {
   addBaseHydratedMarker,
   getBaseHydratedMarkers,
@@ -29,8 +27,10 @@ import {
   setIsNotSelectingMatrixOrigin,
   setMatrixOrigin,
 } from '../stores/matrix-sites-store';
-import type { HydratedLocation } from '../proxy+page.server';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
+import { setSelectedEntity } from '../stores/selected-entity-store';
+import type { HydratedLocation } from '../+layout.server';
+import { goto } from '$app/navigation';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -38,8 +38,8 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   const { marker, location } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
-  showMapSidebar();
-  hideMapFilter();
+  goto(`/map/info/location/${location.location_id}`);
+
   selectedClickAnimation(content);
   setSelectedEntity({ id: location.content.id, location, marker });
 

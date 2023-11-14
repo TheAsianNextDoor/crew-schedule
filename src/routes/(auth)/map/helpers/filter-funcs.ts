@@ -1,4 +1,5 @@
 import { STATUS_ENUM } from '$lib/constants/status';
+import type { HydratedMapSite } from '../+layout.server';
 import type { MapPhase } from '../queries/retrieve-phases-by-site';
 import {
   addFilterConditionFunc,
@@ -7,7 +8,6 @@ import {
   type FilterType,
 } from '../stores/map-marker-store';
 import type { EQUALITY_ENUM } from './equality-utils';
-import type { HydratedMapSite } from '../+page.server';
 
 const maybeFilterByValue = (
   filterName: string,

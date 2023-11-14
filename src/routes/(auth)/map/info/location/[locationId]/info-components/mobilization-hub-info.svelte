@@ -1,6 +1,6 @@
 <script lang="ts">
+  import type { HydratedMobilizationHubLocation } from '../../../../+layout.server';
   import InfoSection from '../info-section.svelte';
-  import type { HydratedMobilizationHubLocation } from '../../../+page.server';
 
   export let location: HydratedMobilizationHubLocation;
 </script>

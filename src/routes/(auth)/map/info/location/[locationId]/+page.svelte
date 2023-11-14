@@ -1,6 +1,6 @@
 <script lang="ts">
   import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
-  import { selectedEntityStore } from '../../stores/sidebar-store';
+  import { selectedEntityStore } from '../../../stores/selected-entity-store';
   import MobilizationHubInfo from './info-components/mobilization-hub-info.svelte';
   import SiteInfo from './info-components/site-info.svelte';
 

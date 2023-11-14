@@ -1,5 +1,4 @@
 import { get, writable } from 'svelte/store';
-import type { HydratedMapSite, HydratedLocation } from '../+page.server';
 import {
   addMarkerToMap,
   removeMarkerFromMap,
@@ -8,6 +7,7 @@ import {
 } from '../helpers/marker-utils';
 import type { MapPhase } from '../queries/retrieve-phases-by-site';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
+import type { HydratedLocation, HydratedMapSite } from '../+layout.server';
 
 export type HydratedMapMarker = {
   id: string;

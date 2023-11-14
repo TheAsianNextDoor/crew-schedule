@@ -1,7 +1,6 @@
 <script lang="ts">
   import { listItemContainerStyle } from '$lib/styles';
-  import { MARKER_PINS, changeMarkerPin, setPinToDefault } from '../../helpers/marker-pin-utils';
-  import type { Marker } from '../../helpers/marker-utils';
+  import { setPinToDefault } from '../../helpers/marker-pin-utils';
   import {
     clearMatrixOrigin,
     getMatrixOrigin,

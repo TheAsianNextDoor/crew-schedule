@@ -25,8 +25,10 @@
   import { easepick } from '@easepick/core';
   import { RangePlugin } from '@easepick/range-plugin';
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
-  export let disciplines: string[];
+  export let data;
+  $: disciplines = data.disciplines;
 
   let datePickerElement: HTMLInputElement;
   let datePicker: easepick.Core;
@@ -56,6 +58,7 @@
 
   const saveAndClose = () => {
     hideMapFilter();
+    goto('/map');
   };
 
   const clearFilters = () => {
@@ -83,6 +86,7 @@
   const clearFiltersAndClose = () => {
     clearFilters();
     hideMapFilter();
+    goto('/map');
   };
 </script>
 

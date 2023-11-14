@@ -1,7 +1,6 @@
 import { get, writable } from 'svelte/store';
-
 import type { HydratedMapMarker } from './map-marker-store';
-import type { HydratedLocation } from '../+page.server';
+import type { HydratedLocation } from '../+layout.server';
 
 /**
  * The selected map entity to display in the menu
@@ -20,17 +19,4 @@ export const updateSelectedLocation = (location: HydratedLocation) => {
 
     return val;
   });
-};
-
-/**
- * Map sidebar store
- */
-export const isMapSidebarVisibleStore = writable(false);
-
-export const isMapSidebarVisible = () => get(isMapSidebarVisibleStore);
-export const hideMapSidebar = () => {
-  isMapSidebarVisibleStore.set(false);
-};
-export const showMapSidebar = () => {
-  isMapSidebarVisibleStore.set(true);
 };

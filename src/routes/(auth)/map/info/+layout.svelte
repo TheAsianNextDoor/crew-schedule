@@ -2,18 +2,9 @@
   import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
 
-  import { isMapFilterVisibleStore } from '../../stores/filter-store';
-  import SidebarContent from './sidebar-content.svelte';
-  import SidebarFilter from './sidebar-filter.svelte';
-  import {
-    hideMapSidebar,
-    showMapSidebar,
-    selectedEntityStore,
-    isMapSidebarVisibleStore,
-  } from '../../stores/sidebar-store';
+  import { hideMapSidebar, showMapSidebar, isMapSidebarVisibleStore } from './sidebar-store';
 
-  export let disciplines: string[];
-  export let sidebarWidth: number;
+  export let sidebarWidth: number = 408;
 
   const getFlyTransition = (x: number) => ({ duration: 300, easing: sineIn, x, opacity: 100 });
 </script>
@@ -23,11 +14,7 @@
     class="overflow-y-auto shadow-xl bg-surface-100-800-token h-screen"
     transition:fly={getFlyTransition(-sidebarWidth)}
   >
-    {#if $isMapFilterVisibleStore}
-      <SidebarFilter bind:disciplines />
-    {:else if $selectedEntityStore}
-      <SidebarContent />
-    {/if}
+    <slot />
   </div>
 {/if}
 

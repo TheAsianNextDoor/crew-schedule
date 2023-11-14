@@ -20,5 +20,5 @@
 <div>
   <h1>Total</h1>
   <div>Total Distance: {totalDistance} mi</div>
-  <div>Total Distance: {totalDuration} mins</div>
+  <div>Total Duration: {totalDuration} mins</div>
 </div>
