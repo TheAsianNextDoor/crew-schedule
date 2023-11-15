@@ -12,7 +12,7 @@
   import { page } from '$app/stores';
 
   const handleFilterClick = () => {
-    goto('/map/info/filter');
+    goto('/map/filter');
   };
 
   const handleRoutesClick = () => {
