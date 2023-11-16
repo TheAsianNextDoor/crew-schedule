@@ -71,12 +71,12 @@
 </script>
 
 <div class="w-full p-4">
-  <div class="card w-full bg-slate-100 flex items-center gap-1 px-4">
+  <div class="card w-full bg-surface-200-700-token flex items-center gap-1 px-4 shadow-md">
     <div class="hover:cursor-pointer">
       <i class="fa-solid fa-bars"></i>
     </div>
     <input
-      class="bg-surface-100-800-token no-outline w-11/12 border-none bg-slate-100"
+      class="bg-surface-200-700-token no-outline w-11/12 border-none bg-slate-100"
       autocomplete="off"
       name="autocomplete-search"
       bind:value={searchValue}
