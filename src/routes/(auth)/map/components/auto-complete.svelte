@@ -6,13 +6,13 @@
     popup,
   } from '@skeletonlabs/skeleton';
 
-  import { hideMapSidebar, showMapSidebar } from '../info/sidebar-store';
   import { getBaseHydratedMarkers } from '../stores/map-marker-store';
   import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
   import { selectedClickAnimation } from '../helpers/animation-helpers';
   import type { HydratedLocation } from '../proxy+layout.server';
   import { selectedEntityStore, setSelectedEntity } from '../stores/selected-entity-store';
   import { goto } from '$app/navigation';
+  import { hideMapSidebar, showMapSidebar } from '../(sidebar)/sidebar-store';
 
   export let locations: HydratedLocation[];
 

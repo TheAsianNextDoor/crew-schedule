@@ -7,11 +7,12 @@ import {
 } from '../helpers/marker-utils';
 import type { MapPhase } from '../queries/retrieve-phases-by-site';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
-import type { HydratedLocation, HydratedMapSite } from '../+layout.server';
+import type { HydratedLocation, HydratedMapSite, HydratedSiteLocation } from '../+layout.server';
 
 export type HydratedMapMarker = {
   id: string;
-  location: HydratedLocation;
+  // location: HydratedLocation;
+  location: HydratedSiteLocation;
   marker: Marker;
 };
 

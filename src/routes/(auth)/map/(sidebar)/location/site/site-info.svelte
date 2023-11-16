@@ -1,18 +1,22 @@
 <script lang="ts">
-  import { getFormattedDate } from '../../../../helpers/date-utils';
+  import { getFormattedDate } from '../../../helpers/date-utils';
   import InfoSection from '../info-section.svelte';
   import { flip } from 'svelte/animate';
   import DraggableList from '$lib/components/draggable-list.svelte';
   import { invalidate } from '$app/navigation';
   import { SOURCES, TRIGGERS, type DndEvent } from 'svelte-dnd-action';
-  import type { HydratedMapPhase, HydratedSiteLocation } from '../../../../+layout.server';
+  import type { HydratedSelectedLocation, HydratedSelectedPhase } from './+page.server';
 
-  export let location: HydratedSiteLocation;
-  $: phases = location.content.phases;
+  export let selectedEntity: HydratedSelectedLocation['selectedEntity'];
+
+  $: site = selectedEntity.sites[0];
+  $: phases = selectedEntity.sites[0].phases;
 
   let dragDisabled = true;
 
-  const startDrag = (e: CustomEvent<DndEvent<HydratedMapPhase[]>> & { target: EventTarget }) => {
+  const startDrag = (
+    e: CustomEvent<DndEvent<HydratedSelectedPhase[]>> & { target: EventTarget },
+  ) => {
     // preventing default to prevent lag on touch devices (because of the browser checking for screen scrolling)
     e.preventDefault();
     dragDisabled = false;
@@ -22,8 +26,8 @@
   };
 
   const handleConsider = (
-    newPhases: HydratedMapPhase[],
-    e: CustomEvent<DndEvent<HydratedMapPhase[]>> & { target: EventTarget },
+    newPhases: HydratedSelectedPhase[],
+    e: CustomEvent<DndEvent<HydratedSelectedPhase[]>> & { target: EventTarget },
   ) => {
     phases = newPhases;
 
@@ -36,12 +40,12 @@
   };
 
   const handleFinalize = async (
-    newPhases: HydratedMapPhase[],
-    e: CustomEvent<DndEvent<HydratedMapPhase[]>> & { target: EventTarget },
+    newPhases: HydratedSelectedPhase[],
+    e: CustomEvent<DndEvent<HydratedSelectedPhase[]>> & { target: EventTarget },
   ) => {
     try {
       for (let i = 0; i < newPhases.length; i += 1) {
-        const { phase_id: phaseId } = newPhases[i];
+        const { id: phaseId } = newPhases[i];
         await fetch('/api/v1/auth/phase-order', {
           method: 'PATCH',
           body: JSON.stringify({
@@ -67,15 +71,15 @@
 <div class="px-4">
   <h3 class="h3">Site Info</h3>
   <div class="px-6">
-    <InfoSection header="Job Number" value={location.content.job_number} />
-    <InfoSection header="Site" value={location.content.name} />
-    <InfoSection header="Client" value={location.content.client_name} />
-    <InfoSection header="Estimated Hours" value={`${location.content.estimated_hours ?? 0} hrs`} />
-    <InfoSection header="Status" value={location.content.status_name} />
-    <InfoSection header="Address" value={location.address} />
+    <InfoSection header="Job Number" value={site.job_number} />
+    <InfoSection header="Site" value={site.name} />
+    <InfoSection header="Client" value={site.client_name} />
+    <InfoSection header="Estimated Hours" value={`${site.estimated_hours ?? 0} hrs`} />
+    <InfoSection header="Status" value={site.status_name} />
+    <InfoSection header="Address" value={selectedEntity.address} />
     <InfoSection
       header="Scheduled Start"
-      value={getFormattedDate(location.content.scheduled_start_date_time)}
+      value={getFormattedDate(site.scheduled_start_date_time)}
     />
   </div>
 </div>

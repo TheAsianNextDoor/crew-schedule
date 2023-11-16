@@ -38,7 +38,11 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   const { marker, location } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
-  goto(`/map/info/location/${location.location_id}`);
+  if (location.type === LOCATION_TYPES_ENUM.site) {
+    goto(`/map/location/site?location-id=${location.location_id}`);
+  } else if (location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
+    goto(`/map/location/mobilization-hub?mobilization-hub-id=${location.location_id}`);
+  }
 
   selectedClickAnimation(content);
   setSelectedEntity({ id: location.content.id, location, marker });
