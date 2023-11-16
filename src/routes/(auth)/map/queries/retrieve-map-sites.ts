@@ -11,15 +11,10 @@ import type {
   Location,
 } from '@prisma/client';
 
-export type MapSite = Pick<
-  Site,
-  | 'job_number'
-  | 'estimated_hours'
-  | 'scheduled_start_date_time'
-  | 'scheduled_finished_date_time'
-  | 'actual_start_date_time'
-  | 'actual_finished_date_time'
-> & { id: string; name: string } & Pick<Location, 'location_id' | 'lat' | 'lng'> &
+export type MapSite = Pick<Site, 'job_number'> & {
+  id: string;
+  name: string;
+} & Pick<Location, 'location_id' | 'lat' | 'lng'> &
   Pick<Status, 'status_name'> &
   Pick<Client, 'client_name'> &
   Pick<Address, 'street'> &
@@ -32,14 +27,9 @@ export const retrieveMapSites = async (customerId: string) =>
   queryDb.findMany<MapSite>(
     `
       SELECT 
-        site.site_id as id, 
         site.job_number, 
+        site.site_id as id, 
         site.site_name as name,
-        site.estimated_hours,
-        site.scheduled_start_date_time,
-        site.scheduled_finished_date_time,
-        site.actual_start_date_time,
-        site.actual_finished_date_time,
         location.location_id,
         location.lat,
         location.lng,
