@@ -10,7 +10,7 @@ export const FILTER_KEYS = {
   phaseForeman: 'phase.foreman',
 };
 
-export const filterFuncs = {
+export const FILTER_FUNCTIONS = {
   phase: {
     discipline: ({ discipline_name }: HydratedMapPhase, discipline: string) =>
       discipline_name === discipline ?? false,

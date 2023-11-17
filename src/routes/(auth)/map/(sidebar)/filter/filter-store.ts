@@ -25,4 +25,12 @@ export const getFilterQueryParams = () => get(filterQueryParamsStore);
 export const setFilterQueryParams = (queryParams: ParsedQuery) => {
   filterQueryParamsStore.set(queryParams);
 };
+export const addFilterQueryParam = (param: Record<string, string>) => {
+  const [key, value] = Object.entries(param)[0];
+  filterQueryParamsStore.update((val) => {
+    val[key] = value;
+
+    return val;
+  });
+};
 export const clearFilterQueryParams = () => filterQueryParamsStore.set({});

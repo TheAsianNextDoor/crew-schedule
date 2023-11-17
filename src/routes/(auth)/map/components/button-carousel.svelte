@@ -10,7 +10,7 @@
   import { hideMatrixPolylines } from '../stores/matrix-polyline.store';
   import { page } from '$app/stores';
   import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
-  import { getFilterQueryParams } from '../(sidebar)/filter/filter-store';
+  import { filterQueryParamsStore } from '../(sidebar)/filter/filter-store';
 
   const handleFilterClick = () => {
     navigateWithFilterSearchParams('/map/filter');
@@ -43,7 +43,7 @@
   <div class="flex mt-6">
     <button
       class={`btn ${
-        Object.keys(getFilterQueryParams()).length && 'variant-outline-secondary'
+        Object.keys($filterQueryParamsStore).length && 'variant-outline-secondary'
       } flex  justify-center shadow-lg items-center px-2 h-8 rounded-lg bg-surface-100-800-token ml-6`}
       on:click={handleFilterClick}
     >

@@ -2,12 +2,16 @@
   import { onMount } from 'svelte';
 
   import { createMarker } from '../helpers/marker-utils';
-  import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
   import { PUBLIC_GOOGLE_MAP_ID } from '$env/static/public';
   import { getGoogleMaps } from '$lib/constants/google-maps';
   import { setInfoWindow } from '../stores/info-window-store';
   import type { GenericHydratedLocation } from '../+layout.server';
+  import { filterMarkers } from '../(sidebar)/filter/filter-markers';
+  import { page } from '$app/stores';
+  import queryString from 'query-string';
+  import { FILTER_KEYS } from '../(sidebar)/filter/filter-funcs';
+  import { addFilterQueryParam } from '../(sidebar)/filter/filter-store';
 
   export let locations: GenericHydratedLocation[];
 
@@ -51,7 +55,18 @@
         }),
       );
 
-      setFilteredHydratedMarkers(getBaseHydratedMarkers());
+      const { url } = $page;
+
+      const queryParams = queryString.parse(url.search);
+
+      for (const param in queryParams) {
+        const isFilterParam = Object.values(FILTER_KEYS).some((filterKey) => filterKey === param);
+        if (isFilterParam) {
+          addFilterQueryParam({ [param]: queryParams[param] as string });
+        }
+      }
+
+      filterMarkers(url);
       // }, 800);
     } catch (e) {
       console.log(e);

@@ -15,14 +15,10 @@
   import { RangePlugin } from '@easepick/range-plugin';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-  import queryString from 'query-string';
   import { FILTER_KEYS } from './filter-funcs';
   import { navigateWithFilterSearchParams } from '../../helpers/navigation-utils';
 
   export let data;
-  $: disciplines = data.disciplines;
-  $: queryParams = queryString.parse($page.url.search);
 
   let phaseDiscipline = (data?.fields?.[FILTER_KEYS.phaseDiscipline] as string | undefined) || '';
   let phaseStatus = (data?.fields?.[FILTER_KEYS.phaseStatus] as string | undefined) || '';
@@ -47,7 +43,7 @@
           const start = picker.getStartDate();
           const end = picker.getEndDate();
 
-          filterByDateRange({ start, end }, queryParams);
+          filterByDateRange({ start, end });
         });
       },
     });
@@ -100,11 +96,11 @@
   <FilterSection label="Discipline">
     <select
       bind:value={phaseDiscipline}
-      on:change={() => filterByDiscipline(phaseDiscipline, queryParams)}
+      on:change={() => filterByDiscipline(phaseDiscipline)}
       class="select"
     >
       <option selected value="">any status</option>
-      {#each disciplines as discipline}
+      {#each data.disciplines as discipline}
         <option selected value={discipline}>{discipline}</option>
       {/each}
     </select>
@@ -113,7 +109,7 @@
   <FilterSection label="Status">
     <select
       bind:value={phaseStatus}
-      on:change={() => filterByStatusName(phaseStatus, queryParams)}
+      on:change={() => filterByStatusName(phaseStatus)}
       class="select"
     >
       <option selected value="">any status</option>
@@ -130,8 +126,7 @@
       <select
         class="select w-min"
         bind:value={phaseCrewHoursCondition}
-        on:change={() =>
-          filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours, queryParams)}
+        on:change={() => filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
       >
         <option value={EQUALITY_ENUM.lt}>less than</option>
         <option selected value={EQUALITY_ENUM.eq}>equal</option>
@@ -141,8 +136,7 @@
         class="input variant-form-material grow basis-0"
         type="number"
         bind:value={phaseCrewHours}
-        on:input={() =>
-          filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours, queryParams)}
+        on:input={() => filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
       />
     </div>
   </FilterSection>
@@ -155,7 +149,7 @@
     <input
       class="input variant-form-material"
       bind:value={phaseForeman}
-      on:input={() => filterByForeman(phaseForeman, queryParams)}
+      on:input={() => filterByForeman(phaseForeman)}
     />
   </FilterSection>
 </div>

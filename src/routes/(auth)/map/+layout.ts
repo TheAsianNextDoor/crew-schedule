@@ -6,7 +6,7 @@ import { getBaseHydratedMarkers, updateBaseHydratedLocations } from './stores/ma
 
 export const ssr = false;
 
-export const load = async ({ url, data }) => {
+export const load = async ({ data }) => {
   const loader = new Loader({
     apiKey: PUBLIC_GOOGLE_MAPS_API_KEY,
     version: 'beta',
