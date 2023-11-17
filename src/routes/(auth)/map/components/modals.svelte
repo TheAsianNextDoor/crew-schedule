@@ -11,7 +11,3 @@
 {#if $mapModeStore === 'matrix'}
   <MatrixModal />
 {/if}
-
-<!-- {#if $mapModeStore === 'user-profile'}
-  <ProfileModal />
-{/if} -->
