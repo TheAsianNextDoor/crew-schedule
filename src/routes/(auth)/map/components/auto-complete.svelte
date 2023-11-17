@@ -9,12 +9,14 @@
   import { getBaseHydratedMarkers } from '../stores/map-marker-store';
   import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
   import { selectedClickAnimation } from '../helpers/animation-helpers';
-  import type { HydratedLocation } from '../proxy+layout.server';
+  import type { GenericHydratedLocation } from '../proxy+layout.server';
   import { selectedEntityStore, setSelectedEntity } from '../stores/selected-entity-store';
   import { goto } from '$app/navigation';
-  import { hideMapSidebar, showMapSidebar } from '../(sidebar)/sidebar-store';
+  import { hideMapSidebar } from '../(sidebar)/sidebar-store';
+  import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
+  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
 
-  export let locations: HydratedLocation[];
+  export let locations: GenericHydratedLocation[];
 
   let searchValue = '';
   let popupSettings: PopupSettings = {
@@ -33,7 +35,13 @@
     if (hydratedMarker) {
       selectedClickAnimation(hydratedMarker.marker.content as HTMLElement);
       setSelectedEntity(hydratedMarker);
-      showMapSidebar();
+      if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.site) {
+        goto(`/map/location/site?location-id=${hydratedMarker.location.location_id}`);
+      } else if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
+        goto(
+          `/map/location/mobilization-hub?mobilization-hub-id=${hydratedMarker.location.location_id}`,
+        );
+      }
     }
   };
 
@@ -66,7 +74,7 @@
     searchValue = '';
     setSelectedEntity(null);
     hideMapSidebar();
-    goto('/map');
+    navigateWithFilterSearchParams('/map');
   };
 </script>
 

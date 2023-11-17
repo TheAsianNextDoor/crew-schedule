@@ -26,7 +26,7 @@ export type HydratedMobilizationHub = Omit<
   'lat' | 'lng' | 'location_id'
 >;
 
-export type GenericHydratedLocation<T> = {
+export type GenericHydratedLocation<T = HydratedMapSite | HydratedMobilizationHub> = {
   location_id: string;
   lat: number;
   lng: number;
@@ -35,7 +35,6 @@ export type GenericHydratedLocation<T> = {
   content: T;
 };
 
-export type HydratedLocation = GenericHydratedLocation<HydratedMapSite | HydratedMobilizationHub>;
 export type HydratedSiteLocation = GenericHydratedLocation<HydratedMapSite>;
 export type HydratedMobilizationHubLocation = GenericHydratedLocation<HydratedMobilizationHub>;
 
@@ -45,7 +44,7 @@ const addCrewInfo = (phase: MapPhase) => {
   const { estimated_hours, personnel_count } = phase;
   if (estimated_hours && personnel_count) {
     // @ts-expect-error doesn't have property yet
-    phase.crewHours = (estimated_hours / personnel_count).toFixed(2);
+    phase.crewHours = Number((estimated_hours / personnel_count).toFixed(2));
   }
 
   return phase;
@@ -77,7 +76,7 @@ const getMapSitesWithPhases = async (sites: MapSite[]) =>
 const createMapLocation = (
   item: UnHydratedMapSite | UnHydratedMobilizationHubs,
   type: keyof typeof LOCATION_TYPES_ENUM,
-): HydratedLocation => {
+): GenericHydratedLocation => {
   const { location_id, lat, lng, ...content } = item;
 
   return {

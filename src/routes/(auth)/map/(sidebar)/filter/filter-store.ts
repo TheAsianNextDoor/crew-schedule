@@ -1,5 +1,5 @@
+import type { ParsedQuery } from 'query-string';
 import { get, writable } from 'svelte/store';
-import { EQUALITY_ENUM } from '../helpers/equality-utils';
 
 /**
  * Map filter visibility
@@ -20,12 +20,9 @@ export const toggleMapFilter = () => {
   isMapFilterVisibleStore.update((value) => !value);
 };
 
-/**
- * Form Values
- */
-export const foremanName = writable('');
-export const estimatedHoursCondition = writable(EQUALITY_ENUM.eq);
-export const estimatedHours = writable<number | undefined>();
-export const phaseStatus = writable('');
-export const disciplineName = writable('');
-export const dateRange = writable({});
+export const filterQueryParamsStore = writable<ParsedQuery>({});
+export const getFilterQueryParams = () => get(filterQueryParamsStore);
+export const setFilterQueryParams = (queryParams: ParsedQuery) => {
+  filterQueryParamsStore.set(queryParams);
+};
+export const clearFilterQueryParams = () => filterQueryParamsStore.set({});
