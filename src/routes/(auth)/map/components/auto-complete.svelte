@@ -14,7 +14,6 @@
   import { goto } from '$app/navigation';
   import { hideMapSidebar } from '../(sidebar)/sidebar-store';
   import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
-  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
 
   export let locations: GenericHydratedLocation[];
 
@@ -74,7 +73,7 @@
     searchValue = '';
     setSelectedEntity(null);
     hideMapSidebar();
-    navigateWithFilterSearchParams('/map');
+    goto('/map');
   };
 </script>
 

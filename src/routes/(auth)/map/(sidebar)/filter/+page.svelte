@@ -16,7 +16,6 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { FILTER_KEYS } from './filter-funcs';
-  import { navigateWithFilterSearchParams } from '../../helpers/navigation-utils';
 
   export let data;
 
@@ -59,7 +58,7 @@
 
   const saveAndClose = () => {
     hideMapFilter();
-    navigateWithFilterSearchParams('/map');
+    goto('/map');
   };
 
   const clearFilters = () => {
@@ -74,11 +73,11 @@
     clearFilteredHydratedMarkers();
   };
 
-  const clearFiltersAndClose = () => {
+  const clearFiltersAndClose = async () => {
     clearFilteredHydratedMarkers();
     clearFilterQueryParams();
     hideMapFilter();
-    goto('/map');
+    await goto('/map');
   };
 </script>
 

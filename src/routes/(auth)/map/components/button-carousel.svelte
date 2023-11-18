@@ -9,8 +9,8 @@
   import { hideRoutePolylines } from '../stores/route-polyline-store';
   import { hideMatrixPolylines } from '../stores/matrix-polyline.store';
   import { page } from '$app/stores';
-  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
   import { filterQueryParamsStore } from '../(sidebar)/filter/filter-store';
+  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
 
   const handleFilterClick = () => {
     navigateWithFilterSearchParams('/map/filter');

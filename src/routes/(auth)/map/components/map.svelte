@@ -9,9 +9,7 @@
   import type { GenericHydratedLocation } from '../+layout.server';
   import { filterMarkers } from '../(sidebar)/filter/filter-markers';
   import { page } from '$app/stores';
-  import queryString from 'query-string';
-  import { FILTER_KEYS } from '../(sidebar)/filter/filter-funcs';
-  import { addFilterQueryParam } from '../(sidebar)/filter/filter-store';
+  import { hydrateStateFromUrl } from '../helpers/initial-load-utils';
 
   export let locations: GenericHydratedLocation[];
 
@@ -57,15 +55,7 @@
 
       const { url } = $page;
 
-      const queryParams = queryString.parse(url.search);
-
-      for (const param in queryParams) {
-        const isFilterParam = Object.values(FILTER_KEYS).some((filterKey) => filterKey === param);
-        if (isFilterParam) {
-          addFilterQueryParam({ [param]: queryParams[param] as string });
-        }
-      }
-
+      hydrateStateFromUrl(url);
       filterMarkers(url);
       // }, 800);
     } catch (e) {

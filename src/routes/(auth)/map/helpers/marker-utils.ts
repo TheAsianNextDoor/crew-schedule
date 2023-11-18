@@ -31,7 +31,7 @@ import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
 import { setSelectedEntity } from '../stores/selected-entity-store';
 import type { GenericHydratedLocation } from '../+layout.server';
 import { hideMapFilter } from '../(sidebar)/filter/filter-store';
-import { navigateWithFilterSearchParams } from './navigation-utils';
+import { goto } from '$app/navigation';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -40,11 +40,9 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   const content = marker.content as HTMLElement;
 
   if (location.type === LOCATION_TYPES_ENUM.site) {
-    navigateWithFilterSearchParams(`/map/location/site?location-id=${location.location_id}`);
+    goto(`/map/location/site?location-id=${location.location_id}`);
   } else if (location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
-    navigateWithFilterSearchParams(
-      `/map/location/mobilization-hub?mobilization-hub-id=${location.location_id}`,
-    );
+    goto(`/map/location/mobilization-hub?mobilization-hub-id=${location.location_id}`);
   }
 
   selectedClickAnimation(content);
