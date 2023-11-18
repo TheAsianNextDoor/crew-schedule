@@ -1,7 +1,8 @@
 <script lang="ts">
-  import Map from './components/map.svelte';
-  import ButtonCarousel from './components/button-carousel.svelte';
   import AutoComplete from './components/auto-complete.svelte';
+  import ButtonCarousel from './components/button-carousel.svelte';
+  import Map from './components/map.svelte';
+  import Avatar from './components/user-profile/avatar.svelte';
   import { getFilterQueryParams, isMapFilterVisibleStore } from './(sidebar)/filter/filter-store';
   import Modals from './components/modals.svelte';
   import { beforeNavigate } from '$app/navigation';
@@ -40,7 +41,8 @@
   <Map locations={data.locations} />
 </div>
 
-<!-- add profile icon here -->
-<!-- <div class="absolute right-0 z-20">Profile</div> -->
+<div class="absolute right-0 z-20 flex justify-end m-5 cursor-pointer">
+  <Avatar src={data.session.user.user_metadata.avatar_url} user={data.employee} />
+</div>
 
 <Modals />

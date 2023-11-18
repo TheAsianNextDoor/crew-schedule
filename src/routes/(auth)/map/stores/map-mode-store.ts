@@ -1,11 +1,11 @@
 import { get, writable } from 'svelte/store';
 import { setAllPinsToDefault } from '../helpers/marker-pin-utils';
-import { changePinsToRoutes } from './route-sites-store';
-import { changePinsToMatrix } from './matrix-sites-store';
 import { showMatrixPolylines } from './matrix-polyline.store';
+import { changePinsToMatrix } from './matrix-sites-store';
 import { showRoutePolylines } from './route-polyline-store';
+import { changePinsToRoutes } from './route-sites-store';
 
-export type MapMode = 'base' | 'routes' | 'matrix';
+export type MapMode = 'base' | 'routes' | 'matrix' | 'user-profile';
 
 export const mapModeStore = writable<MapMode>('base');
 const { set } = mapModeStore;
@@ -28,3 +28,7 @@ export const setMapModeMatrix = () => {
   showMatrixPolylines();
   set('matrix');
 };
+
+// export const setMapModeUserProfile = () => {
+//   set('user-profile');
+// };
