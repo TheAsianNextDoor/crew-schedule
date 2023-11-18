@@ -16,12 +16,12 @@ const maybeFilterByValue = (
     parsedQuery[searchParamKey] = searchParamValue;
     setFilterQueryParams(parsedQuery);
     const queryParams = queryString.stringify(parsedQuery);
-    goto(`${baseUrl}${queryParams}`);
+    goto(`${baseUrl}${queryParams}`, { keepFocus: true });
   } else {
     delete parsedQuery[searchParamKey];
     setFilterQueryParams(parsedQuery);
     const queryParams = queryString.stringify(parsedQuery);
-    goto(`${baseUrl}${queryParams}`);
+    goto(`${baseUrl}${queryParams}`, { keepFocus: true });
   }
 };
 

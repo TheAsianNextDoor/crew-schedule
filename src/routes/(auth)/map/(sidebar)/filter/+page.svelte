@@ -16,6 +16,7 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { FILTER_KEYS } from './filter-funcs';
+  import DebouncedInput from '$lib/components/debounced-input.svelte';
 
   export let data;
 
@@ -145,10 +146,10 @@
   </FilterSection>
 
   <FilterSection label="Foreman">
-    <input
-      class="input variant-form-material"
-      bind:value={phaseForeman}
-      on:input={() => filterByForeman(phaseForeman)}
+    <DebouncedInput
+      classStyles="input variant-form-material"
+      value={phaseForeman}
+      onInput={filterByForeman}
     />
   </FilterSection>
 </div>
