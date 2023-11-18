@@ -40,8 +40,6 @@ module.exports = {
   ],
   rules: {
     'import/prefer-default-export': 'off',
-    'a11y-click-events-have-key-events': 'off',
-    'a11y-no-noninteractive-element-interactions': 'off',
 
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/consistent-type-imports': [
