@@ -17,6 +17,7 @@
   import { goto } from '$app/navigation';
   import { FILTER_KEYS } from './filter-funcs';
   import DebouncedInput from '$lib/components/debounced-input.svelte';
+  import { navigateWithFilterSearchParams } from '../../helpers/navigation-utils';
 
   export let data;
 
@@ -59,7 +60,7 @@
 
   const saveAndClose = () => {
     hideMapFilter();
-    goto('/map');
+    navigateWithFilterSearchParams('/map');
   };
 
   const clearFilters = () => {

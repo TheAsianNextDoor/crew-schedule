@@ -3,23 +3,12 @@
   import ButtonCarousel from './components/button-carousel.svelte';
   import Map from './components/map.svelte';
   import Avatar from './components/user-profile/avatar.svelte';
-  import { getFilterQueryParams, isMapFilterVisibleStore } from './(sidebar)/filter/filter-store';
+  import { isMapFilterVisibleStore } from './(sidebar)/filter/filter-store';
   import Modals from './components/modals.svelte';
-  import { beforeNavigate } from '$app/navigation';
 
   export let data;
 
   let sidebarWidth = 408;
-
-  beforeNavigate(({ to, from }) => {
-    if (!(to?.url.pathname.includes('/filter') && from?.url.pathname.includes('/filter'))) {
-      const queryParams = getFilterQueryParams();
-      for (const param in queryParams) {
-        to?.url.searchParams.set(param, queryParams[param] as string);
-        history.replaceState(null, '', to?.url.href);
-      }
-    }
-  });
 </script>
 
 <div class="absolute z-30" style="width:{sidebarWidth}px">

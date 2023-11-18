@@ -10,10 +10,15 @@
   import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
   import { selectedClickAnimation } from '../helpers/animation-helpers';
   import type { GenericHydratedLocation } from '../proxy+layout.server';
-  import { selectedEntityStore, setSelectedEntity } from '../stores/selected-entity-store';
+  import {
+    selectedEntityStore,
+    selectedEntitySubscribe,
+    setSelectedEntity,
+  } from '../stores/selected-entity-store';
   import { goto } from '$app/navigation';
-  import { hideMapSidebar } from '../(sidebar)/sidebar-store';
   import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
+  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
+  import { onDestroy } from 'svelte';
 
   export let locations: GenericHydratedLocation[];
 
@@ -23,6 +28,14 @@
     target: 'popupAutocomplete',
     placement: 'bottom',
   };
+
+  const unsubSelectedEntity = selectedEntitySubscribe((val) => {
+    searchValue = val?.location.content.name || '';
+  });
+
+  onDestroy(() => {
+    unsubSelectedEntity();
+  });
 
   const handlePopupSelect = (event: CustomEvent<AutocompleteOption>) => {
     searchValue = event.detail.label;
@@ -35,9 +48,11 @@
       selectedClickAnimation(hydratedMarker.marker.content as HTMLElement);
       setSelectedEntity(hydratedMarker);
       if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.site) {
-        goto(`/map/location/site?location-id=${hydratedMarker.location.location_id}`);
+        navigateWithFilterSearchParams(
+          `/map/location/site?location-id=${hydratedMarker.location.location_id}`,
+        );
       } else if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
-        goto(
+        navigateWithFilterSearchParams(
           `/map/location/mobilization-hub?mobilization-hub-id=${hydratedMarker.location.location_id}`,
         );
       }
@@ -72,7 +87,6 @@
   const handleCloseEntity = () => {
     searchValue = '';
     setSelectedEntity(null);
-    hideMapSidebar();
     goto('/map');
   };
 </script>
