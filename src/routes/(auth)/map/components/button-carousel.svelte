@@ -8,11 +8,12 @@
   } from '../stores/map-mode-store';
   import { hideRoutePolylines } from '../stores/route-polyline-store';
   import { hideMatrixPolylines } from '../stores/matrix-polyline.store';
-  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import { filterQueryParamsStore } from '../(sidebar)/filter/filter-store';
+  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
 
   const handleFilterClick = () => {
-    goto('/map/info/filter');
+    navigateWithFilterSearchParams('/map/filter');
   };
 
   const handleRoutesClick = () => {
@@ -41,7 +42,9 @@
 {#if !$page.url.href.includes('filter')}
   <div class="flex mt-6">
     <button
-      class="flex justify-center shadow-lg items-center px-2 h-8 rounded-lg bg-surface-100-800-token ml-6"
+      class={`btn ${
+        Object.keys($filterQueryParamsStore).length && 'variant-outline-secondary'
+      } flex  justify-center shadow-lg items-center px-2 h-8 rounded-lg bg-surface-100-800-token ml-6`}
       on:click={handleFilterClick}
     >
       <i class="pr-1 fa-solid fa-filter fa-sm"></i>

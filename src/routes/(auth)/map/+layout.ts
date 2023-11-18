@@ -1,8 +1,8 @@
 import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
 import { setGoogleMaps } from '$lib/constants/google-maps.js';
 import { Loader } from '@googlemaps/js-api-loader';
-import { getBaseHydratedMarkers, updateBaseHydratedLocations } from './stores/map-marker-store.js';
 import { getSelectedEntity, updateSelectedLocation } from './stores/selected-entity-store.js';
+import { getBaseHydratedMarkers, updateBaseHydratedLocations } from './stores/map-marker-store.js';
 
 export const ssr = false;
 

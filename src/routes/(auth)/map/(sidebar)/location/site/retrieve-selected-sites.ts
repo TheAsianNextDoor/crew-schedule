@@ -1,21 +1,15 @@
 import { queryDb } from '$lib/db/query';
-import type {
-  Address,
-  City,
-  Client,
-  Country,
-  Site,
-  State,
-  Status,
-  ZipCode,
-  Location,
-} from '@prisma/client';
+import type { Address, City, Client, Country, Site, State, Status, ZipCode } from '@prisma/client';
 
-export type MapSite = Pick<Site, 'job_number'> & {
-  id: string;
-  name: string;
-} & Pick<Location, 'location_id' | 'lat' | 'lng'> &
-  Pick<Status, 'status_name'> &
+export type SelectedSite = { id: string } & Pick<
+  Site,
+  | 'job_number'
+  | 'estimated_hours'
+  | 'scheduled_start_date_time'
+  | 'scheduled_finished_date_time'
+  | 'actual_start_date_time'
+  | 'actual_finished_date_time'
+> & { id: string; name: string } & Pick<Status, 'status_name'> &
   Pick<Client, 'client_name'> &
   Pick<Address, 'street'> &
   Pick<City, 'city'> &
@@ -23,16 +17,18 @@ export type MapSite = Pick<Site, 'job_number'> & {
   Pick<Country, 'country'> &
   Pick<ZipCode, 'zip_code'>;
 
-export const retrieveMapSites = async (customerId: string) =>
-  queryDb.findMany<MapSite>(
+export const retrieveSitesBySelectedLocationId = async (customerId: string, locationId: string) =>
+  queryDb.findMany<SelectedSite>(
     `
       SELECT 
-        site.job_number, 
         site.site_id as id, 
+        site.job_number, 
         site.site_name as name,
-        location.location_id,
-        location.lat,
-        location.lng,
+        site.estimated_hours,
+        site.scheduled_start_date_time,
+        site.scheduled_finished_date_time,
+        site.actual_start_date_time,
+        site.actual_finished_date_time,
         status.status_name,
         client.client_name,
         address.street,
@@ -58,6 +54,7 @@ export const retrieveMapSites = async (customerId: string) =>
       LEFT JOIN country
         ON address.country_id = country.country_id
       WHERE site.customer_id = $1
+        AND location.location_id = $2;
     `,
-    [customerId],
+    [customerId, locationId],
   );

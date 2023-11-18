@@ -29,7 +29,8 @@ import {
 } from '../stores/matrix-sites-store';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
 import { setSelectedEntity } from '../stores/selected-entity-store';
-import type { HydratedLocation } from '../+layout.server';
+import type { GenericHydratedLocation } from '../+layout.server';
+import { hideMapFilter } from '../(sidebar)/filter/filter-store';
 import { goto } from '$app/navigation';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
@@ -38,10 +39,15 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   const { marker, location } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
-  goto(`/map/info/location/${location.location_id}`);
+  if (location.type === LOCATION_TYPES_ENUM.site) {
+    goto(`/map/location/site?location-id=${location.location_id}`);
+  } else if (location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
+    goto(`/map/location/mobilization-hub?mobilization-hub-id=${location.location_id}`);
+  }
 
   selectedClickAnimation(content);
-  setSelectedEntity({ id: location.content.id, location, marker });
+  setSelectedEntity(hydratedMapMarker);
+  hideMapFilter();
 
   const mapMode = getMapMode();
   if (mapMode === 'routes') {
@@ -75,7 +81,7 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
 };
 
 interface CreateMarkerArgs {
-  location: HydratedLocation;
+  location: GenericHydratedLocation;
   map: MapInstance;
   intersectionObserver?: IntersectionObserver;
 }
@@ -117,7 +123,7 @@ export const createMarker = ({ location, map, intersectionObserver }: CreateMark
     title: location.content.name,
     content: container,
   });
-  const hydratedMapMarker: HydratedMapMarker = { id: location.content.id, marker, location };
+  const hydratedMapMarker = { id: location.content.id, marker, location };
 
   const content = marker.content as HTMLElement;
   content.classList.add('map-marker');

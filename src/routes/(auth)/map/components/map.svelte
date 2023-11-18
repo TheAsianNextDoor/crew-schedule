@@ -2,14 +2,16 @@
   import { onMount } from 'svelte';
 
   import { createMarker } from '../helpers/marker-utils';
-  import type { HydratedLocation } from '../proxy+page.server';
-  import { getBaseHydratedMarkers, setFilteredHydratedMarkers } from '../stores/map-marker-store';
   import { setMap } from '../stores/map-store';
   import { PUBLIC_GOOGLE_MAP_ID } from '$env/static/public';
   import { getGoogleMaps } from '$lib/constants/google-maps';
   import { setInfoWindow } from '../stores/info-window-store';
+  import type { GenericHydratedLocation } from '../+layout.server';
+  import { filterMarkers } from '../(sidebar)/filter/filter-markers';
+  import { page } from '$app/stores';
+  import { hydrateStateFromUrl } from '../helpers/initial-load-utils';
 
-  export let locations: HydratedLocation[];
+  export let locations: GenericHydratedLocation[];
 
   const { Map, InfoWindow } = getGoogleMaps();
 
@@ -42,17 +44,20 @@
       });
       setMap(map);
 
-      setTimeout(() => {
-        locations.map((location) =>
-          createMarker({
-            location,
-            map,
-            intersectionObserver,
-          }),
-        );
+      // setTimeout(() => {
+      locations.map((location) =>
+        createMarker({
+          location,
+          map,
+          // intersectionObserver,
+        }),
+      );
 
-        setFilteredHydratedMarkers(getBaseHydratedMarkers());
-      }, 800);
+      const { url } = $page;
+
+      hydrateStateFromUrl(url);
+      filterMarkers(url);
+      // }, 800);
     } catch (e) {
       console.log(e);
     }

@@ -1,34 +1,30 @@
 <script lang="ts">
-  import {
-    dateRange,
-    disciplineName,
-    estimatedHours,
-    estimatedHoursCondition,
-    foremanName,
-    hideMapFilter,
-    phaseStatus,
-  } from '../../stores/filter-store';
-  import {
-    clearFilteredHydratedMarkers,
-    clearFilterConditionFuncs,
-  } from '../../stores/map-marker-store';
+  import { clearFilterQueryParams, hideMapFilter } from './filter-store';
+  import { clearFilteredHydratedMarkers } from '../../stores/map-marker-store';
   import FilterSection from './filter-section.svelte';
   import {
     filterByDateRange,
     filterByDiscipline,
-    filterByEstimatedHours,
+    filterByEstimatedCrewHours,
     filterByForeman,
     filterByStatusName,
-  } from '../../helpers/filter-funcs';
+  } from './handle-filter-events';
   import { STATUS_ENUM } from '$lib/constants/status';
-  import { EQUALITY_ENUM } from '../../helpers/equality-utils';
+  import { EQUALITY_ENUM } from '../../../../../lib/constants/equality';
   import { easepick } from '@easepick/core';
   import { RangePlugin } from '@easepick/range-plugin';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { FILTER_KEYS } from './filter-funcs';
 
   export let data;
-  $: disciplines = data.disciplines;
+
+  let phaseDiscipline = (data?.fields?.[FILTER_KEYS.phaseDiscipline] as string | undefined) || '';
+  let phaseStatus = (data?.fields?.[FILTER_KEYS.phaseStatus] as string | undefined) || '';
+  let { condition: phaseCrewHoursCondition, hours: phaseCrewHours } = JSON.parse(
+    (data?.fields?.[FILTER_KEYS.phaseCrewHours] as string) || '{}',
+  );
+  let phaseForeman = (data?.fields?.[FILTER_KEYS.phaseForeman] as string | undefined) || '';
 
   let datePickerElement: HTMLInputElement;
   let datePicker: easepick.Core;
@@ -46,14 +42,18 @@
           const start = picker.getStartDate();
           const end = picker.getEndDate();
 
-          dateRange.set({
-            start,
-            end,
-          });
-          filterByDateRange($dateRange);
+          filterByDateRange({ start, end });
         });
       },
     });
+
+    // set initial date
+    let { start, end } = JSON.parse(
+      (data?.fields?.[FILTER_KEYS.phaseStartDate] as string) || '{}',
+    ) as { start?: Date; end?: Date };
+    if (start && end) {
+      datePicker.setDateRange(start, end);
+    }
   });
 
   const saveAndClose = () => {
@@ -62,31 +62,22 @@
   };
 
   const clearFilters = () => {
-    // discipline
-    disciplineName.set('');
-
-    // status
-    phaseStatus.set('');
-
-    // estimatedHours
-    estimatedHoursCondition.set(EQUALITY_ENUM.eq);
-    estimatedHours.set(undefined);
-
-    // dateRange
-    dateRange.set({});
+    goto('/map/filter');
+    phaseDiscipline = '';
+    phaseStatus = '';
+    phaseCrewHoursCondition = EQUALITY_ENUM.eq;
+    phaseCrewHours = '';
     datePicker.clear();
-
-    // foremanName
-    foremanName.set('');
-
+    phaseForeman = '';
+    clearFilterQueryParams();
     clearFilteredHydratedMarkers();
-    clearFilterConditionFuncs();
   };
 
-  const clearFiltersAndClose = () => {
-    clearFilters();
+  const clearFiltersAndClose = async () => {
+    clearFilteredHydratedMarkers();
+    clearFilterQueryParams();
     hideMapFilter();
-    goto('/map');
+    await goto('/map');
   };
 </script>
 
@@ -103,12 +94,12 @@
 <div class="py-4 px-6">
   <FilterSection label="Discipline">
     <select
-      bind:value={$disciplineName}
-      on:change={() => filterByDiscipline($disciplineName)}
+      bind:value={phaseDiscipline}
+      on:change={() => filterByDiscipline(phaseDiscipline)}
       class="select"
     >
       <option selected value="">any status</option>
-      {#each disciplines as discipline}
+      {#each data.disciplines as discipline}
         <option selected value={discipline}>{discipline}</option>
       {/each}
     </select>
@@ -116,8 +107,8 @@
 
   <FilterSection label="Status">
     <select
-      bind:value={$phaseStatus}
-      on:change={() => filterByStatusName($phaseStatus)}
+      bind:value={phaseStatus}
+      on:change={() => filterByStatusName(phaseStatus)}
       class="select"
     >
       <option selected value="">any status</option>
@@ -133,8 +124,8 @@
     <div class="flex gap-4">
       <select
         class="select w-min"
-        bind:value={$estimatedHoursCondition}
-        on:change={() => filterByEstimatedHours($estimatedHoursCondition, $estimatedHours)}
+        bind:value={phaseCrewHoursCondition}
+        on:change={() => filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
       >
         <option value={EQUALITY_ENUM.lt}>less than</option>
         <option selected value={EQUALITY_ENUM.eq}>equal</option>
@@ -143,8 +134,8 @@
       <input
         class="input variant-form-material grow basis-0"
         type="number"
-        bind:value={$estimatedHours}
-        on:input={() => filterByEstimatedHours($estimatedHoursCondition, $estimatedHours)}
+        bind:value={phaseCrewHours}
+        on:input={() => filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
       />
     </div>
   </FilterSection>
@@ -156,8 +147,8 @@
   <FilterSection label="Foreman">
     <input
       class="input variant-form-material"
-      bind:value={$foremanName}
-      on:input={() => filterByForeman($foremanName)}
+      bind:value={phaseForeman}
+      on:input={() => filterByForeman(phaseForeman)}
     />
   </FilterSection>
 </div>

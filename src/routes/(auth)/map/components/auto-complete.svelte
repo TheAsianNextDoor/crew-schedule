@@ -6,15 +6,16 @@
     popup,
   } from '@skeletonlabs/skeleton';
 
-  import { hideMapSidebar, showMapSidebar } from '../info/sidebar-store';
   import { getBaseHydratedMarkers } from '../stores/map-marker-store';
   import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
   import { selectedClickAnimation } from '../helpers/animation-helpers';
-  import type { HydratedLocation } from '../proxy+layout.server';
+  import type { GenericHydratedLocation } from '../proxy+layout.server';
   import { selectedEntityStore, setSelectedEntity } from '../stores/selected-entity-store';
   import { goto } from '$app/navigation';
+  import { hideMapSidebar } from '../(sidebar)/sidebar-store';
+  import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
 
-  export let locations: HydratedLocation[];
+  export let locations: GenericHydratedLocation[];
 
   let searchValue = '';
   let popupSettings: PopupSettings = {
@@ -33,7 +34,13 @@
     if (hydratedMarker) {
       selectedClickAnimation(hydratedMarker.marker.content as HTMLElement);
       setSelectedEntity(hydratedMarker);
-      showMapSidebar();
+      if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.site) {
+        goto(`/map/location/site?location-id=${hydratedMarker.location.location_id}`);
+      } else if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
+        goto(
+          `/map/location/mobilization-hub?mobilization-hub-id=${hydratedMarker.location.location_id}`,
+        );
+      }
     }
   };
 
@@ -71,12 +78,12 @@
 </script>
 
 <div class="w-full p-4">
-  <div class="card w-full bg-slate-100 flex items-center gap-1 px-4">
+  <div class="card w-full bg-surface-200-700-token flex items-center gap-1 px-4 shadow-md">
     <div class="hover:cursor-pointer">
       <i class="fa-solid fa-bars"></i>
     </div>
     <input
-      class="bg-surface-100-800-token no-outline w-11/12 border-none bg-slate-100"
+      class="bg-surface-200-700-token no-outline w-11/12 border-none bg-slate-100"
       autocomplete="off"
       name="autocomplete-search"
       bind:value={searchValue}
