@@ -20,6 +20,7 @@
   import { FILTER_KEYS } from './filter-funcs';
   import DebouncedInput from '$lib/components/debounced-input.svelte';
   import { navigateWithFilterSearchParams } from '../../helpers/navigation-utils';
+  import { capitalizeFirstLetter } from '$lib/utils/string-utils';
 
   export let data;
 
@@ -112,7 +113,7 @@
           checked={phaseDisciplines.includes(discipline)}
           on:click={filterPhaseByDiscipline}
         />
-        <p>{discipline}</p>
+        <p>{capitalizeFirstLetter(discipline)}</p>
       </label>
     {/each}
   </FilterSection>
