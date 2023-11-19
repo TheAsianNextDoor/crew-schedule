@@ -23,7 +23,7 @@
 
   export let data;
 
-  let phaseDiscipline = (data?.fields?.[FILTER_KEYS.phaseDiscipline] as string | undefined) || '';
+  let phaseDisciplines = (data?.fields?.[FILTER_KEYS.phaseDiscipline] as string | undefined) || '';
   let phaseStatus = (data?.fields?.[FILTER_KEYS.phaseStatus] as string | undefined) || '';
   let { condition: phaseCrewHoursCondition, hours: phaseCrewHours } = JSON.parse(
     (data?.fields?.[FILTER_KEYS.phaseCrewHours] as string) || '{}',
@@ -70,12 +70,14 @@
 
   const clearFilters = () => {
     goto('/map/filter');
-    phaseDiscipline = '';
+    phaseDisciplines = '';
     phaseStatus = '';
     phaseCrewHoursCondition = EQUALITY_ENUM.eq;
     phaseCrewHours = '';
     datePicker.clear();
     phaseForeman = '';
+    siteClient = '';
+    siteStatus = '';
     clearFilterQueryParams();
     clearFilteredHydratedMarkers();
   };
@@ -101,16 +103,18 @@
 <div class="py-4 px-6">
   <h1 class="h3">Phase Filters</h1>
   <FilterSection label="Discipline">
-    <select
-      bind:value={phaseDiscipline}
-      on:change={() => filterPhaseByDiscipline(phaseDiscipline)}
-      class="select"
-    >
-      <option selected value="">any status</option>
-      {#each data.disciplines as discipline}
-        <option selected value={discipline}>{discipline}</option>
-      {/each}
-    </select>
+    {#each data.disciplines as discipline}
+      <label class="flex items-center space-x-2">
+        <input
+          class="checkbox"
+          type="checkbox"
+          value={discipline}
+          checked={phaseDisciplines.includes(discipline)}
+          on:click={filterPhaseByDiscipline}
+        />
+        <p>{discipline}</p>
+      </label>
+    {/each}
   </FilterSection>
 
   <FilterSection label="Status">

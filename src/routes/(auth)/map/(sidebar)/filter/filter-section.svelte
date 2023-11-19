@@ -3,7 +3,7 @@
 </script>
 
 <div class="py-4">
-  <h2 class="block !font-normal">
+  <h2 class="block !font-semibold">
     {label}
   </h2>
 

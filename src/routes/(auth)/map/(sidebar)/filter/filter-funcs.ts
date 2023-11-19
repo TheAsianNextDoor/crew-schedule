@@ -15,8 +15,11 @@ export const FILTER_KEYS = {
 
 export const FILTER_FUNCTIONS = {
   phase: {
-    discipline: ({ discipline_name }: HydratedMapPhase, discipline: string) =>
-      discipline_name === discipline ?? false,
+    discipline: ({ discipline_name }: HydratedMapPhase, disciplines: string) => {
+      const disciplinesArray = disciplines.split(',');
+
+      return disciplinesArray.some((discipline) => discipline === discipline_name);
+    },
     status: ({ status_name }: HydratedMapPhase, phaseStatus: string) => {
       if (phaseStatus === STATUS_ENUM.SOLD) {
         return status_name !== STATUS_ENUM.COMPLETED ?? false;

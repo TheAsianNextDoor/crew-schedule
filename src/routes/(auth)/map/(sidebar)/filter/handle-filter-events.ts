@@ -1,8 +1,8 @@
 import { goto } from '$app/navigation';
 import { FILTER_KEYS } from './filter-funcs';
 import type { EQUALITY_ENUM } from '../../../../../lib/constants/equality';
-import queryString from 'query-string';
 import { setFilterQueryParams } from './filter-store';
+import queryString from 'query-string';
 
 const maybeFilterByValue = (
   shouldFilter: boolean,
@@ -25,9 +25,19 @@ const maybeFilterByValue = (
   }
 };
 
-export const filterPhaseByDiscipline = (filterValue: string) => {
-  const shouldFilter = filterValue !== '';
+export const filterPhaseByDiscipline = ({ target }: Event) => {
+  const parsedQuery = queryString.parse(location.search);
+  const currentDisciplines = (parsedQuery[FILTER_KEYS.phaseDiscipline] as string) || '';
+  let disciplineArray = currentDisciplines.length ? currentDisciplines.split(',') : [];
+  const { value, checked } = target as HTMLInputElement;
+  if (checked) {
+    disciplineArray.push(value);
+  } else {
+    disciplineArray = disciplineArray.filter((val) => val !== value);
+  }
 
+  const shouldFilter = disciplineArray.length !== 0;
+  const filterValue = disciplineArray.join(',');
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseDiscipline, filterValue);
 };
 
