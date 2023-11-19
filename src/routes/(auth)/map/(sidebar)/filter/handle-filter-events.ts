@@ -25,19 +25,19 @@ const maybeFilterByValue = (
   }
 };
 
-export const filterByDiscipline = (filterValue: string) => {
+export const filterPhaseByDiscipline = (filterValue: string) => {
   const shouldFilter = filterValue !== '';
 
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseDiscipline, filterValue);
 };
 
-export const filterByStatusName = (filterValue: string) => {
+export const filterPhaseByStatusName = (filterValue: string) => {
   const shouldFilter = filterValue !== '';
 
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseStatus, filterValue);
 };
 
-export const filterByEstimatedCrewHours = (
+export const filterPhaseByEstimatedCrewHours = (
   condition: (typeof EQUALITY_ENUM)[keyof typeof EQUALITY_ENUM],
   crewHours: number | undefined,
 ) => {
@@ -51,14 +51,26 @@ export const filterByEstimatedCrewHours = (
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseCrewHours, searchParamValue);
 };
 
-export const filterByDateRange = (dateRange: { start?: Date; end?: Date }) => {
+export const filterPhaseByDateRange = (dateRange: { start?: Date; end?: Date }) => {
   const shouldFilter = !!(dateRange?.start && dateRange.end);
 
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseStartDate, JSON.stringify(dateRange));
 };
 
-export const filterByForeman = (filterValue: string) => {
+export const filterPhaseByForeman = (filterValue: string) => {
   const shouldFilter = filterValue.length !== 0;
 
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseForeman, filterValue);
+};
+
+export const filterSiteByStatusName = (filterValue: string) => {
+  const shouldFilter = filterValue !== '';
+
+  maybeFilterByValue(shouldFilter, FILTER_KEYS.siteStatus, filterValue);
+};
+
+export const filterSiteByClientName = (filterValue: string) => {
+  const shouldFilter = filterValue !== '';
+
+  maybeFilterByValue(shouldFilter, FILTER_KEYS.siteClient, filterValue);
 };

@@ -1,5 +1,5 @@
 import { STATUS_ENUM } from '$lib/constants/status';
-import type { HydratedMapPhase } from '../../+layout.server';
+import type { HydratedMapPhase, HydratedMapSite } from '../../+layout.server';
 import type { EQUALITY_ENUM } from '../../../../../lib/constants/equality';
 
 export const FILTER_KEYS = {
@@ -8,6 +8,9 @@ export const FILTER_KEYS = {
   phaseCrewHours: 'phase.crewHours',
   phaseStartDate: 'phase.startDate',
   phaseForeman: 'phase.foreman',
+
+  siteStatus: 'site.status',
+  siteClient: 'site.client',
 };
 
 export const FILTER_FUNCTIONS = {
@@ -50,7 +53,17 @@ export const FILTER_FUNCTIONS = {
       );
     },
     foreman: ({ foreman_name }: HydratedMapPhase, foremanName: string) =>
-      foreman_name.includes(foremanName) ?? false,
+      foreman_name.toLowerCase().includes(foremanName.toLowerCase()),
   },
-  site: {},
+  site: {
+    status: ({ status_name }: HydratedMapSite, siteStatus: string) => {
+      if (siteStatus === STATUS_ENUM.SOLD) {
+        return status_name !== STATUS_ENUM.COMPLETED ?? false;
+      }
+      return status_name === siteStatus ?? false;
+    },
+    client: ({ client_name }: HydratedMapSite, clientName: string) => {
+      return client_name.toLowerCase().includes(clientName.toLowerCase());
+    },
+  },
 };

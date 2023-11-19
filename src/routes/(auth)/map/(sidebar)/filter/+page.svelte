@@ -3,11 +3,13 @@
   import { clearFilteredHydratedMarkers } from '../../stores/map-marker-store';
   import FilterSection from './filter-section.svelte';
   import {
-    filterByDateRange,
-    filterByDiscipline,
-    filterByEstimatedCrewHours,
-    filterByForeman,
-    filterByStatusName,
+    filterPhaseByDateRange,
+    filterPhaseByDiscipline,
+    filterPhaseByEstimatedCrewHours,
+    filterPhaseByForeman,
+    filterPhaseByStatusName,
+    filterSiteByClientName,
+    filterSiteByStatusName,
   } from './handle-filter-events';
   import { STATUS_ENUM } from '$lib/constants/status';
   import { EQUALITY_ENUM } from '../../../../../lib/constants/equality';
@@ -28,6 +30,9 @@
   );
   let phaseForeman = (data?.fields?.[FILTER_KEYS.phaseForeman] as string | undefined) || '';
 
+  let siteClient = (data?.fields?.[FILTER_KEYS.siteClient] as string | undefined) || '';
+  let siteStatus = (data?.fields?.[FILTER_KEYS.siteStatus] as string | undefined) || '';
+
   let datePickerElement: HTMLInputElement;
   let datePicker: easepick.Core;
 
@@ -44,7 +49,7 @@
           const start = picker.getStartDate();
           const end = picker.getEndDate();
 
-          filterByDateRange({ start, end });
+          filterPhaseByDateRange({ start, end });
         });
       },
     });
@@ -94,10 +99,11 @@
 </div>
 
 <div class="py-4 px-6">
+  <h1 class="h3">Phase Filters</h1>
   <FilterSection label="Discipline">
     <select
       bind:value={phaseDiscipline}
-      on:change={() => filterByDiscipline(phaseDiscipline)}
+      on:change={() => filterPhaseByDiscipline(phaseDiscipline)}
       class="select"
     >
       <option selected value="">any status</option>
@@ -110,7 +116,7 @@
   <FilterSection label="Status">
     <select
       bind:value={phaseStatus}
-      on:change={() => filterByStatusName(phaseStatus)}
+      on:change={() => filterPhaseByStatusName(phaseStatus)}
       class="select"
     >
       <option selected value="">any status</option>
@@ -122,12 +128,12 @@
     </select>
   </FilterSection>
 
-  <FilterSection label="Estimated Hours">
+  <FilterSection label="Estimated Crew Hours">
     <div class="flex gap-4">
       <select
         class="select w-min"
         bind:value={phaseCrewHoursCondition}
-        on:change={() => filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
+        on:change={() => filterPhaseByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
       >
         <option value={EQUALITY_ENUM.lt}>less than</option>
         <option selected value={EQUALITY_ENUM.eq}>equal</option>
@@ -137,7 +143,7 @@
         class="input variant-form-material grow basis-0"
         type="number"
         bind:value={phaseCrewHours}
-        on:input={() => filterByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
+        on:input={() => filterPhaseByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
       />
     </div>
   </FilterSection>
@@ -150,7 +156,32 @@
     <DebouncedInput
       classStyles="input variant-form-material"
       value={phaseForeman}
-      onInput={filterByForeman}
+      onInput={filterPhaseByForeman}
+    />
+  </FilterSection>
+
+  <h1 class="h3">Site Filters</h1>
+
+  <FilterSection label="Status">
+    <select
+      bind:value={siteStatus}
+      on:change={() => filterSiteByStatusName(siteStatus)}
+      class="select"
+    >
+      <option selected value="">any status</option>
+      <option selected value={STATUS_ENUM.SOLD}>sold</option>
+      <option value={STATUS_ENUM.PENDING}>pending</option>
+      <option value={STATUS_ENUM.SCHEDULED}>scheduled</option>
+      <option value={STATUS_ENUM.IN_PROGRESS}>in progress</option>
+      <option value={STATUS_ENUM.COMPLETED}>completed</option>
+    </select>
+  </FilterSection>
+
+  <FilterSection label="Client">
+    <DebouncedInput
+      classStyles="input variant-form-material"
+      value={siteClient}
+      onInput={filterSiteByClientName}
     />
   </FilterSection>
 </div>
