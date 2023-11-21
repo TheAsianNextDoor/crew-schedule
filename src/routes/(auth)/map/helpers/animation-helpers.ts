@@ -1,9 +1,9 @@
-import { getSelectedEntity } from '../stores/selected-entity-store';
+import { getSelectedHydratedMarker } from '../stores/map-marker-store';
 
 let timeoutId: NodeJS.Timeout;
 
 export const selectedClickAnimation = (content: HTMLElement) => {
-  const previouslySelected = getSelectedEntity();
+  const previouslySelected = getSelectedHydratedMarker();
   if (previouslySelected) {
     const previousContent = previouslySelected.marker.content as HTMLElement;
     previousContent.style.animationName = '';

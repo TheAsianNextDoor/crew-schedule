@@ -1,9 +1,11 @@
 import { STATUS_ENUM } from '$lib/constants/status.js';
 import { parseOrThrow422 } from '$lib/utils/validation.js';
-import { error } from '@sveltejs/kit';
+import { json, type RequestHandler } from '@sveltejs/kit';
 import { retrieveSitesBySelectedLocationId, type SelectedSite } from './retrieve-selected-sites.js';
 import { z } from 'zod';
 import { retrievePhasesBySelectedSiteId, type SelectedPhase } from './retrieve-selected-phases.js';
+import type { HydratedSelectedEntity } from '../../types.js';
+import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types.js';
 
 export type HydratedSelectedPhase = SelectedPhase & {
   crewHours: string;
@@ -13,13 +15,6 @@ export type HydratedSelectedPhase = SelectedPhase & {
 export type HydratedSelectedSite = SelectedSite & {
   currentPhase: HydratedSelectedPhase | null;
   phases: HydratedSelectedPhase[];
-};
-
-export type HydratedSelectedLocation = {
-  selectedEntity: {
-    sites: HydratedSelectedSite[];
-    address: string;
-  };
 };
 
 const findCurrentPhase = (phase: HydratedSelectedPhase) =>
@@ -62,31 +57,24 @@ const buildAddress = (
   country: string,
 ) => `${street} ${city}, ${state}, ${zipCode}, ${country}`;
 
-const searchParamsSchema = z.object({
+const getParamsSchema = z.object({
   locationId: z.string(),
+  customerId: z.string(),
 });
 
-export async function load({ url, parent }) {
-  const {
-    employee: { customer_id: customerId },
-  } = await parent();
-  const { searchParams } = url;
-
-  const { locationId } = parseOrThrow422(searchParamsSchema, {
-    locationId: searchParams.get('location-id'),
-  });
+export const GET: RequestHandler = async ({ params }) => {
+  const { locationId, customerId } = parseOrThrow422(getParamsSchema, params);
 
   const sites = await retrieveSitesBySelectedLocationId(customerId, locationId);
   if (!sites.length) {
-    throw error(404, 'Not Found');
+    return json({ sites: [], address: null });
   }
   const sitesWithPhases = (await getMapSitesWithPhases(sites)) as HydratedSelectedSite[];
   const { street, city, state, zip_code, country } = sitesWithPhases[0];
 
-  return {
-    selectedEntity: {
-      sites: sitesWithPhases,
-      address: buildAddress(street, city, state, zip_code, country),
-    },
-  } satisfies HydratedSelectedLocation;
-}
+  return json({
+    entity: sitesWithPhases,
+    address: buildAddress(street, city, state, zip_code, country),
+    type: LOCATION_TYPES_ENUM.site,
+  } satisfies HydratedSelectedEntity<HydratedSelectedSite[]>);
+};

@@ -32,6 +32,7 @@ export type GenericHydratedLocation<T = HydratedMapSite | HydratedMobilizationHu
   lng: number;
   type: keyof typeof LOCATION_TYPES_ENUM;
   address: string;
+  shortAddress: string;
   content: T;
 };
 
@@ -57,6 +58,8 @@ const buildAddress = (
   zipCode: string,
   country: string,
 ) => `${street} ${city}, ${state}, ${zipCode}, ${country}`;
+
+const buildShortAddress = (street: string, city: string) => `${street} ${city}`;
 
 const getMapSitesWithPhases = async (sites: MapSite[]) =>
   Promise.all(
@@ -85,6 +88,7 @@ const createMapLocation = (
     lng,
     type,
     address: buildAddress(item.street, item.city, item.state, item.zip_code, item.country),
+    shortAddress: buildShortAddress(item.street, item.city),
     content,
   };
 };
@@ -101,13 +105,18 @@ export async function load({ parent, depends }) {
   const mapSitesWithPhases: UnHydratedMapSite[] = await getMapSitesWithPhases(sites);
   const siteLocations = mapSitesWithPhases.map((site) =>
     createMapLocation(site, LOCATION_TYPES_ENUM.site),
-  );
+  ) as unknown as HydratedSiteLocation[];
 
   const disciplines = (await retrieveDisciplines(customerId)).map((item) => item.discipline_name);
 
   const mobilizationHubs = (await retrieveMobilizationHubs(customerId)).map((hub) =>
     createMapLocation(hub, LOCATION_TYPES_ENUM.mobilizationHub),
-  );
+  ) as unknown as HydratedMobilizationHubLocation[];
 
-  return { locations: [...siteLocations, ...mobilizationHubs], disciplines };
+  return {
+    locations: [...siteLocations, ...mobilizationHubs],
+    siteLocations,
+    disciplines,
+    customerId,
+  };
 }

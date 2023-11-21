@@ -1,7 +1,17 @@
 <script lang="ts">
-  import { clearFilterQueryParams, hideMapFilter } from './filter-store';
-  import { clearFilteredHydratedMarkers } from '../../stores/map-marker-store';
-  import FilterSection from './filter-section.svelte';
+  import { clearFilteredHydratedMarkers } from '../stores/map-marker-store';
+
+  import { STATUS_ENUM } from '$lib/constants/status';
+  import { EQUALITY_ENUM } from '../../../../lib/constants/equality';
+  import { easepick } from '@easepick/core';
+  import { RangePlugin } from '@easepick/range-plugin';
+  import { onMount } from 'svelte';
+  import DebouncedInput from '$lib/components/debounced-input.svelte';
+  import {
+    getSelectedLocationSearchParam,
+    navigateWithFilterSearchParams,
+  } from '../helpers/navigation-utils';
+  import { capitalizeFirstLetter } from '$lib/utils/string-utils';
   import {
     filterPhaseByDateRange,
     filterPhaseByDiscipline,
@@ -11,28 +21,13 @@
     filterSiteByClientName,
     filterSiteByStatusName,
   } from './handle-filter-events';
-  import { STATUS_ENUM } from '$lib/constants/status';
-  import { EQUALITY_ENUM } from '../../../../../lib/constants/equality';
-  import { easepick } from '@easepick/core';
-  import { RangePlugin } from '@easepick/range-plugin';
-  import { onMount } from 'svelte';
+  import { clearFilterQueryParams, hideMapFilter } from './filter-store';
+  import FilterSection from './filter-section.svelte';
   import { goto } from '$app/navigation';
-  import { FILTER_KEYS } from './filter-funcs';
-  import DebouncedInput from '$lib/components/debounced-input.svelte';
-  import { navigateWithFilterSearchParams } from '../../helpers/navigation-utils';
-  import { capitalizeFirstLetter } from '$lib/utils/string-utils';
+  import type { Fields } from '../+layout';
 
-  export let data;
-
-  let phaseDisciplines = (data?.fields?.[FILTER_KEYS.phaseDiscipline] as string | undefined) || '';
-  let phaseStatus = (data?.fields?.[FILTER_KEYS.phaseStatus] as string | undefined) || '';
-  let { condition: phaseCrewHoursCondition, hours: phaseCrewHours } = JSON.parse(
-    (data?.fields?.[FILTER_KEYS.phaseCrewHours] as string) || '{}',
-  );
-  let phaseForeman = (data?.fields?.[FILTER_KEYS.phaseForeman] as string | undefined) || '';
-
-  let siteClient = (data?.fields?.[FILTER_KEYS.siteClient] as string | undefined) || '';
-  let siteStatus = (data?.fields?.[FILTER_KEYS.siteStatus] as string | undefined) || '';
+  export let fields: Fields;
+  export let disciplines: string[];
 
   let datePickerElement: HTMLInputElement;
   let datePicker: easepick.Core;
@@ -56,9 +51,7 @@
     });
 
     // set initial date
-    let { start, end } = JSON.parse(
-      (data?.fields?.[FILTER_KEYS.phaseStartDate] as string) || '{}',
-    ) as { start?: Date; end?: Date };
+    let { start, end } = fields.phaseStartDate;
     if (start && end) {
       datePicker.setDateRange(start, end);
     }
@@ -66,28 +59,20 @@
 
   const saveAndClose = () => {
     hideMapFilter();
-    navigateWithFilterSearchParams('/map');
+    navigateWithFilterSearchParams(`/map?${getSelectedLocationSearchParam()}`);
   };
 
   const clearFilters = () => {
-    goto('/map/filter');
-    phaseDisciplines = '';
-    phaseStatus = '';
-    phaseCrewHoursCondition = EQUALITY_ENUM.eq;
-    phaseCrewHours = '';
-    datePicker.clear();
-    phaseForeman = '';
-    siteClient = '';
-    siteStatus = '';
     clearFilterQueryParams();
     clearFilteredHydratedMarkers();
+    goto(`/map?${getSelectedLocationSearchParam()}`);
   };
 
   const clearFiltersAndClose = async () => {
     clearFilteredHydratedMarkers();
     clearFilterQueryParams();
     hideMapFilter();
-    await goto('/map');
+    goto(`/map?${getSelectedLocationSearchParam()}`);
   };
 </script>
 
@@ -104,13 +89,13 @@
 <div class="py-4 px-6">
   <h1 class="h3">Phase Filters</h1>
   <FilterSection label="Discipline">
-    {#each data.disciplines as discipline}
+    {#each disciplines as discipline}
       <label class="flex items-center space-x-2">
         <input
           class="checkbox"
           type="checkbox"
           value={discipline}
-          checked={phaseDisciplines.includes(discipline)}
+          checked={fields.phaseDisciplines?.includes(discipline)}
           on:click={filterPhaseByDiscipline}
         />
         <p>{capitalizeFirstLetter(discipline)}</p>
@@ -119,11 +104,7 @@
   </FilterSection>
 
   <FilterSection label="Status">
-    <select
-      bind:value={phaseStatus}
-      on:change={() => filterPhaseByStatusName(phaseStatus)}
-      class="select"
-    >
+    <select value={fields.phaseStatus} on:change={filterPhaseByStatusName} class="select">
       <option selected value="">any status</option>
       <option selected value={STATUS_ENUM.SOLD}>sold</option>
       <option value={STATUS_ENUM.PENDING}>pending</option>
@@ -137,8 +118,9 @@
     <div class="flex gap-4">
       <select
         class="select w-min"
-        bind:value={phaseCrewHoursCondition}
-        on:change={() => filterPhaseByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
+        value={fields.crewHoursValue.condition || EQUALITY_ENUM.eq}
+        on:change={(evt) =>
+          filterPhaseByEstimatedCrewHours(evt.target?.value, fields.crewHoursValue.hours || '0')}
       >
         <option value={EQUALITY_ENUM.lt}>less than</option>
         <option selected value={EQUALITY_ENUM.eq}>equal</option>
@@ -147,8 +129,12 @@
       <input
         class="input variant-form-material grow basis-0"
         type="number"
-        bind:value={phaseCrewHours}
-        on:input={() => filterPhaseByEstimatedCrewHours(phaseCrewHoursCondition, phaseCrewHours)}
+        value={fields.crewHoursValue.hours || ''}
+        on:input={(evt) =>
+          filterPhaseByEstimatedCrewHours(
+            fields.crewHoursValue.condition || EQUALITY_ENUM.eq,
+            evt.target?.value,
+          )}
       />
     </div>
   </FilterSection>
@@ -160,7 +146,7 @@
   <FilterSection label="Foreman">
     <DebouncedInput
       classStyles="input variant-form-material"
-      value={phaseForeman}
+      value={fields.phaseForeman}
       onInput={filterPhaseByForeman}
     />
   </FilterSection>
@@ -168,11 +154,7 @@
   <h1 class="h3">Site Filters</h1>
 
   <FilterSection label="Status">
-    <select
-      bind:value={siteStatus}
-      on:change={() => filterSiteByStatusName(siteStatus)}
-      class="select"
-    >
+    <select value={fields.siteStatus} on:change={filterSiteByStatusName} class="select">
       <option selected value="">any status</option>
       <option selected value={STATUS_ENUM.SOLD}>sold</option>
       <option value={STATUS_ENUM.PENDING}>pending</option>
@@ -185,7 +167,7 @@
   <FilterSection label="Client">
     <DebouncedInput
       classStyles="input variant-form-material"
-      value={siteClient}
+      value={fields.siteClient}
       onInput={filterSiteByClientName}
     />
   </FilterSection>

@@ -1,12 +1,12 @@
 import queryString from 'query-string';
-import type { HydratedMapPhase, HydratedMapSite } from '../../+layout.server';
+import type { HydratedMapPhase, HydratedMapSite } from '../+layout.server';
 import {
   setFilteredHydratedMarkers,
   type HydratedMapMarker,
   getBaseHydratedMarkers,
-} from '../../stores/map-marker-store';
+} from '../stores/map-marker-store';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
-import { addMarkerToMap, removeMarkerFromMap, showAllMarkers } from '../../helpers/marker-utils';
+import { addMarkerToMap, removeMarkerFromMap, showAllMarkers } from '../helpers/marker-utils';
 import { getProperty } from 'dot-prop';
 import { FILTER_FUNCTIONS } from './filter-funcs';
 

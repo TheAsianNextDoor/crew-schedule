@@ -1,14 +1,9 @@
 import queryString from 'query-string';
-import { getFilterQueryParams } from '../(sidebar)/filter/filter-store';
+import { getFilterQueryParams } from '../filter/filter-store';
 import { goto } from '$app/navigation';
 
 export const navigateWithFilterSearchParams = (newUrl: string) => {
   const filterQueryParams = getFilterQueryParams();
-  if (!Object.keys(filterQueryParams).length) {
-    goto(newUrl);
-
-    return;
-  }
 
   const [pathname, currentSearchParams] = newUrl.split('?');
   const currentQueryParams = queryString.parse(currentSearchParams);
@@ -16,3 +11,9 @@ export const navigateWithFilterSearchParams = (newUrl: string) => {
   const newSearchParams = `?${queryString.stringify(combinedQueryParams)}`;
   goto(`${pathname}${newSearchParams}`);
 };
+
+export const getSelectedLocationId = () =>
+  new URL(location.href).searchParams.get('selected-location');
+
+export const getSelectedLocationSearchParam = () =>
+  getSelectedLocationId() ? `selected-location=${getSelectedLocationId()}` : '';

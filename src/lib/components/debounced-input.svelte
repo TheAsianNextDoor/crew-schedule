@@ -2,7 +2,7 @@
   export let classStyles = '';
   export let value: string;
   export let onInput = (_value: string) => {};
-  export let debounceTime = 750;
+  export let debounceTime = 500;
 
   let timer: ReturnType<typeof setTimeout>;
 

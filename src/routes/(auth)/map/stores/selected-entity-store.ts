@@ -1,22 +1,9 @@
 import { get, writable } from 'svelte/store';
-import type { HydratedMapMarker } from './map-marker-store';
-import type { GenericHydratedLocation } from '../+layout.server';
+import type { HydratedSelectedEntity } from '../../../api/v1/auth/customer/[customerId]/location/types';
 
-/**
- * The selected map entity to display in the menu
- */
-export const selectedEntityStore = writable<HydratedMapMarker | null>(null);
+export const selectedEntityStore = writable<HydratedSelectedEntity | null>(null);
 export const { subscribe: selectedEntitySubscribe } = selectedEntityStore;
 export const getSelectedEntity = () => get(selectedEntityStore);
-export const setSelectedEntity = (mapMarker: HydratedMapMarker | null) => {
+export const setSelectedEntity = (mapMarker: HydratedSelectedEntity | null) => {
   selectedEntityStore.set(mapMarker);
-};
-export const updateSelectedLocation = (location: GenericHydratedLocation) => {
-  selectedEntityStore.update((val) => {
-    if (val?.location) {
-      val.location = location;
-    }
-
-    return val;
-  });
 };

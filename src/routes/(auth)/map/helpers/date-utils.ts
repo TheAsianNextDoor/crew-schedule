@@ -1,7 +1,9 @@
-export const getFormattedDate = (date: Date | null) => {
-  if (!date) {
+export const getFormattedDate = (dateString: string | null) => {
+  if (!dateString) {
     return '';
   }
+
+  const date = new Date(dateString);
 
   let day: string | number = date.getDate();
   let month: string | number = date.getMonth();

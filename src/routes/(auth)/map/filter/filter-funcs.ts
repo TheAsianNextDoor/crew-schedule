@@ -1,6 +1,6 @@
 import { STATUS_ENUM } from '$lib/constants/status';
-import type { HydratedMapPhase, HydratedMapSite } from '../../+layout.server';
-import type { EQUALITY_ENUM } from '../../../../../lib/constants/equality';
+import type { HydratedMapPhase, HydratedMapSite } from '../+layout.server';
+import type { EQUALITY_ENUM } from '../../../../lib/constants/equality';
 
 export const FILTER_KEYS = {
   phaseDiscipline: 'phase.discipline',
@@ -11,6 +11,11 @@ export const FILTER_KEYS = {
 
   siteStatus: 'site.status',
   siteClient: 'site.client',
+};
+
+export type CrewHoursValue = {
+  condition: (typeof EQUALITY_ENUM)[keyof typeof EQUALITY_ENUM];
+  hours: string;
 };
 
 export const FILTER_FUNCTIONS = {
@@ -26,13 +31,7 @@ export const FILTER_FUNCTIONS = {
       }
       return status_name === phaseStatus ?? false;
     },
-    crewHours: (
-      { crewHours }: HydratedMapPhase,
-      {
-        condition,
-        hours,
-      }: { condition: (typeof EQUALITY_ENUM)[keyof typeof EQUALITY_ENUM]; hours: string },
-    ) => {
+    crewHours: ({ crewHours }: HydratedMapPhase, { condition, hours }: CrewHoursValue) => {
       const hoursNumber = Number(hours);
 
       if (!crewHours) return false;

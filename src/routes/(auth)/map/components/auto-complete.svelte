@@ -6,19 +6,18 @@
     popup,
   } from '@skeletonlabs/skeleton';
 
-  import { getBaseHydratedMarkers } from '../stores/map-marker-store';
   import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
   import { selectedClickAnimation } from '../helpers/animation-helpers';
   import type { GenericHydratedLocation } from '../proxy+layout.server';
   import {
-    selectedEntityStore,
-    selectedEntitySubscribe,
-    setSelectedEntity,
-  } from '../stores/selected-entity-store';
-  import { goto } from '$app/navigation';
-  import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
+    getBaseHydratedMarkers,
+    selectedHydratedMarkerStore,
+    selectedHydratedMarkerSubscribe,
+    setSelectedHydratedMarker,
+  } from '../stores/map-marker-store';
   import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
   import { onDestroy } from 'svelte';
+  import { setSelectedEntity } from '../stores/selected-entity-store';
 
   export let locations: GenericHydratedLocation[];
 
@@ -29,7 +28,7 @@
     placement: 'bottom',
   };
 
-  const unsubSelectedEntity = selectedEntitySubscribe((val) => {
+  const unsubSelectedEntity = selectedHydratedMarkerSubscribe((val) => {
     searchValue = val?.location.content.name || '';
   });
 
@@ -46,16 +45,10 @@
 
     if (hydratedMarker) {
       selectedClickAnimation(hydratedMarker.marker.content as HTMLElement);
-      setSelectedEntity(hydratedMarker);
-      if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.site) {
-        navigateWithFilterSearchParams(
-          `/map/location/site?location-id=${hydratedMarker.location.location_id}`,
-        );
-      } else if (hydratedMarker.location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
-        navigateWithFilterSearchParams(
-          `/map/location/mobilization-hub?mobilization-hub-id=${hydratedMarker.location.location_id}`,
-        );
-      }
+      setSelectedHydratedMarker(hydratedMarker);
+      navigateWithFilterSearchParams(
+        `/map?selected-location=${hydratedMarker.location.location_id}`,
+      );
     }
   };
 
@@ -86,8 +79,9 @@
 
   const handleCloseEntity = () => {
     searchValue = '';
+    setSelectedHydratedMarker(null);
     setSelectedEntity(null);
-    goto('/map');
+    navigateWithFilterSearchParams('/map');
   };
 </script>
 
@@ -104,7 +98,7 @@
       placeholder="Search..."
       use:popup={popupSettings}
     />
-    {#if $selectedEntityStore}
+    {#if $selectedHydratedMarkerStore}
       <button on:click={handleCloseEntity} class="hover:cursor-pointer">
         <i class="fa-solid fa-lg fa-xmark"></i>
       </button>

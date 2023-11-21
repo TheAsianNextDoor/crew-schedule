@@ -21,15 +21,8 @@ export const addBaseHydratedMarker = (hydratedMarker: HydratedMapMarker) => {
 };
 
 export const getBaseHydratedMarkers = () => get(baseHydratedMarkerStore);
-export const updateBaseHydratedLocations = (hydratedLocations: GenericHydratedLocation[]) => {
-  baseHydratedMarkerStore.update((val) => {
-    val.forEach((hydratedMarker, idx) => {
-      hydratedMarker.location = hydratedLocations[idx];
-    });
-
-    return val;
-  });
-};
+export const setBaseHydratedMarkers = (hydratedMarkers: HydratedMapMarker[]) =>
+  baseHydratedMarkerStore.set(hydratedMarkers);
 
 /**
  * Filtered Hydrated Map Markers
@@ -43,4 +36,27 @@ export const clearFilteredHydratedMarkers = () => {
 
 export const setFilteredHydratedMarkers = (sites: HydratedMapMarker[]) => {
   filteredHydratedMarkerStore.set(sites);
+};
+
+/**
+ * Selected Hydrated Map Marker
+ */
+/**
+ * The selected map entity to display in the menu
+ */
+export const selectedHydratedMarkerStore = writable<HydratedMapMarker | null>(null);
+export const { subscribe: selectedHydratedMarkerSubscribe } = selectedHydratedMarkerStore;
+export const getSelectedHydratedMarker = () => get(selectedHydratedMarkerStore);
+export const setSelectedHydratedMarker = (mapMarker: HydratedMapMarker | null) => {
+  selectedHydratedMarkerStore.set(mapMarker);
+};
+
+export const updateSelectedHydratedMarkerLocation = (location: GenericHydratedLocation) => {
+  selectedHydratedMarkerStore.update((val) => {
+    if (val?.location) {
+      val.location = location;
+    }
+
+    return val;
+  });
 };

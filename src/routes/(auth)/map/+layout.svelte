@@ -3,12 +3,13 @@
   import ButtonCarousel from './components/button-carousel.svelte';
   import Map from './components/map.svelte';
   import Avatar from './components/user-profile/avatar.svelte';
-  import { isMapFilterVisibleStore } from './(sidebar)/filter/filter-store';
   import Modals from './components/modals.svelte';
+  import Sidebar from './components/sidebar.svelte';
+  import { isMapFilterVisibleStore } from './filter/filter-store';
 
   export let data;
 
-  let sidebarWidth = 408;
+  let sidebarWidth = 350;
 </script>
 
 <div class="absolute z-30" style="width:{sidebarWidth}px">
@@ -19,7 +20,12 @@
 
 <div class="z-20 relative">
   <div class="absolute" style="width:{sidebarWidth}px">
-    <slot />
+    <Sidebar
+      {sidebarWidth}
+      siteLocations={data.siteLocations}
+      disciplines={data.disciplines}
+      fields={data.fields}
+    />
   </div>
   <div class="absolute" style="left:{sidebarWidth}px">
     <ButtonCarousel />

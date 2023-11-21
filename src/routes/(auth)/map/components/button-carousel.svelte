@@ -8,12 +8,16 @@
   } from '../stores/map-mode-store';
   import { hideRoutePolylines } from '../stores/route-polyline-store';
   import { hideMatrixPolylines } from '../stores/matrix-polyline.store';
-  import { page } from '$app/stores';
-  import { filterQueryParamsStore } from '../(sidebar)/filter/filter-store';
-  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
+  import {
+    filterQueryParamsStore,
+    isMapFilterVisibleStore,
+    showMapFilter,
+  } from '../filter/filter-store';
+  import { showMapSidebar } from '../stores/sidebar-store';
 
   const handleFilterClick = () => {
-    navigateWithFilterSearchParams('/map/filter');
+    showMapFilter();
+    showMapSidebar();
   };
 
   const handleRoutesClick = () => {
@@ -39,7 +43,7 @@
   };
 </script>
 
-{#if !$page.url.href.includes('filter')}
+{#if !$isMapFilterVisibleStore}
   <div class="flex mt-6">
     <button
       class={`btn ${

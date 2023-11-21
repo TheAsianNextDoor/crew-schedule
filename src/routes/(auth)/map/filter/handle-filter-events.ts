@@ -1,6 +1,6 @@
 import { goto } from '$app/navigation';
 import { FILTER_KEYS } from './filter-funcs';
-import type { EQUALITY_ENUM } from '../../../../../lib/constants/equality';
+import type { EQUALITY_ENUM } from '../../../../lib/constants/equality';
 import { setFilterQueryParams } from './filter-store';
 import queryString from 'query-string';
 
@@ -9,17 +9,19 @@ const maybeFilterByValue = (
   searchParamKey: (typeof FILTER_KEYS)[keyof typeof FILTER_KEYS],
   searchParamValue: string,
 ) => {
-  const baseUrl = '/map/filter?';
-  const parsedQuery = queryString.parse(window.location.search);
+  const baseUrl = '/map?';
+  const parsedQuery = queryString.parse(location.search);
 
   if (shouldFilter) {
     parsedQuery[searchParamKey] = searchParamValue;
     setFilterQueryParams(parsedQuery);
+
     const queryParams = queryString.stringify(parsedQuery);
     goto(`${baseUrl}${queryParams}`, { keepFocus: true });
   } else {
     delete parsedQuery[searchParamKey];
     setFilterQueryParams(parsedQuery);
+
     const queryParams = queryString.stringify(parsedQuery);
     goto(`${baseUrl}${queryParams}`, { keepFocus: true });
   }
@@ -41,17 +43,18 @@ export const filterPhaseByDiscipline = ({ target }: Event) => {
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseDiscipline, filterValue);
 };
 
-export const filterPhaseByStatusName = (filterValue: string) => {
-  const shouldFilter = filterValue !== '';
+export const filterPhaseByStatusName = (event: Event) => {
+  const { value } = event.target as HTMLSelectElement;
+  const shouldFilter = value !== '';
 
-  maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseStatus, filterValue);
+  maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseStatus, value);
 };
 
 export const filterPhaseByEstimatedCrewHours = (
   condition: (typeof EQUALITY_ENUM)[keyof typeof EQUALITY_ENUM],
-  crewHours: number | undefined,
+  crewHours: string | undefined,
 ) => {
-  const hours = crewHours ?? 0;
+  const hours = Number(crewHours) ?? 0;
   const shouldFilter = hours !== 0;
   const searchParamValue = JSON.stringify({
     condition,
@@ -73,10 +76,11 @@ export const filterPhaseByForeman = (filterValue: string) => {
   maybeFilterByValue(shouldFilter, FILTER_KEYS.phaseForeman, filterValue);
 };
 
-export const filterSiteByStatusName = (filterValue: string) => {
-  const shouldFilter = filterValue !== '';
+export const filterSiteByStatusName = (event: Event) => {
+  const { value } = event.target as HTMLSelectElement;
+  const shouldFilter = value !== '';
 
-  maybeFilterByValue(shouldFilter, FILTER_KEYS.siteStatus, filterValue);
+  maybeFilterByValue(shouldFilter, FILTER_KEYS.siteStatus, value);
 };
 
 export const filterSiteByClientName = (filterValue: string) => {

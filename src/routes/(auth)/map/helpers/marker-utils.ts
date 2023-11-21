@@ -1,7 +1,7 @@
 import {
-  addBaseHydratedMarker,
   getBaseHydratedMarkers,
   type HydratedMapMarker,
+  setSelectedHydratedMarker,
 } from '../stores/map-marker-store';
 import { getMap } from '../stores/map-store';
 import { getMapMode } from '../stores/map-mode-store';
@@ -28,10 +28,9 @@ import {
   setMatrixOrigin,
 } from '../stores/matrix-sites-store';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
-import { setSelectedEntity } from '../stores/selected-entity-store';
 import type { GenericHydratedLocation } from '../+layout.server';
-import { hideMapFilter } from '../(sidebar)/filter/filter-store';
 import { navigateWithFilterSearchParams } from './navigation-utils';
+import { showMapSidebar } from '../stores/sidebar-store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -40,16 +39,14 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   const content = marker.content as HTMLElement;
 
   if (location.type === LOCATION_TYPES_ENUM.site) {
-    navigateWithFilterSearchParams(`/map/location/site?location-id=${location.location_id}`);
+    navigateWithFilterSearchParams(`/map?selected-location=${location.location_id}`);
   } else if (location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
-    navigateWithFilterSearchParams(
-      `/map/location/mobilization-hub?mobilization-hub-id=${location.location_id}`,
-    );
+    navigateWithFilterSearchParams(`/map?selected-location=${location.location_id}`);
   }
 
   selectedClickAnimation(content);
-  setSelectedEntity(hydratedMapMarker);
-  hideMapFilter();
+  setSelectedHydratedMarker(hydratedMapMarker);
+  showMapSidebar();
 
   const mapMode = getMapMode();
   if (mapMode === 'routes') {
@@ -135,9 +132,7 @@ export const createMarker = ({ location, map, intersectionObserver }: CreateMark
     dropAnimation(content, intersectionObserver);
   }
 
-  addBaseHydratedMarker(hydratedMapMarker);
-
-  return marker;
+  return hydratedMapMarker;
 };
 
 export const removeMarkerFromMap = (marker: Marker) => {

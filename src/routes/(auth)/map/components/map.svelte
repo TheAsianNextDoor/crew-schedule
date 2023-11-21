@@ -7,9 +7,7 @@
   import { getGoogleMaps } from '$lib/constants/google-maps';
   import { setInfoWindow } from '../stores/info-window-store';
   import type { GenericHydratedLocation } from '../+layout.server';
-  import { filterMarkers } from '../(sidebar)/filter/filter-markers';
-  import { page } from '$app/stores';
-  import { hydrateStateFromUrl } from '../helpers/initial-load-utils';
+  import { setBaseHydratedMarkers } from '../stores/map-marker-store';
 
   export let locations: GenericHydratedLocation[];
 
@@ -44,20 +42,17 @@
       });
       setMap(map);
 
-      // setTimeout(() => {
-      locations.map((location) =>
-        createMarker({
-          location,
-          map,
-          // intersectionObserver,
-        }),
-      );
+      setTimeout(() => {
+        const hydratedMapMarkers = locations.map((location) =>
+          createMarker({
+            location,
+            map,
+            intersectionObserver,
+          }),
+        );
 
-      const { url } = $page;
-
-      hydrateStateFromUrl(url);
-      filterMarkers(url);
-      // }, 800);
+        setBaseHydratedMarkers(hydratedMapMarkers);
+      }, 800);
     } catch (e) {
       console.log(e);
     }
