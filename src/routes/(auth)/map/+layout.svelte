@@ -6,10 +6,16 @@
   import Modals from './components/modals.svelte';
   import Sidebar from './components/sidebar.svelte';
   import { isMapFilterVisibleStore } from './filter/filter-store';
+  import { onMount } from 'svelte';
+  import { showMapSidebar } from './stores/sidebar-store';
 
   export let data;
 
   let sidebarWidth = 350;
+
+  onMount(() => {
+    showMapSidebar();
+  });
 </script>
 
 <div class="absolute z-30" style="width:{sidebarWidth}px">
