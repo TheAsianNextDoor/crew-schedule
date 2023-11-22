@@ -30,7 +30,8 @@ import {
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
 import type { GenericHydratedLocation } from '../+layout.server';
 import { navigateWithFilterSearchParams } from './navigation-utils';
-import { showMapSidebar } from '../stores/sidebar-store';
+import { isMapSidebarVisible, showMapSidebar } from '../stores/sidebar-store';
+import { setShouldSlideAnimate } from '../stores/selected-entity-store';
 
 export type Marker = google.maps.marker.AdvancedMarkerElement;
 
@@ -46,7 +47,11 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
 
   selectedClickAnimation(content);
   setSelectedHydratedMarker(hydratedMapMarker);
-  showMapSidebar();
+
+  if (!isMapSidebarVisible()) {
+    setShouldSlideAnimate();
+    showMapSidebar();
+  }
 
   const mapMode = getMapMode();
   if (mapMode === 'routes') {

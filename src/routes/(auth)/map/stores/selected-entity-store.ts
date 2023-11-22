@@ -7,3 +7,10 @@ export const getSelectedEntity = () => get(selectedEntityStore);
 export const setSelectedEntity = (mapMarker: HydratedSelectedEntity | null) => {
   selectedEntityStore.set(mapMarker);
 };
+
+export const shouldSlideAnimateStore = writable(false);
+
+export const setShouldSlideAnimate = () => {
+  shouldSlideAnimateStore.set(true);
+  setTimeout(() => shouldSlideAnimateStore.set(false), 300);
+};
