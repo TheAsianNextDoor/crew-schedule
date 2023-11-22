@@ -10,11 +10,10 @@
     HydratedSelectedSite,
   } from '../../../../api/v1/auth/customer/[customerId]/location/[locationId]/site/+server';
   import InfoSection from '../info-section.svelte';
-  import { selectedEntityStore } from '../../stores/selected-entity-store';
 
-  $: siteEntity = $selectedEntityStore as HydratedSelectedEntity<HydratedSelectedSite[]>;
-  $: site = siteEntity.entity[0];
-  $: address = siteEntity.address;
+  export let selectedEntity: HydratedSelectedEntity<HydratedSelectedSite[]>;
+  $: site = selectedEntity.entity[0];
+  $: address = selectedEntity.address;
   $: phases = site?.phases;
 
   let dragDisabled = true;

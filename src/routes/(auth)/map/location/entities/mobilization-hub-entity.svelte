@@ -2,12 +2,14 @@
   import InfoSection from '../info-section.svelte';
   import type { SelectedMobilizationHub } from '../../../../api/v1/auth/customer/[customerId]/location/[locationId]/mobilization-hub/retrieve-selected-mobilization-hub';
   import type { HydratedSelectedEntity } from '../../../../api/v1/auth/customer/[customerId]/location/types';
-  import { selectedEntityStore } from '../../stores/selected-entity-store';
 
-  let mobilizationHubEntity =
-    $selectedEntityStore as HydratedSelectedEntity<SelectedMobilizationHub>;
-  let mobilizationHub = mobilizationHubEntity.entity;
-  let address = mobilizationHubEntity.address;
+  export let selectedEntity: HydratedSelectedEntity<SelectedMobilizationHub>;
+  let mobilizationHub = selectedEntity.entity;
+  let address = selectedEntity.address;
+
+  $: {
+    console.log(selectedEntity);
+  }
 </script>
 
 {#if mobilizationHub}
