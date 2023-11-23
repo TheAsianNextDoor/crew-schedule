@@ -1,4 +1,4 @@
-import queryString from 'query-string';
+import type { ParsedQuery } from 'query-string';
 import type { HydratedMapPhase, HydratedMapSite } from '../+layout.server';
 import {
   setFilteredHydratedMarkers,
@@ -59,12 +59,14 @@ const isStringifiedObject = (str: string | null) => {
   }
 };
 
-export const filterMarkers = (url: URL) => {
-  const { searchParams } = url;
-  const queryParams = queryString.parse(searchParams.toString());
+export const filterMarkers = (filterQueryParams: ParsedQuery) => {
   const baseHydratedMarkers = getBaseHydratedMarkers();
 
-  if (Object.keys(queryParams).length === 0) {
+  if (baseHydratedMarkers.length === 0) {
+    return;
+  }
+
+  if (Object.keys(filterQueryParams).length === 0) {
     setFilteredHydratedMarkers(baseHydratedMarkers);
     showAllMarkers();
 
@@ -73,18 +75,14 @@ export const filterMarkers = (url: URL) => {
 
   const filterConfigs: FilterConfigs = [];
 
-  for (const param in queryParams) {
+  for (const param in filterQueryParams) {
     const type = param.split('.')[0] as FilterType;
-    const value = queryParams[param] as string;
+    const value = filterQueryParams[param] as string;
     filterConfigs.push({
       type,
       func: getProperty(FILTER_FUNCTIONS, param),
       value: isStringifiedObject(value) ? JSON.parse(value) : value,
     });
-  }
-
-  if (baseHydratedMarkers.length === 0) {
-    return;
   }
 
   const filteredMarkers = baseHydratedMarkers.filter((hydratedMarker) => {
@@ -100,6 +98,4 @@ export const filterMarkers = (url: URL) => {
   });
 
   setFilteredHydratedMarkers(filteredMarkers);
-
-  return { fields: queryParams };
 };

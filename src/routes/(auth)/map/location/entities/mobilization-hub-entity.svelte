@@ -6,10 +6,6 @@
   export let selectedEntity: HydratedSelectedEntity<SelectedMobilizationHub>;
   let mobilizationHub = selectedEntity.entity;
   let address = selectedEntity.address;
-
-  $: {
-    console.log(selectedEntity);
-  }
 </script>
 
 {#if mobilizationHub}

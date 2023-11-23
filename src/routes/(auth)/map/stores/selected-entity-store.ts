@@ -8,9 +8,17 @@ export const setSelectedEntity = (mapMarker: HydratedSelectedEntity | null) => {
   selectedEntityStore.set(mapMarker);
 };
 
+/**
+ * Animation stores
+ */
 export const shouldSlideAnimateStore = writable(false);
-
-export const setShouldSlideAnimate = () => {
+export const setSlideAnimate = () => {
   shouldSlideAnimateStore.set(true);
   setTimeout(() => shouldSlideAnimateStore.set(false), 300);
+};
+
+export const isMarkerClickWhenSidebarClosedStore = writable(false);
+export const setMarkerClickWhenSidebarClosed = () => {
+  isMarkerClickWhenSidebarClosedStore.set(true);
+  setTimeout(() => isMarkerClickWhenSidebarClosedStore.set(false), 300);
 };

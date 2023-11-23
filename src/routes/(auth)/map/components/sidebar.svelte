@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { sineIn } from 'svelte/easing';
   import { fly } from 'svelte/transition';
   import type { HydratedSiteLocation } from '../proxy+layout.server';
   import { isMapFilterVisibleStore } from '../filter/filter-store';
@@ -13,8 +12,9 @@
   } from '../stores/sidebar-store';
   import AllSites from './all-sites.svelte';
   import {
+    isMarkerClickWhenSidebarClosedStore,
     selectedEntityStore,
-    setShouldSlideAnimate,
+    setSlideAnimate,
     shouldSlideAnimateStore,
   } from '../stores/selected-entity-store';
 
@@ -25,24 +25,17 @@
 
   let sidebarGap = 10;
 
-  $: calculatedSidebarWidth = fields.selectedLocation
+  $: calculatedSidebarWidth = fields.selectedLocationId
     ? sidebarWidth * 2 + sidebarGap
     : sidebarWidth;
 
-  const getSidebarFlyTransition = (x: number) => ({
-    duration: 300,
-    easing: sineIn,
-    x,
-    opacity: 100,
-  });
-
   const handleMenuOpen = () => {
-    setShouldSlideAnimate();
+    setSlideAnimate();
     showMapSidebar();
   };
 
   const handleMenuClose = () => {
-    setShouldSlideAnimate();
+    setSlideAnimate();
     hideMapSidebar();
   };
 </script>
@@ -50,7 +43,12 @@
 {#if $isMapSidebarVisibleStore}
   <div
     class="overflow-y-auto shadow-xl bg-surface-100-800-token h-screen"
-    transition:fly={getSidebarFlyTransition(-calculatedSidebarWidth)}
+    transition:fly={{
+      duration: $isMarkerClickWhenSidebarClosedStore ? 440 : 600,
+      x: -calculatedSidebarWidth,
+      opacity: 100,
+      delay: $isMarkerClickWhenSidebarClosedStore ? 239 : 0,
+    }}
   >
     {#if $isMapFilterVisibleStore}
       <Filter {disciplines} {fields} />
@@ -65,14 +63,14 @@
     style={`left: ${sidebarWidth + sidebarGap}px; width: ${sidebarWidth}px`}
     class="selected-entity absolute z-20 card overflow-y-auto shadow-xl bg-surface-100-800-token h-5/6 pt-4"
     in:fly={{
-      duration: $shouldSlideAnimateStore ? 300 : 0,
+      duration: $shouldSlideAnimateStore ? 600 : 0,
       x: -calculatedSidebarWidth,
-      easing: sineIn,
+      opacity: 100,
     }}
     out:fly={{
-      duration: $shouldSlideAnimateStore ? 300 : 0,
+      duration: $shouldSlideAnimateStore ? 600 : 0,
       x: -calculatedSidebarWidth,
-      easing: sineIn,
+      opacity: 100,
     }}
   >
     <SelectedEntity />
@@ -82,16 +80,24 @@
 <!-- Close/Open Menu icon -->
 {#if $isMapSidebarVisibleStore}
   <button
-    transition:fly={getSidebarFlyTransition(-calculatedSidebarWidth)}
+    transition:fly={{
+      duration: 600,
+      x: -calculatedSidebarWidth,
+      opacity: 100,
+    }}
     class="arrow bg-surface-100-800-token"
-    style="left:{calculatedSidebarWidth}px"
+    style="left:{$shouldSlideAnimateStore ? 0 : calculatedSidebarWidth}px"
     on:click={handleMenuClose}
   >
     <i class="fa-solid fa-caret-left"></i>
   </button>
 {:else}
   <button
-    transition:fly={getSidebarFlyTransition(calculatedSidebarWidth)}
+    transition:fly={{
+      duration: 600,
+      x: calculatedSidebarWidth,
+      opacity: 100,
+    }}
     class="arrow bg-surface-100-800-token"
     on:click={handleMenuOpen}
   >

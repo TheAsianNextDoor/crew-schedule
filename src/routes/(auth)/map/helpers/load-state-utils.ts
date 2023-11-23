@@ -1,5 +1,5 @@
-import queryString from 'query-string';
-import { FILTER_KEYS } from '../filter/filter-funcs';
+import queryString, { type ParsedQuery } from 'query-string';
+import { FILTER_KEYS, type CrewHoursValue } from '../filter/filter-funcs';
 import { addFilterQueryParam } from '../filter/filter-store';
 import {
   getBaseHydratedMarkers,
@@ -21,8 +21,7 @@ export const loadFiltersFromUrl = (url: URL) => {
   }
 };
 
-export const loadSelectedHydratedMarkerFromUrl = (url: URL) => {
-  const selectedLocationId = url.searchParams.get('selected-location');
+export const loadSelectedHydratedMarkerFromUrl = (selectedLocationId: string) => {
   const hydratedMarkers = getBaseHydratedMarkers();
 
   if (selectedLocationId && hydratedMarkers) {
@@ -75,3 +74,21 @@ export const loadSelectedEntityFromUrl = async (
 
   return { entity: null, address: '' };
 };
+
+export const loadFilterFields = (queryParams: ParsedQuery) => ({
+  phaseDisciplines: (queryParams?.[FILTER_KEYS.phaseDiscipline] as string | undefined) || '',
+  phaseStatus: (queryParams?.[FILTER_KEYS.phaseStatus] as string | undefined) || '',
+  crewHoursValue: JSON.parse(
+    (queryParams?.[FILTER_KEYS.phaseCrewHours] as string) || '{}',
+  ) as CrewHoursValue,
+  phaseStartDate: JSON.parse((queryParams?.[FILTER_KEYS.phaseStartDate] as string) || '{}') as {
+    start?: Date;
+    end?: Date;
+  },
+  phaseForeman: (queryParams?.[FILTER_KEYS.phaseForeman] as string | undefined) || '',
+
+  siteClient: (queryParams?.[FILTER_KEYS.siteClient] as string | undefined) || '',
+  siteStatus: (queryParams?.[FILTER_KEYS.siteStatus] as string | undefined) || '',
+
+  selectedLocationId: (queryParams?.['selected-location'] as string | undefined) || '',
+});
