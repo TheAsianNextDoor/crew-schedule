@@ -12,6 +12,7 @@ export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
 export type PinOptions = Omit<google.maps.marker.PinElementOptions, 'glyph'>;
 
 type MarkerPinTypes =
+  | 'hovered'
   | 'selected'
   | 'site'
   | 'mobilizationHub'
@@ -26,8 +27,16 @@ interface PinElementConfig {
 }
 
 const borderColor = '#808080';
-
 export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
+  hovered: {
+    type: 'hovered',
+    iconHtml: '<i class="fa-solid fa-eye"></i>',
+    pinOptions: {
+      glyphColor: 'white',
+      background: '#5FE764', // green
+      borderColor,
+    },
+  },
   selected: {
     type: 'selected',
     iconHtml: '<i class="fa-solid fa-map-pin"></i>',
@@ -69,7 +78,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-brands fa-xing"></i>',
     pinOptions: {
       glyphColor: 'white',
-      background: '#5FE764', // orange
+      background: '#5FE764', // green
       borderColor,
     },
   },
@@ -78,7 +87,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-brands fa-xing"></i>',
     pinOptions: {
       glyphColor: 'white',
-      background: '#e7985f', // green
+      background: '#e7985f', // orange
       borderColor,
     },
   },

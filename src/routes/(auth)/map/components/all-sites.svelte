@@ -38,7 +38,7 @@
       return;
     }
 
-    changeMarkerPin(hoveredHydratedMarker.marker, MARKER_PINS.selected);
+    changeMarkerPin(hoveredHydratedMarker.marker, MARKER_PINS.hovered);
   };
 
   const handleSiteMouseLeave = (locationId: string) => {
@@ -50,7 +50,12 @@
       return;
     }
 
-    if (hoveredHydratedMarker.id !== getSelectedHydratedMarker()?.id) {
+    if (
+      hoveredHydratedMarker.location.location_id ===
+      getSelectedHydratedMarker()?.location.location_id
+    ) {
+      changeMarkerPin(hoveredHydratedMarker.marker, MARKER_PINS.selected);
+    } else {
       setPinToDefault(hoveredHydratedMarker);
     }
   };
