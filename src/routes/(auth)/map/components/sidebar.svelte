@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fly } from 'svelte/transition';
+  import { crossfade, fly } from 'svelte/transition';
   import type { HydratedSiteLocation } from '../proxy+layout.server';
   import { isMapFilterVisibleStore } from '../filter/filter-store';
   import Filter from '../filter/filter.svelte';
@@ -17,6 +17,7 @@
     setSlideAnimate,
     shouldSlideAnimateStore,
   } from '../stores/selected-entity-store';
+  import { beforeUpdate } from 'svelte';
 
   export let disciplines: string[];
   export let fields: Fields;
@@ -25,9 +26,17 @@
 
   let sidebarGap = 10;
 
-  $: calculatedSidebarWidth = fields.selectedLocationId
-    ? sidebarWidth * 2 + sidebarGap
-    : sidebarWidth;
+  let calculatedSidebarWidth = sidebarWidth;
+
+  beforeUpdate(() => {
+    calculatedSidebarWidth = fields.selectedLocationId
+      ? sidebarWidth * 2 + sidebarGap
+      : sidebarWidth;
+  });
+
+  const [send, receive] = crossfade({
+    duration: 570,
+  });
 
   const handleMenuOpen = () => {
     setSlideAnimate();
@@ -47,7 +56,7 @@
       duration: $isMarkerClickWhenSidebarClosedStore ? 451 : 600,
       x: -calculatedSidebarWidth,
       opacity: 100,
-      delay: $isMarkerClickWhenSidebarClosedStore ? 243 : 0,
+      delay: $isMarkerClickWhenSidebarClosedStore ? 200 : 0,
     }}
   >
     {#if $isMapFilterVisibleStore}
@@ -80,24 +89,18 @@
 <!-- Close/Open Menu icon -->
 {#if $isMapSidebarVisibleStore}
   <button
-    transition:fly={{
-      duration: 600,
-      x: -calculatedSidebarWidth,
-      opacity: 100,
-    }}
+    in:receive={{ key: 'a' }}
+    out:send={{ key: 'a' }}
     class="arrow bg-surface-100-800-token"
-    style="left:{$shouldSlideAnimateStore ? 0 : calculatedSidebarWidth}px"
+    style="left:{calculatedSidebarWidth}px"
     on:click={handleMenuClose}
   >
     <i class="fa-solid fa-caret-left"></i>
   </button>
 {:else}
   <button
-    transition:fly={{
-      duration: 600,
-      x: calculatedSidebarWidth,
-      opacity: 100,
-    }}
+    in:receive={{ key: 'a' }}
+    out:send={{ key: 'a' }}
     class="arrow bg-surface-100-800-token"
     on:click={handleMenuOpen}
   >
