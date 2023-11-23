@@ -1,13 +1,23 @@
-import { getGoogleMaps } from '$lib/constants/google-maps';
+import { getGoogleMaps, type AdvancedMarkerElementInstance } from '$lib/constants/google-maps';
 import { LOCATION_TYPES_ENUM } from '$lib/constants/location-types';
-import { getBaseHydratedMarkers, type HydratedMapMarker } from '../stores/map-marker-store';
+import {
+  getBaseHydratedMarkers,
+  getSelectedHydratedMarker,
+  type HydratedMapMarker,
+} from '../stores/map-marker-store';
 import type { Marker } from './marker-utils';
 
 export const MAP_MARKER_PIN_CLASS = 'map-marker-pin';
 
 export type PinOptions = Omit<google.maps.marker.PinElementOptions, 'glyph'>;
 
-type MarkerPinTypes = 'site' | 'mobilizationHub' | 'routes' | 'matrixDestination' | 'matrixOrigin';
+type MarkerPinTypes =
+  | 'selected'
+  | 'site'
+  | 'mobilizationHub'
+  | 'routes'
+  | 'matrixDestination'
+  | 'matrixOrigin';
 
 interface PinElementConfig {
   type: MarkerPinTypes;
@@ -18,6 +28,15 @@ interface PinElementConfig {
 const borderColor = '#808080';
 
 export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
+  selected: {
+    type: 'selected',
+    iconHtml: '<i class="fa-solid fa-map-pin"></i>',
+    pinOptions: {
+      glyphColor: 'white',
+      background: '#e7dc5f', // yellow
+      borderColor,
+    },
+  },
   site: {
     type: 'site',
     iconHtml: '<i class="fa-solid fa-circle"></i>',
@@ -41,7 +60,7 @@ export const MARKER_PINS: Record<MarkerPinTypes, PinElementConfig> = {
     iconHtml: '<i class="fa-solid fa-road fa-lg"></i>',
     pinOptions: {
       glyphColor: 'black',
-      background: '#e7dc5f', // yellow
+      background: '#965FE7', // purple
       borderColor,
     },
   },
@@ -100,6 +119,22 @@ export const setPinToDefault = ({ marker, location: { type } }: HydratedMapMarke
     changeMarkerPin(marker, MARKER_PINS.mobilizationHub);
 };
 
+export const setPinToSelected = (newMarker: AdvancedMarkerElementInstance) => {
+  const previousHydratedSelectedMarker = getSelectedHydratedMarker();
+  if (previousHydratedSelectedMarker) {
+    setPinToDefault(previousHydratedSelectedMarker);
+  }
+
+  if (newMarker) {
+    changeMarkerPin(newMarker, MARKER_PINS.selected);
+  }
+};
+
 export const setAllPinsToDefault = () => {
   getBaseHydratedMarkers().forEach(setPinToDefault);
+  const selectedHydratedMarker = getSelectedHydratedMarker();
+
+  if (selectedHydratedMarker) {
+    setPinToSelected(selectedHydratedMarker.marker);
+  }
 };

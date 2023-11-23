@@ -12,6 +12,7 @@ import {
   changeMarkerPin,
   getMarkerPinElement,
   isMarkerPinOfType,
+  setPinToSelected,
 } from './marker-pin-utils';
 import { addToRouteSites, isMaxRouteItemsStore } from '../stores/route-sites-store';
 import {
@@ -39,14 +40,7 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   const { marker, location } = hydratedMapMarker;
   const content = marker.content as HTMLElement;
 
-  if (location.type === LOCATION_TYPES_ENUM.site) {
-    navigateWithFilterSearchParams(`/map?selected-location=${location.location_id}`);
-  } else if (location.type === LOCATION_TYPES_ENUM.mobilizationHub) {
-    navigateWithFilterSearchParams(`/map?selected-location=${location.location_id}`);
-  }
-
-  selectedClickAnimation(content);
-  setSelectedHydratedMarker(hydratedMapMarker);
+  navigateWithFilterSearchParams(`/map?selected-location=${location.location_id}`);
 
   if (!isMapSidebarVisible()) {
     setSlideAnimate();
@@ -55,6 +49,14 @@ export const markerClickEventListener = (hydratedMapMarker: HydratedMapMarker) =
   }
 
   const mapMode = getMapMode();
+
+  if (mapMode === 'base') {
+    setPinToSelected(marker);
+  }
+
+  selectedClickAnimation(content);
+  setSelectedHydratedMarker(hydratedMapMarker);
+
   if (mapMode === 'routes') {
     const pinElement = getMarkerPinElement(marker.content as HTMLElement);
 

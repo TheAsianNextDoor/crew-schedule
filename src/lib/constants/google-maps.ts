@@ -1,3 +1,4 @@
+export type AdvancedMarkerElementInstance = google.maps.marker.AdvancedMarkerElement;
 export type MapInstance = google.maps.Map;
 export type InfoWindowInstance = google.maps.InfoWindow;
 export type PolylineInstance = google.maps.Polyline;
