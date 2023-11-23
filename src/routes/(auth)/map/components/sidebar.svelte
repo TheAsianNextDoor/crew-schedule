@@ -44,10 +44,10 @@
   <div
     class="overflow-y-auto shadow-xl bg-surface-100-800-token h-screen"
     transition:fly={{
-      duration: $isMarkerClickWhenSidebarClosedStore ? 440 : 600,
+      duration: $isMarkerClickWhenSidebarClosedStore ? 451 : 600,
       x: -calculatedSidebarWidth,
       opacity: 100,
-      delay: $isMarkerClickWhenSidebarClosedStore ? 239 : 0,
+      delay: $isMarkerClickWhenSidebarClosedStore ? 243 : 0,
     }}
   >
     {#if $isMapFilterVisibleStore}
