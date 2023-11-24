@@ -9,7 +9,7 @@
   <div class="p-2">
     <h1>
       {$matrixSitesStore.origin?.location.content.name} to {$matrixSitesStore.destinations[index]
-        .location.content.name}
+        ?.location.content.name}
     </h1>
     <div>Distance: {leg.localizedValues.distance.text}</div>
     <div>Duration: {leg.localizedValues.duration.text}</div>
