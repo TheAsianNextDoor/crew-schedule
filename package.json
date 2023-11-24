@@ -23,6 +23,9 @@
     "@easepick/range-plugin": "^1.2.1",
     "@floating-ui/dom": "^1.5.3",
     "@fortawesome/fontawesome-free": "^6.4.2",
+    "@fullcalendar/core": "^6.1.9",
+    "@fullcalendar/daygrid": "^6.1.9",
+    "@fullcalendar/interaction": "^6.1.9",
     "@googlemaps/js-api-loader": "^1.16.2",
     "@prisma/client": "5.5.2",
     "@skeletonlabs/skeleton": "^2.4.0",
@@ -42,6 +45,7 @@
   },
   "devDependencies": {
     "@fontsource/fira-mono": "^5.0.8",
+    "@fullcalendar/timegrid": "^6.1.9",
     "@playwright/test": "^1.39.0",
     "@skeletonlabs/tw-plugin": "^0.2.3",
     "@sveltejs/adapter-auto": "^2.1.0",
