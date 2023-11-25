@@ -1,13 +1,16 @@
 <script lang="ts">
   import {
     Autocomplete,
+    popup,
     type AutocompleteOption,
     type PopupSettings,
-    popup,
   } from '@skeletonlabs/skeleton';
 
-  import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
+  import AppSidebar from '$lib/components/app-sidebar.svelte';
+  import { onDestroy } from 'svelte';
   import { selectedClickAnimation } from '../helpers/animation-helpers';
+  import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
+  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
   import type { GenericHydratedLocation } from '../proxy+layout.server';
   import {
     getBaseHydratedMarkers,
@@ -15,8 +18,6 @@
     selectedHydratedMarkerSubscribe,
     setSelectedHydratedMarker,
   } from '../stores/map-marker-store';
-  import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
-  import { onDestroy } from 'svelte';
   import { setSelectedEntity } from '../stores/selected-entity-store';
 
   export let locations: GenericHydratedLocation[];
@@ -83,13 +84,15 @@
     setSelectedEntity(null);
     navigateWithFilterSearchParams('/map');
   };
+
+  let isSidebarOpen = false;
 </script>
 
 <div class="w-full p-4">
   <div class="card w-full bg-surface-200-700-token flex items-center gap-1 px-4 shadow-md">
-    <div class="hover:cursor-pointer">
+    <button class="hover:cursor-pointer" on:click={() => (isSidebarOpen = !isSidebarOpen)}>
       <i class="fa-solid fa-bars"></i>
-    </div>
+    </button>
     <input
       class="bg-surface-200-700-token no-outline w-11/12 border-none bg-slate-100"
       autocomplete="off"
@@ -102,6 +105,9 @@
       <button on:click={handleCloseEntity} class="hover:cursor-pointer">
         <i class="fa-solid fa-lg fa-xmark"></i>
       </button>
+    {/if}
+    {#if isSidebarOpen}
+      <AppSidebar on:close-app-sidebar={() => (isSidebarOpen = false)} />
     {/if}
   </div>
 </div>
