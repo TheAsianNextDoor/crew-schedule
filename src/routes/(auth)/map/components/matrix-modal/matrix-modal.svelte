@@ -21,7 +21,7 @@
   import MatrixOrigin from './matrix-origin.svelte';
   import { setAllPinsToDefault } from '../../helpers/marker-pin-utils';
   import type { HydratedMapMarker } from '../../stores/map-marker-store';
-  import type { RoutesResponse } from '../../../../api/v1/auth/routes/get-google-route';
+  import type { RoutesPostResponse } from '../../../../api/v1/auth/routes/+server';
 
   $: calculateButtonDisabled =
     $matrixSitesStore.origin && $matrixSitesStore.destinations.length < 2;
@@ -39,14 +39,12 @@
       })
     ).json();
 
-    const [{ legs }] = result.data.routes as RoutesResponse;
+    const {
+      data: { legs },
+    } = result as RoutesPostResponse;
 
     let colorIndex = 0;
     legs.forEach((leg, index) => {
-      if (index % 2 === 1) {
-        return;
-      }
-
       const polyline = buildRouteCalcPolyline(leg, colorIndex);
       addMatrixPolyline({
         origin,
@@ -62,9 +60,9 @@
   };
 
   const handleCalcAnotherRoute = () => {
+    hideMatrixCalcInfo();
     clearMatrixEdges();
     clearMatrixPolylines();
-    hideMatrixCalcInfo();
   };
 
   const handleClear = () => {

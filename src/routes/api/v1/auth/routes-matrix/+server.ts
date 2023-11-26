@@ -2,6 +2,8 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import { getGoogleRoutes } from '../routes/get-google-route';
 import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
 import { routesMatrixMock } from '../../../../../../mock/routes-matrix';
+import { isLive } from '$lib/env';
+import type { RoutesPostResponse } from '../routes/+server';
 
 interface PostBody {
   originLocation: LatitudeLongitude;
@@ -26,14 +28,22 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
   );
   matrixIntermediates.push(originLocation);
 
-  // const data = await getGoogleRoutes(
-  //   fetch,
-  //   originLocation,
-  //   destination,
-  //   matrixIntermediates,
-  //   false,
-  // );
-  // return json({ data });
+  if (isLive) {
+    const {
+      routes: [{ legs, polyline, localizedValues }],
+    } = await getGoogleRoutes(fetch, originLocation, destination, matrixIntermediates, false);
 
-  return json({ data: routesMatrixMock });
+    const filteredLegs = legs.filter((_, index) => (index % 2 ? false : true));
+
+    return json({
+      data: { legs: filteredLegs, polyline, localizedValues },
+    } satisfies RoutesPostResponse);
+  }
+
+  console.log('mocked matrix route');
+
+  const { legs, localizedValues, polyline } = routesMatrixMock[0];
+  const filteredLegs = legs.filter((_, index) => (index % 2 ? false : true));
+
+  return json({ data: { legs: filteredLegs, polyline, localizedValues } });
 };

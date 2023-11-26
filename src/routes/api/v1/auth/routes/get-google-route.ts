@@ -1,11 +1,28 @@
 import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
 import type { LatitudeLongitude } from '$lib/types/latitude-longitude';
 
-export type RoutesResponse = {
-  legs: {
+export type GoogleRoutesResponse = {
+  routes: {
+    legs: {
+      polyline: {
+        encodedPolyline: string;
+      };
+      localizedValues: {
+        distance: {
+          text: string;
+        };
+        duration: {
+          text: string;
+        };
+        staticDuration: {
+          text: string;
+        };
+      };
+    }[];
     polyline: {
       encodedPolyline: string;
     };
+    warnings: string[];
     localizedValues: {
       distance: {
         text: string;
@@ -17,24 +34,11 @@ export type RoutesResponse = {
         text: string;
       };
     };
+    routeToken: string;
   }[];
-  polyline: {
-    encodedPolyline: string;
-  };
-  warnings: string[];
-  localizedValues: {
-    distance: {
-      text: string;
-    };
-    duration: {
-      text: string;
-    };
-    staticDuration: {
-      text: string;
-    };
-  };
-  routeToken: string;
-}[];
+};
+
+export type GoogleRoute = GoogleRoutesResponse['routes'][number];
 
 export const getGoogleRoutes = async (
   fetch: Function,
@@ -86,7 +90,7 @@ export const getGoogleRoutes = async (
     },
     body,
   });
-  const result = (await data.json()) as RoutesResponse;
+  const result = (await data.json()) as GoogleRoutesResponse;
   console.log('getGoogleRoutes: ', JSON.stringify(result));
 
   return result;

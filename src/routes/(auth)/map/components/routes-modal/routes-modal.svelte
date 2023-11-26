@@ -21,7 +21,7 @@
   import { addRoutePolyline, clearRoutePolylines } from '../../stores/route-polyline-store';
   import RouteCalcInfo from './route-calc-info.svelte';
   import { setAllPinsToDefault } from '../../helpers/marker-pin-utils';
-  import type { RoutesResponse } from '../../../../api/v1/auth/routes/get-google-route';
+  import type { RoutesPostResponse } from '../../../../api/v1/auth/routes/+server';
 
   $: calculateButtonDisabled = $routeSitesStore.length < 2;
 
@@ -35,7 +35,9 @@
       })
     ).json();
 
-    const [{ legs }] = result.data.routes as RoutesResponse;
+    const {
+      data: { legs },
+    } = result as RoutesPostResponse;
 
     legs.forEach((leg, index) => {
       addToTotalLegDistance(Number(leg.localizedValues.distance.text.split(' ')[0]));
