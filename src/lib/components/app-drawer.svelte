@@ -39,4 +39,7 @@
       </a>
     </li>
   </ul>
+
+  <div class="mt-auto"></div>
+  <p class="text-center">© 2023 Aaron S.</p>
 </div>
