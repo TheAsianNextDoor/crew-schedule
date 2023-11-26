@@ -8,10 +8,12 @@
   import { isMapFilterVisibleStore } from './filter/filter-store';
   import { onMount } from 'svelte';
   import { showMapSidebar } from './stores/sidebar-store';
+  import AppDrawer from '$lib/components/app-drawer.svelte';
 
   export let data;
 
   let sidebarWidth = 350;
+  let isAppDrawerOpen = false;
 
   onMount(() => {
     showMapSidebar();
@@ -20,7 +22,18 @@
 
 <div class="absolute z-30" style="width:{sidebarWidth}px">
   {#if !$isMapFilterVisibleStore}
-    <AutoComplete locations={data.locations} />
+    <AutoComplete
+      on:app-drawer={({ detail }) => {
+        isAppDrawerOpen = detail.isOpen;
+      }}
+      locations={data.locations}
+    />
+  {/if}
+</div>
+
+<div class="fixed z-40 h-full">
+  {#if isAppDrawerOpen}
+    <AppDrawer on:app-drawer={({ detail }) => (isAppDrawerOpen = detail.isOpen)} />
   {/if}
 </div>
 

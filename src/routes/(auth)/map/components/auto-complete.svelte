@@ -6,8 +6,7 @@
     type PopupSettings,
   } from '@skeletonlabs/skeleton';
 
-  import AppSidebar from '$lib/components/app-sidebar.svelte';
-  import { onDestroy } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import { selectedClickAnimation } from '../helpers/animation-helpers';
   import { isMobilizationHubLocation, isSiteLocation } from '../helpers/location-type-utils';
   import { navigateWithFilterSearchParams } from '../helpers/navigation-utils';
@@ -19,6 +18,8 @@
     setSelectedHydratedMarker,
   } from '../stores/map-marker-store';
   import { setSelectedEntity } from '../stores/selected-entity-store';
+
+  const dispatch = createEventDispatcher();
 
   export let locations: GenericHydratedLocation[];
 
@@ -84,13 +85,11 @@
     setSelectedEntity(null);
     navigateWithFilterSearchParams('/map');
   };
-
-  let isSidebarOpen = false;
 </script>
 
 <div class="w-full p-4">
   <div class="card w-full bg-surface-200-700-token flex items-center gap-1 px-4 shadow-md">
-    <button class="hover:cursor-pointer" on:click={() => (isSidebarOpen = !isSidebarOpen)}>
+    <button class="hover:cursor-pointer" on:click={() => dispatch('app-drawer', { isOpen: true })}>
       <i class="fa-solid fa-bars"></i>
     </button>
     <input
@@ -105,9 +104,6 @@
       <button on:click={handleCloseEntity} class="hover:cursor-pointer">
         <i class="fa-solid fa-lg fa-xmark"></i>
       </button>
-    {/if}
-    {#if isSidebarOpen}
-      <AppSidebar on:close-app-sidebar={() => (isSidebarOpen = false)} />
     {/if}
   </div>
 </div>
