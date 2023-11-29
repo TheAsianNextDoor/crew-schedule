@@ -20,7 +20,7 @@
     editable: true,
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     initialView: 'dayGridMonth',
-    events: [{ title: 'Discuss ownership with Aaron', start: '2023-11-23' }],
+    events: [{ title: 'Event here', start: '2023-11-23' }],
   };
 
   onMount(() => {
