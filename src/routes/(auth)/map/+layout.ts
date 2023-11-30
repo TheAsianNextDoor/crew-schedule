@@ -13,6 +13,8 @@ import {
 } from './helpers/load-state-utils.js';
 import { setSelectedEntity } from './stores/selected-entity-store.js';
 import { getFilterQueryParams } from './filter/filter-store.js';
+import { setAllPinsToDefault, setPinToSelected } from './helpers/marker-pin-utils.js';
+import { getMapMode } from './stores/map-mode-store.js';
 
 export type Fields = {
   phaseDisciplines: string;
@@ -71,6 +73,12 @@ export const load = async ({ data, url }) => {
           getSelectedHydratedMarker(),
         ),
       );
+
+      const selectedMarker = getSelectedHydratedMarker();
+      if (selectedMarker && getMapMode() === 'base') {
+        setAllPinsToDefault();
+        setPinToSelected(selectedMarker.marker);
+      }
     }
   });
 

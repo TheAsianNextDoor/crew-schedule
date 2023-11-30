@@ -13,11 +13,13 @@
   import type { GenericHydratedLocation } from '../proxy+layout.server';
   import {
     getBaseHydratedMarkers,
+    getSelectedHydratedMarker,
     selectedHydratedMarkerStore,
     selectedHydratedMarkerSubscribe,
     setSelectedHydratedMarker,
   } from '../stores/map-marker-store';
   import { setSelectedEntity } from '../stores/selected-entity-store';
+  import { setPinToDefault } from '../helpers/marker-pin-utils';
 
   const dispatch = createEventDispatcher();
 
@@ -81,6 +83,10 @@
 
   const handleCloseEntity = () => {
     searchValue = '';
+    const selectedMarker = getSelectedHydratedMarker();
+    if (selectedMarker) {
+      setPinToDefault(selectedMarker);
+    }
     setSelectedHydratedMarker(null);
     setSelectedEntity(null);
     navigateWithFilterSearchParams('/map');
