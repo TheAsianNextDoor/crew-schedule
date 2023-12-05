@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EmployeeInfo } from '../../../../retrieve-employee-info';
+  import type { EmployeeInfo } from '../../../../../retrieve-employee-info';
 
   export let user: EmployeeInfo;
   export let showSidebar: boolean;

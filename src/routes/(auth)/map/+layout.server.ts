@@ -98,7 +98,7 @@ export async function load({ parent, depends }) {
   depends('map:data');
 
   const {
-    employee: { customer_id: customerId },
+    user: { customer_id: customerId },
   } = await parent();
 
   const sites = await retrieveMapSites(customerId);

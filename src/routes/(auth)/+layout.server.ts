@@ -1,14 +1,14 @@
 import { redirect } from '@sveltejs/kit';
 
 export const load = async ({ parent }) => {
-  const { session, employee } = await parent();
+  const { session, user } = await parent();
 
-  if (!session || !employee) {
+  if (!session || !user) {
     throw redirect(303, '/');
   }
 
   return {
-    employee,
+    user,
     session,
   };
 };

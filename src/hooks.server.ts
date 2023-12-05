@@ -2,6 +2,7 @@ import { initSupabaseServerClient, supabaseServerClient } from '$lib/supabase';
 import type { Handle } from '@sveltejs/kit';
 
 import type { GithubSession } from './app';
+import { retrievePersonInfo } from './retrieve-employee-info';
 
 export const handle: Handle = async ({ event, resolve }) => {
   initSupabaseServerClient(event);
@@ -16,13 +17,18 @@ export const handle: Handle = async ({ event, resolve }) => {
   };
 
   event.locals.getSession = getSession;
+  const session = await getSession();
+  event.locals.session = session;
 
-  if (event?.request?.url?.includes('/auth')) {
-    const session = await getSession();
-
-    if (!session?.user) {
-      return new Response('Unauthorized', { status: 401 });
+  if (session?.user) {
+    const user = await retrievePersonInfo(session.user.user_metadata.email);
+    if (user) {
+      event.locals.user = user;
     }
+  }
+
+  if (event?.request?.url?.includes('/auth') && !session?.user) {
+    return new Response('Unauthorized', { status: 401 });
   }
 
   return resolve(event, {

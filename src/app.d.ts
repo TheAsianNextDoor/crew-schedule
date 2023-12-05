@@ -9,6 +9,7 @@ import { type Item, type DndEvent } from 'svelte-dnd-action';
 
 import { type Database } from './DatabaseDefinitions';
 import type { HydratedMapMarker } from './routes/(auth)/map/stores/map-marker-store';
+import type { EmployeeInfo } from './retrieve-employee-info';
 
 export interface GithubSession extends Session {
   user: User & {
@@ -35,6 +36,8 @@ declare global {
     interface Locals {
       supabase: SupabaseClient<Database>;
       getSession(): Promise<GithubSession | null>;
+      session: GithubSession | null;
+      user: EmployeeInfo;
     }
     interface PageData {
       session: GithubSession | null;

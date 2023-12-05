@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EmployeeInfo } from '../../../../retrieve-employee-info';
+  import type { EmployeeInfo } from '../../../../../retrieve-employee-info';
   import ProfileModal from './profile-modal.svelte';
 
   export let src: string | undefined;
